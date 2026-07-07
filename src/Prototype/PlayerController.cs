@@ -21,23 +21,17 @@ public partial class PlayerController : CharacterBody2D
     private const float ComboWindowSeconds = 0.30f;
     private const float ExecuteRange = 42f;
     private const float MaxStamina = 100f;
-    private const float DodgeCost = 22f;
-    private const float DodgeDurationSeconds = 0.38f;
-    private const float DodgeIFramesSeconds = 0.22f;
-    private const float DodgeSpeed = 150f;
-    private const float CounterAttackWindowSeconds = 0.4f;
+    private const float DashCost = 22f;
+    private const float DashDurationSeconds = 0.32f;
+    private const float DashIFramesSeconds = 0.20f;
+    private const float DashSpeed = 168f;
     private const float StaminaRegenOutOfCombat = 18f;
     private const float StaminaRegenInCombat = 10f;
     private const float StaminaRegenDelaySeconds = 0.35f;
     private const float RunSpeed = 198f;
-    private const float RunCost = 12f;
-    private const float RunDurationSeconds = 1.2f;
+    private const float RunDrainPerSecond = 15f;
+    private const float RunMinStamina = 8f;
     private const float DoubleTapWindowSeconds = 0.22f;
-    private const float DashCost = 18f;
-    private const float DashDurationSeconds = 0.18f;
-    private const float DashSpeed = 268f;
-    private const float DashIFramesSeconds = 0.08f;
-    private const float DashAttackWindowSeconds = 0.35f;
     private const float HeavyAttackStaminaCost = 8f;
     private const float JumpCost = 14f;
     private const float JumpDurationSeconds = 0.42f;
@@ -51,6 +45,9 @@ public partial class PlayerController : CharacterBody2D
     private const float AirHammerLandingRecoverySeconds = 0.22f;
     private const float AirSlamRadius = 28f;
     private const float AirDiveSlamRadius = 34f;
+    private const int MaxArrows = 5;
+    private const float BowStaminaCost = 8f;
+    private const float BowRecoverySeconds = 0.28f;
     private static readonly Rect2 DefaultMovementBounds = new(new Vector2(-380, 124), new Vector2(760, 92));
 
     private enum AirAttackPending
@@ -66,9 +63,8 @@ public partial class PlayerController : CharacterBody2D
         Walk,
         LightAttack,
         HeavyAttack,
-        Dodge,
-        Run,
         Dash,
+        Run,
         Jump,
         HitStun,
         Dead
@@ -98,24 +94,18 @@ public partial class PlayerController : CharacterBody2D
     private float _comboWindow;
     private int _comboStep;
     private bool _isHeavyAttack;
-    private bool _isCounterAttack;
     private bool _isRunAttack;
-    private bool _isDashAttack;
     private bool _isComboHeavyFinisher;
+    private bool _isArtifactAttack;
     private float _stamina = MaxStamina;
     private float _staminaRegenDelay;
-    private float _dodgeTimer;
-    private float _dodgeInvulnTimer;
-    private float _counterAttackWindow;
     private float _staminaBlockedFlash;
     private float _gameTime;
     private float _lastLeftTapTime = -999f;
     private float _lastRightTapTime = -999f;
-    private float _runTimer;
     private float _runDirectionX = 1f;
     private float _dashTimer;
     private float _dashInvulnTimer;
-    private float _dashAttackWindow;
     private float _jumpTimer;
     private float _jumpStartDepthY;
     private float _jumpStartX;
@@ -126,6 +116,15 @@ public partial class PlayerController : CharacterBody2D
     private bool _airHeavyUsed;
     private float _airApexAttackTimer;
     private AirAttackPending _airAttackPending = AirAttackPending.None;
+    private readonly WeaponProfile _weaponProfile = WeaponProfile.Default;
+    private int _arrowCount;
+    private bool _isAimingBow;
+    private bool _bowHeld;
+    private float _aimDepthOffset;
+    private float _bowRecoveryTimer;
+    private Polygon2D? _aimIndicator;
+    private int _artifactCharges;
+    private bool _artifactEquipped;
 
     public Rect2 MovementBounds
     {
@@ -143,15 +142,36 @@ public partial class PlayerController : CharacterBody2D
 
     public float MaxStaminaValue => MaxStamina;
 
-    public bool IsDodging => _state == PlayerState.Dodge;
+    public bool IsDashing => _state == PlayerState.Dash;
 
     public bool IsRunning => _state == PlayerState.Run;
-
-    public bool IsDashing => _state == PlayerState.Dash;
 
     public bool IsJumping => _state == PlayerState.Jump;
 
     public bool StaminaExhaustedFlash => _staminaBlockedFlash > 0f;
+
+    public int ArrowCount => _arrowCount;
+
+    public int MaxArrowCount => MaxArrows;
+
+    public string WeaponDisplayName => _weaponProfile.DisplayName;
+
+    public int ArtifactCharges => _artifactCharges;
+
+    public bool ArtifactEquipped => _artifactEquipped;
+
+    public bool IsAimingBow => _isAimingBow;
+
+    public void AddArrows(int amount)
+    {
+        _arrowCount = Mathf.Min(MaxArrows, _arrowCount + Mathf.Max(0, amount));
+    }
+
+    public void GrantArtifact(int uses)
+    {
+        _artifactCharges = Mathf.Max(0, uses);
+        _artifactEquipped = _artifactCharges > 0;
+    }
 
     public override void _Ready()
     {
@@ -173,11 +193,12 @@ public partial class PlayerController : CharacterBody2D
         BuildCollision();
         BuildAttackHitbox();
         BuildHurtbox();
+        BuildAimIndicator();
     }
 
     public void TakeHit(Vector2 impulse, int damage)
     {
-        if (_state == PlayerState.Dead || _invulnerabilityTimer > 0f || _dodgeInvulnTimer > 0f || _dashInvulnTimer > 0f)
+        if (_state == PlayerState.Dead || _invulnerabilityTimer > 0f || _dashInvulnTimer > 0f)
         {
             return;
         }
@@ -208,12 +229,10 @@ public partial class PlayerController : CharacterBody2D
         _hitFlash = Mathf.Max(0f, _hitFlash - dt);
         _invulnerabilityTimer = Mathf.Max(0f, _invulnerabilityTimer - dt);
         _comboWindow = Mathf.Max(0f, _comboWindow - dt);
-        _counterAttackWindow = Mathf.Max(0f, _counterAttackWindow - dt);
-        _dashAttackWindow = Mathf.Max(0f, _dashAttackWindow - dt);
-        _dodgeInvulnTimer = Mathf.Max(0f, _dodgeInvulnTimer - dt);
         _dashInvulnTimer = Mathf.Max(0f, _dashInvulnTimer - dt);
         _staminaRegenDelay = Mathf.Max(0f, _staminaRegenDelay - dt);
         _staminaBlockedFlash = Mathf.Max(0f, _staminaBlockedFlash - dt);
+        _bowRecoveryTimer = Mathf.Max(0f, _bowRecoveryTimer - dt);
         UpdateStaminaRegen(dt);
 
         if (_state == PlayerState.Dead)
@@ -226,11 +245,7 @@ public partial class PlayerController : CharacterBody2D
 
         var input = Input.GetVector("move_left", "move_right", "move_up", "move_down");
 
-        if (_state == PlayerState.Dodge)
-        {
-            UpdateDodge(dt);
-        }
-        else if (_state == PlayerState.Dash)
+        if (_state == PlayerState.Dash)
         {
             UpdateDash(dt);
         }
@@ -264,9 +279,12 @@ public partial class PlayerController : CharacterBody2D
         }
         else
         {
-            Velocity = input.Normalized() * Speed;
+            var moveSpeed = _isAimingBow ? Speed * 0.35f : Speed;
+            Velocity = input.Normalized() * moveSpeed;
             _state = input.LengthSquared() > 0.01f ? PlayerState.Walk : PlayerState.Idle;
         }
+
+        UpdateBowAim(dt, input);
 
         UpdateFacing(input);
 
@@ -297,14 +315,14 @@ public partial class PlayerController : CharacterBody2D
             TryStartJump();
         }
 
-        if (Input.IsActionJustPressed("dodge"))
-        {
-            TryStartDodge();
-        }
-
         if (Input.IsActionJustPressed("dash"))
         {
             TryStartDash();
+        }
+
+        if (Input.IsActionJustPressed("artifact_toggle"))
+        {
+            ToggleArtifact();
         }
 
         if (Input.IsActionJustPressed("attack_light") && _attackCooldown <= 0f)
@@ -319,7 +337,14 @@ public partial class PlayerController : CharacterBody2D
             }
             else if (CanStartLightAttack())
             {
-                StartLightAttack(ResolveComboStep());
+                if (_artifactEquipped && _artifactCharges > 0)
+                {
+                    StartArtifactAttack();
+                }
+                else
+                {
+                    StartLightAttack(ResolveComboStep());
+                }
             }
         }
 
@@ -359,9 +384,7 @@ public partial class PlayerController : CharacterBody2D
         _stamina = MaxStamina;
         _state = PlayerState.Idle;
         _hitStunTimer = 0f;
-        _runTimer = 0f;
         _dashTimer = 0f;
-        _dashAttackWindow = 0f;
         _jumpTimer = 0f;
         _jumpLandingRecovery = 0f;
         _nextComboHit = 1;
@@ -377,13 +400,18 @@ public partial class PlayerController : CharacterBody2D
 
     private bool CanStartLightAttack()
     {
-        return _jumpLandingRecovery <= 0f
-            && (_state is PlayerState.Idle or PlayerState.Walk || _dashAttackWindow > 0f || _comboWindow > 0f);
+        return _bowRecoveryTimer <= 0f
+            && !_isAimingBow
+            && _jumpLandingRecovery <= 0f
+            && (_state is PlayerState.Idle or PlayerState.Walk || _comboWindow > 0f);
     }
 
     private bool CanStartHeavyAttack()
     {
-        return _jumpLandingRecovery <= 0f && _state is PlayerState.Idle or PlayerState.Walk;
+        return _bowRecoveryTimer <= 0f
+            && !_isAimingBow
+            && _jumpLandingRecovery <= 0f
+            && _state is PlayerState.Idle or PlayerState.Walk;
     }
 
     private bool CanComboHeavyFinisher()
@@ -393,11 +421,6 @@ public partial class PlayerController : CharacterBody2D
 
     private int ResolveComboStep()
     {
-        if (_dashAttackWindow > 0f || _counterAttackWindow > 0f)
-        {
-            return 1;
-        }
-
         if (_comboWindow > 0f)
         {
             return _nextComboHit;
@@ -411,32 +434,41 @@ public partial class PlayerController : CharacterBody2D
         SnapFacingForAttack(Input.GetVector("move_left", "move_right", "move_up", "move_down"));
         _isHeavyAttack = false;
         _isRunAttack = false;
-        _isCounterAttack = _counterAttackWindow > 0f;
-        _isDashAttack = _dashAttackWindow > 0f;
-        if (_isCounterAttack)
-        {
-            _counterAttackWindow = 0f;
-        }
-
-        if (_isDashAttack)
-        {
-            _dashAttackWindow = 0f;
-        }
+        _isArtifactAttack = false;
 
         if (_comboWindow > 0f)
         {
             _comboWindow = 0f;
         }
 
-        _comboStep = _isCounterAttack || _isDashAttack ? 2 : comboStep;
+        _comboStep = comboStep;
         _state = PlayerState.LightAttack;
-        _attackCooldown = _isCounterAttack || _isDashAttack ? 0.24f : AttackCooldownSeconds;
-        var startup = _isCounterAttack || _isDashAttack ? 0.03f : _comboStep == 3 ? 0.04f : AttackStartupSeconds;
+        _attackCooldown = AttackCooldownSeconds;
+        var startup = _comboStep == 3 ? 0.04f : AttackStartupSeconds;
         _attackTimer = startup + AttackActiveSeconds + (_comboStep == 3 ? 0.12f : AttackRecoverySeconds);
         _slashTimer = AttackActiveSeconds + (_comboStep == 3 ? 0.12f : AttackRecoverySeconds);
         _hitEnemiesThisAttack.Clear();
         _visualAnimator?.PulseAttack();
-        PlaySwingSfx(false, _comboStep >= 2 || _isCounterAttack || _isDashAttack);
+        PlaySwingSfx(false, _comboStep >= 2);
+        SetAttackHitboxEnabled(false);
+        SyncAttackHitboxPosition();
+    }
+
+    private void StartArtifactAttack()
+    {
+        SnapFacingForAttack(Input.GetVector("move_left", "move_right", "move_up", "move_down"));
+        _isHeavyAttack = false;
+        _isRunAttack = false;
+        _isArtifactAttack = true;
+        _artifactEquipped = false;
+        _comboStep = 2;
+        _state = PlayerState.LightAttack;
+        _attackCooldown = 0.26f;
+        _attackTimer = 0.03f + AttackActiveSeconds + 0.1f;
+        _slashTimer = AttackActiveSeconds + 0.1f;
+        _hitEnemiesThisAttack.Clear();
+        _visualAnimator?.PulseAttack();
+        PlaySwingSfx(false, true);
         SetAttackHitboxEnabled(false);
         SyncAttackHitboxPosition();
     }
@@ -445,10 +477,8 @@ public partial class PlayerController : CharacterBody2D
     {
         SnapFacingForAttack(Input.GetVector("move_left", "move_right", "move_up", "move_down"));
         _isHeavyAttack = false;
-        _isCounterAttack = false;
-        _isDashAttack = false;
         _isRunAttack = true;
-        _runTimer = 0f;
+        _runDirectionX = _facingX;
         _comboStep = 2;
         _state = PlayerState.LightAttack;
         _attackCooldown = 0.28f;
@@ -476,7 +506,6 @@ public partial class PlayerController : CharacterBody2D
         _isHeavyAttack = true;
         _isComboHeavyFinisher = true;
         _isRunAttack = false;
-        _isDashAttack = false;
         _comboStep = 3;
         _state = PlayerState.HeavyAttack;
         _attackCooldown = 0.48f;
@@ -502,7 +531,6 @@ public partial class PlayerController : CharacterBody2D
         _isHeavyAttack = true;
         _isComboHeavyFinisher = false;
         _isRunAttack = false;
-        _isDashAttack = false;
         _comboStep = 0;
         _state = PlayerState.HeavyAttack;
         _attackCooldown = HeavyAttackCooldownSeconds;
@@ -545,10 +573,10 @@ public partial class PlayerController : CharacterBody2D
         var activeEndsAt = recovery + active;
         var isActive = _attackTimer > activeStartsAt && _attackTimer <= activeEndsAt;
 
-        if (!_isHeavyAttack && _state == PlayerState.LightAttack && _attackTimer > 0f && _attackTimer <= recovery && Input.IsActionJustPressed("dodge"))
+        if (!_isHeavyAttack && _state == PlayerState.LightAttack && _attackTimer > 0f && _attackTimer <= recovery && Input.IsActionJustPressed("dash"))
         {
             SetAttackHitboxEnabled(false);
-            TryStartDodge();
+            TryStartDash();
             return;
         }
 
@@ -561,12 +589,12 @@ public partial class PlayerController : CharacterBody2D
         if (_attackTimer <= 0f)
         {
             SetAttackHitboxEnabled(false);
+            var wasRunAttack = _isRunAttack;
             _state = PlayerState.Idle;
-            _isCounterAttack = false;
             _isRunAttack = false;
-            _isDashAttack = false;
             _isComboHeavyFinisher = false;
-            if (_isCounterAttack || _isDashAttack || _isRunAttack)
+            _isArtifactAttack = false;
+            if (wasRunAttack)
             {
                 _comboStep = 0;
                 _comboWindow = 0f;
@@ -609,17 +637,20 @@ public partial class PlayerController : CharacterBody2D
             _hitEnemiesThisAttack.Add(enemy.GetInstanceId());
             var baseImpulseX = _isHeavyAttack ? 128f : _comboStep == 3 ? 112f : 96f;
             var impulse = new Vector2(_facingX * baseImpulseX, _isHeavyAttack ? -16f : _comboStep == 3 ? -14f : -10f);
-            var isComboFinisher = _comboStep >= 2 || _isCounterAttack || _isRunAttack || _isDashAttack || _isComboHeavyFinisher;
+            var isComboFinisher = _comboStep >= 2 || _isRunAttack || _isComboHeavyFinisher;
             var attackKind = _isHeavyAttack
                 ? PlayerAttackKind.Heavy
                 : isComboFinisher ? PlayerAttackKind.ComboFinisher : PlayerAttackKind.Light;
             var impulseScale = _isComboHeavyFinisher ? 1.35f
                 : _comboStep == 3 ? 1.28f
                 : _isRunAttack ? 1.3f
-                : _isDashAttack ? 1.22f
-                : _isCounterAttack ? 1.15f
                 : 1f;
             enemy.TakeHit(impulse * impulseScale, attackKind);
+            if (_isArtifactAttack)
+            {
+                enemy.ApplyBleed(BleedLevel.Heavy);
+            }
+
             if (_comboStep == 2 || _comboStep == 3)
             {
                 enemy.TakeHit(impulse * 0.5f, PlayerAttackKind.ComboFinisher);
@@ -632,6 +663,101 @@ public partial class PlayerController : CharacterBody2D
 
             CombatFeel.ApplyPlayerAttackImpact(GetParent<PrototypeArena>(), attackKind);
         }
+
+        if (_isArtifactAttack && _hitEnemiesThisAttack.Count > 0)
+        {
+            _artifactCharges = Mathf.Max(0, _artifactCharges - 1);
+            if (_artifactCharges <= 0)
+            {
+                CombatAudio.Get(this)?.PlayArtifactBreak();
+            }
+        }
+    }
+
+    private void UpdateBowAim(float dt, Vector2 input)
+    {
+        if (Input.IsActionJustPressed("aim_bow") && CanUseBow())
+        {
+            _bowHeld = true;
+        }
+
+        if (_bowHeld && Input.IsActionPressed("aim_bow") && CanUseBow())
+        {
+            _isAimingBow = true;
+            if (input.Y < -0.1f)
+            {
+                _aimDepthOffset = Mathf.Clamp(_aimDepthOffset - dt * 1.4f, -0.65f, 0.65f);
+            }
+            else if (input.Y > 0.1f)
+            {
+                _aimDepthOffset = Mathf.Clamp(_aimDepthOffset + dt * 1.4f, -0.65f, 0.65f);
+            }
+
+            UpdateAimIndicator();
+        }
+        else
+        {
+            _isAimingBow = false;
+            if (_aimIndicator is not null)
+            {
+                _aimIndicator.Visible = false;
+            }
+        }
+
+        if (_bowHeld && Input.IsActionJustReleased("aim_bow"))
+        {
+            _bowHeld = false;
+            _isAimingBow = false;
+            if (_aimIndicator is not null)
+            {
+                _aimIndicator.Visible = false;
+            }
+
+            TryShootArrow();
+        }
+    }
+
+    private bool CanUseBow()
+    {
+        return _bowRecoveryTimer <= 0f
+            && _jumpLandingRecovery <= 0f
+            && _state is PlayerState.Idle or PlayerState.Walk;
+    }
+
+    private void TryShootArrow()
+    {
+        if (_arrowCount <= 0 || _stamina < BowStaminaCost)
+        {
+            _staminaBlockedFlash = 0.25f;
+            return;
+        }
+
+        SpendStamina(BowStaminaCost);
+        _arrowCount--;
+        _bowRecoveryTimer = BowRecoverySeconds;
+        var direction = new Vector2(_facingX, _aimDepthOffset);
+        if (direction.LengthSquared() < 0.01f)
+        {
+            direction = new Vector2(_facingX, 0f);
+        }
+
+        direction = direction.Normalized();
+        var projectile = new ArrowProjectile { Name = "ArrowProjectile" };
+        GetParent()?.AddChild(projectile);
+        projectile.Launch(GlobalPosition + new Vector2(_facingX * 10f, -10f), direction);
+        CombatAudio.Get(this)?.PlayBowRelease();
+        _aimDepthOffset = 0f;
+    }
+
+    private void ToggleArtifact()
+    {
+        if (_artifactCharges <= 0)
+        {
+            _artifactEquipped = false;
+            return;
+        }
+
+        _artifactEquipped = !_artifactEquipped;
     }
 
     private void SyncAttackHitboxPosition()
@@ -644,6 +770,40 @@ public partial class PlayerController : CharacterBody2D
         _attackHitbox.Position = new Vector2(_facingX * (_isHeavyAttack ? 40f : _comboStep == 3 ? 38f : 34f), -8f);
     }
 
+    private void BuildAimIndicator()
+    {
+        if (_visualRig is null)
+        {
+            return;
+        }
+
+        _aimIndicator = new Polygon2D
+        {
+            Name = "AimIndicator",
+            Visible = false,
+            Color = new Color("#e0b75d", 0.75f),
+            Polygon = new[]
+            {
+                new Vector2(8, 0),
+                new Vector2(48, -3),
+                new Vector2(48, 3)
+            }
+        };
+        _visualRig.AddChild(_aimIndicator);
+    }
+
+    private void UpdateAimIndicator()
+    {
+        if (_aimIndicator is null)
+        {
+            return;
+        }
+
+        _aimIndicator.Visible = true;
+        _aimIndicator.Scale = new Vector2(_facingX, 1f);
+        _aimIndicator.Position = new Vector2(0f, _aimDepthOffset * -18f);
+    }
+
     private void PlaySwingSfx(bool heavy, bool comboFinisher)
     {
         var kind = heavy
@@ -652,57 +812,55 @@ public partial class PlayerController : CharacterBody2D
         CombatAudio.Get(this)?.PlayPlayerSwing(kind);
     }
 
-    private bool TryStartDodge()
+    private bool TryStartDash()
     {
-        if (_state is PlayerState.Dead or PlayerState.HitStun or PlayerState.HeavyAttack or PlayerState.Dodge or PlayerState.Dash or PlayerState.Jump)
+        if (_state is PlayerState.Dead or PlayerState.HitStun or PlayerState.HeavyAttack or PlayerState.Dash or PlayerState.Jump)
         {
             return false;
         }
 
-        if (_stamina < DodgeCost)
+        if (_stamina < DashCost)
         {
             _staminaBlockedFlash = 0.25f;
             return false;
         }
 
-        SpendStamina(DodgeCost);
-        _state = PlayerState.Dodge;
-        _dodgeTimer = DodgeDurationSeconds;
-        _dodgeInvulnTimer = DodgeIFramesSeconds;
+        SpendStamina(DashCost);
+        _state = PlayerState.Dash;
+        _dashTimer = DashDurationSeconds;
+        _dashInvulnTimer = DashIFramesSeconds;
         _attackTimer = 0f;
         SetAttackHitboxEnabled(false);
-        _isCounterAttack = false;
 
         var input = Input.GetVector("move_left", "move_right", "move_up", "move_down");
-        var dodgeDirection = input.LengthSquared() > 0.01f ? input.Normalized() : new Vector2(_facingX, 0f);
-        if (Mathf.Abs(dodgeDirection.X) > 0.1f)
+        var dashDirection = input.LengthSquared() > 0.01f ? input.Normalized() : new Vector2(_facingX, 0f);
+        if (Mathf.Abs(dashDirection.X) > 0.1f)
         {
-            SetFacingX(dodgeDirection.X);
+            SetFacingX(dashDirection.X);
         }
 
-        Velocity = dodgeDirection * DodgeSpeed;
+        Velocity = dashDirection * DashSpeed;
         CombatAudio.Get(this)?.PlayDodge();
         return true;
     }
 
-    private void UpdateDodge(float dt)
+    private void UpdateDash(float dt)
     {
-        _dodgeTimer = Mathf.Max(0f, _dodgeTimer - dt);
+        _dashTimer = Mathf.Max(0f, _dashTimer - dt);
         Velocity = Velocity.Lerp(Vector2.Zero, 4f * dt);
 
-        if (_dodgeTimer > 0f)
+        if (_dashTimer > 0f)
         {
             return;
         }
 
         Velocity = Vector2.Zero;
         _state = PlayerState.Idle;
-        _counterAttackWindow = CounterAttackWindowSeconds;
     }
 
     private bool TryStartJump()
     {
-        if (_state is PlayerState.Dead or PlayerState.HitStun or PlayerState.HeavyAttack or PlayerState.Dodge or PlayerState.Dash or PlayerState.Jump
+        if (_state is PlayerState.Dead or PlayerState.HitStun or PlayerState.HeavyAttack or PlayerState.Dash or PlayerState.Jump
             or PlayerState.LightAttack)
         {
             return false;
@@ -726,7 +884,6 @@ public partial class PlayerController : CharacterBody2D
         _jumpTimer = JumpDurationSeconds;
         _jumpStartDepthY = GlobalPosition.Y;
         _jumpStartX = GlobalPosition.X;
-        _runTimer = 0f;
         _airLightUsed = false;
         _airHeavyUsed = false;
         _airApexAttackTimer = 0f;
@@ -978,15 +1135,13 @@ public partial class PlayerController : CharacterBody2D
             return false;
         }
 
-        if (_stamina < RunCost)
+        if (_stamina < RunMinStamina)
         {
             _staminaBlockedFlash = 0.25f;
             return false;
         }
 
-        SpendStamina(RunCost);
         _runDirectionX = directionX;
-        _runTimer = RunDurationSeconds;
         _state = PlayerState.Run;
         SetFacingX(directionX);
         CombatAudio.Get(this)?.PlayRunStart();
@@ -995,69 +1150,23 @@ public partial class PlayerController : CharacterBody2D
 
     private void UpdateRun(float dt, Vector2 input)
     {
-        _runTimer = Mathf.Max(0f, _runTimer - dt);
-
-        if (input.X * _runDirectionX < -0.3f || _runTimer <= 0f)
+        if (input.X * _runDirectionX < -0.3f)
         {
-            _runTimer = 0f;
             Velocity = input.LengthSquared() > 0.01f ? input.Normalized() * Speed : Vector2.Zero;
             _state = input.LengthSquared() > 0.01f ? PlayerState.Walk : PlayerState.Idle;
             return;
         }
 
-        Velocity = new Vector2(_runDirectionX * RunSpeed, input.Y * Speed);
-    }
-
-    private bool TryStartDash()
-    {
-        if (_state is PlayerState.Dead or PlayerState.HitStun or PlayerState.HeavyAttack or PlayerState.Dodge or PlayerState.Dash or PlayerState.Jump)
+        if (_stamina <= 0f)
         {
-            return false;
-        }
-
-        if (_stamina < DashCost)
-        {
+            Velocity = Vector2.Zero;
+            _state = PlayerState.Idle;
             _staminaBlockedFlash = 0.25f;
-            return false;
-        }
-
-        SpendStamina(DashCost);
-        _state = PlayerState.Dash;
-        _dashTimer = DashDurationSeconds;
-        _dashInvulnTimer = DashIFramesSeconds;
-        _runTimer = 0f;
-        _attackTimer = 0f;
-        _dashAttackWindow = 0f;
-        SetAttackHitboxEnabled(false);
-        _isCounterAttack = false;
-        _isRunAttack = false;
-        _isDashAttack = false;
-
-        var input = Input.GetVector("move_left", "move_right", "move_up", "move_down");
-        var dashDirection = input.LengthSquared() > 0.01f ? input.Normalized() : new Vector2(_facingX, 0f);
-        if (Mathf.Abs(dashDirection.X) > 0.1f)
-        {
-            SetFacingX(dashDirection.X);
-        }
-
-        Velocity = dashDirection * DashSpeed;
-        CombatAudio.Get(this)?.PlayDashImpulse();
-        return true;
-    }
-
-    private void UpdateDash(float dt)
-    {
-        _dashTimer = Mathf.Max(0f, _dashTimer - dt);
-        Velocity = Velocity.Lerp(Vector2.Zero, 5f * dt);
-
-        if (_dashTimer > 0f)
-        {
             return;
         }
 
-        Velocity = Vector2.Zero;
-        _state = PlayerState.Idle;
-        _dashAttackWindow = DashAttackWindowSeconds;
+        SpendStamina(RunDrainPerSecond * dt);
+        Velocity = new Vector2(_runDirectionX * RunSpeed, input.Y * Speed);
     }
 
     private void SpendStamina(float amount)
@@ -1129,7 +1238,7 @@ public partial class PlayerController : CharacterBody2D
             return;
         }
 
-        var inCombat = _state is PlayerState.LightAttack or PlayerState.HeavyAttack or PlayerState.HitStun or PlayerState.Dodge or PlayerState.Dash or PlayerState.Run or PlayerState.Jump;
+        var inCombat = _state is PlayerState.LightAttack or PlayerState.HeavyAttack or PlayerState.HitStun or PlayerState.Dash or PlayerState.Run or PlayerState.Jump;
         var rate = inCombat ? StaminaRegenInCombat : StaminaRegenOutOfCombat;
         _stamina = Mathf.Min(MaxStamina, _stamina + rate * dt);
     }
@@ -1342,13 +1451,11 @@ public partial class PlayerController : CharacterBody2D
         }
 
         _pixelSprite?.SetFacing(_facingX);
-        var dodgeFlash = _state == PlayerState.Dodge && _dodgeInvulnTimer > 0f;
         var dashFlash = _state == PlayerState.Dash && _dashInvulnTimer > 0f;
         var jumpFlash = _state == PlayerState.Jump;
         var slamReady = _state == PlayerState.Jump && _airAttackPending == AirAttackPending.Slam;
         _pixelSprite?.SpeedScale = _state == PlayerState.Run ? 1.55f : 1f;
-        _pixelSprite?.Modulate = dodgeFlash ? new Color(0.85f, 0.92f, 1f, 0.82f)
-            : dashFlash ? new Color(1f, 0.94f, 0.82f, 0.88f)
+        _pixelSprite?.Modulate = dashFlash ? new Color(0.85f, 0.92f, 1f, 0.82f)
             : slamReady ? new Color(1f, 0.88f, 0.78f)
             : jumpFlash ? new Color(0.96f, 0.98f, 1f)
             : Colors.White;
@@ -1356,7 +1463,7 @@ public partial class PlayerController : CharacterBody2D
             (_state == PlayerState.Walk || _state == PlayerState.Run) && Velocity.LengthSquared() > 1f,
             _state is PlayerState.LightAttack or PlayerState.HeavyAttack,
             _state == PlayerState.HeavyAttack,
-            _hitFlash > 0f || dodgeFlash || dashFlash || jumpFlash,
+            _hitFlash > 0f || dashFlash || jumpFlash,
             _state == PlayerState.Dead);
     }
 
@@ -1381,8 +1488,9 @@ public partial class PlayerController : CharacterBody2D
         AddKeyAction("attack_heavy", Key.K);
         AddKeyAction("execute", Key.E);
         SetKeyAction("jump", Key.Space);
-        SetKeyAction("dodge", Key.Ctrl);
         SetKeyAction("dash", Key.Shift);
+        AddKeyAction("aim_bow", Key.R);
+        AddKeyAction("artifact_toggle", Key.U);
     }
 
     private static void SetKeyAction(string action, Key key)

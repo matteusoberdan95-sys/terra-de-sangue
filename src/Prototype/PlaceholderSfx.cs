@@ -52,6 +52,16 @@ public static class PlaceholderSfx
 
     public static AudioStreamWav CreateAirSlamLand() => CreateBurst(0.14f, 44f, 0.72f, 0.38f);
 
+    public static AudioStreamWav CreateBowRelease() => CreateSweep(0.1f, 180f, 90f, 0.34f);
+
+    public static AudioStreamWav CreateArrowHit() => CreateBurst(0.08f, 112f, 0.46f, 0.2f);
+
+    public static AudioStreamWav CreateArrowPickup() => CreateSweep(0.14f, 280f, 420f, 0.32f);
+
+    public static AudioStreamWav CreateArtifactPickup() => CreateSweep(0.16f, 220f, 360f, 0.36f);
+
+    public static AudioStreamWav CreateArtifactBreak() => CreateBurst(0.12f, 68f, 0.58f, 0.42f);
+
     private static AudioStreamWav CreateBurst(float duration, float frequency, float volume, float noiseAmount)
     {
         var sampleCount = Mathf.Max(1, (int)(MixRate * duration));

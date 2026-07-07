@@ -13,6 +13,7 @@ public partial class CombatAudio : Node
     private AudioStreamPlayer? _telegraphPlayer;
     private AudioStreamPlayer? _enemySwingPlayer;
     private AudioStreamPlayer? _uiPlayer;
+    private AudioStreamPlayer? _bowPlayer;
 
     public override void _Ready()
     {
@@ -25,6 +26,7 @@ public partial class CombatAudio : Node
         _telegraphPlayer = CreatePlayer("TelegraphSfx", -8f);
         _enemySwingPlayer = CreatePlayer("EnemySwingSfx", -5f);
         _uiPlayer = CreatePlayer("UiSfx", -6f);
+        _bowPlayer = CreatePlayer("BowSfx", -5f);
 
         AddChild(_swingPlayer);
         AddChild(_hitPlayer);
@@ -34,6 +36,7 @@ public partial class CombatAudio : Node
         AddChild(_telegraphPlayer);
         AddChild(_enemySwingPlayer);
         AddChild(_uiPlayer);
+        AddChild(_bowPlayer);
     }
 
     public static CombatAudio? Get(Node from)
@@ -142,6 +145,31 @@ public partial class CombatAudio : Node
             ? Load($"{SfxRoot}/combat/air_hammer_land.wav", PlaceholderSfx.CreateAirSlamLand)
             : Load($"{SfxRoot}/combat/air_slam_land.wav", PlaceholderSfx.CreateAirSlamLand);
         Play(_hitPlayer, stream, heavy ? 0.96f : 1.04f);
+    }
+
+    public void PlayBowRelease()
+    {
+        Play(_bowPlayer, Load($"{SfxRoot}/combat/bow_release.wav", PlaceholderSfx.CreateBowRelease), 1f);
+    }
+
+    public void PlayArrowHit()
+    {
+        Play(_hitPlayer, Load($"{SfxRoot}/combat/arrow_hit.wav", PlaceholderSfx.CreateArrowHit), 1.02f);
+    }
+
+    public void PlayArrowPickup()
+    {
+        Play(_uiPlayer, Load($"{SfxRoot}/ui/arrow_pickup.wav", PlaceholderSfx.CreateArrowPickup), 1f);
+    }
+
+    public void PlayArtifactPickup()
+    {
+        Play(_uiPlayer, Load($"{SfxRoot}/ui/artifact_pickup.wav", PlaceholderSfx.CreateArtifactPickup), 1f);
+    }
+
+    public void PlayArtifactBreak()
+    {
+        Play(_hitPlayer, Load($"{SfxRoot}/combat/artifact_break.wav", PlaceholderSfx.CreateArtifactBreak), 0.94f);
     }
 
     private static AudioStream Load(string path, System.Func<AudioStream> fallback)

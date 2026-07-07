@@ -74,6 +74,11 @@ public partial class ImpactFeedback : Node
         CombatAudio.Get(this)?.PlayPlayerHurt(damage);
     }
 
+    public void OnBleedTick(Vector2 worldPosition)
+    {
+        SpawnDecal(worldPosition + new Vector2((float)GD.RandRange(-3, 3), 6));
+    }
+
     public void SpawnDismemberment(Vector2 worldPosition, Vector2 impulse, LimbKind kind)
     {
         if (_effectsRoot is null || !GoreReadability.CanSpawnLimb(this))

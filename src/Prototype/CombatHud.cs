@@ -7,6 +7,9 @@ public partial class CombatHud : CanvasLayer
     private Label? _staminaLabel;
     private Label? _bossLabel;
     private Label? _memoryLabel;
+    private Label? _quiverLabel;
+    private Label? _weaponLabel;
+    private Label? _artifactLabel;
     private ProgressBar? _healthBar;
     private ProgressBar? _staminaBar;
     private ProgressBar? _bossBar;
@@ -70,6 +73,38 @@ public partial class CombatHud : CanvasLayer
         {
             _memoryLabel.Text = $"Memorias: {MemoryRegistry.All.Count}";
         }
+
+        if (player is not null && _quiverLabel is not null)
+        {
+            var filled = new string('●', player.ArrowCount);
+            var empty = new string('○', player.MaxArrowCount - player.ArrowCount);
+            _quiverLabel.Text = $"Flechas {filled}{empty}";
+            _quiverLabel.Modulate = player.IsAimingBow
+                ? new Color("#f0d7aa")
+                : Colors.White;
+        }
+
+        if (player is not null && _weaponLabel is not null)
+        {
+            _weaponLabel.Text = player.WeaponDisplayName;
+        }
+
+        if (player is not null && _artifactLabel is not null)
+        {
+            if (player.ArtifactCharges <= 0)
+            {
+                _artifactLabel.Visible = false;
+            }
+            else
+            {
+                _artifactLabel.Visible = true;
+                var status = player.ArtifactEquipped ? "equipada" : "guardada";
+                _artifactLabel.Text = $"Faca ({player.ArtifactCharges}) — {status}";
+                _artifactLabel.Modulate = player.ArtifactEquipped
+                    ? new Color("#e8c4a0")
+                    : new Color("#9a8a72");
+            }
+        }
     }
 
     private void BuildUi()
@@ -118,5 +153,17 @@ public partial class CombatHud : CanvasLayer
         _memoryLabel = new Label { Position = new Vector2(12, 116) };
         _memoryLabel.AddThemeColorOverride("font_color", new Color("#bb9a5d"));
         AddChild(_memoryLabel);
+
+        _quiverLabel = new Label { Position = new Vector2(12, 136) };
+        _quiverLabel.AddThemeColorOverride("font_color", new Color("#c9a84a"));
+        AddChild(_quiverLabel);
+
+        _weaponLabel = new Label { Position = new Vector2(12, 154) };
+        _weaponLabel.AddThemeColorOverride("font_color", new Color("#8a7a5a"));
+        AddChild(_weaponLabel);
+
+        _artifactLabel = new Label { Position = new Vector2(12, 172), Visible = false };
+        _artifactLabel.AddThemeColorOverride("font_color", new Color("#b87070"));
+        AddChild(_artifactLabel);
     }
 }

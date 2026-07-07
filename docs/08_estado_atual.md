@@ -4,25 +4,27 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 19 validada. Proximo: Sprint 20 arsenal e arquearia.
+Sprint 20 validada. Proximo: Sprint 21 (tacape tier 1 + hemorragia).
 
 ## Direcao
 
-Kit de movimento e golpes aereos concluidos na Fase 1. Proximo: aljava, flechas e bleed (`docs/13_sistema_de_arsenal_e_arquearia.md`).
+Arsenal e arquearia na Fase 1 concluidos. Movimento simplificado: um dash defensivo no Shift e corrida com dreno de stamina.
 
 ## Fechamento recente
 
-- Sprint 19: golpes aereos (slam, martelo, investida). Validada 2026-07-07.
-- Sprint 18: pulo frontal, J-J-J, J-J-K. Validada 2026-07-07.
+- Sprint 20: aljava, flechas, bleed, faca de ferro, HUD arsenal. Validada 2026-07-07.
+- Refino movimento: dash unico no Shift, corrida drena stamina, removidos Ctrl/esquiva e impulso ofensivo.
 
 ## Controles atuais
 
 - `WASD`, `J`, `K`, `E`
 - `Space` / `W`+`A`/`D`+`Space`: pulo / pulo frontal
 - `J`/`K` no ar: corte, slam, martelo
-- `Shift`: impulso | `Ctrl`: esquiva
+- `Shift`: dash defensivo (22 stamina, i-frames)
+- `A`/`D` 2x: corrida (drena stamina)
+- `R`: arco | `U`: artefato
 - `J J J` / `J J K`: combos no chao
 
 ## Proximo passo
 
-Implementar Sprint 20 (aljava, flechas, sangramento, artefato).
+Sprint 21 — Tacape Tier 1 e hemorragia.

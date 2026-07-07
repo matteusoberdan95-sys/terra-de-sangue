@@ -48,6 +48,7 @@ public abstract partial class EnemyBase : CharacterBody2D
     private Vector2 _facing = Vector2.Left;
     private bool _attackWindUpPulsed;
     private bool _telegraphSfxPlayed;
+    private readonly BleedStatus _bleed = new();
 
     protected Vector2 FacingDirection => _facing;
     private bool _hitPlayerThisAttack;
@@ -101,6 +102,7 @@ public abstract partial class EnemyBase : CharacterBody2D
         var dt = (float)delta;
         _attackCooldown = Mathf.Max(0f, _attackCooldown - dt);
         UpdateState(dt);
+        ProcessBleed(dt);
         MoveAndSlide();
         ClampToMovementBounds();
         ZIndex = Mathf.RoundToInt(GlobalPosition.Y);
@@ -141,6 +143,55 @@ public abstract partial class EnemyBase : CharacterBody2D
             ZIndex += 1;
             GetTree().CreateTimer(0.38).Timeout += QueueFree;
         }
+    }
+
+    public void ApplyBleed(BleedLevel level)
+    {
+        if (_state == EnemyState.Dead)
+        {
+            return;
+        }
+
+        _bleed.Apply(level);
+        UpdateWoundVisuals();
+    }
+
+    private void ProcessBleed(float dt)
+    {
+        if (_state == EnemyState.Dead)
+        {
+            return;
+        }
+
+        var damage = _bleed.Tick(dt);
+        if (damage <= 0)
+        {
+            return;
+        }
+
+        for (var i = 0; i < damage; i++)
+        {
+            if (_health <= 0)
+            {
+                break;
+            }
+
+            _health--;
+            _hitFlash = 0.06f;
+            ImpactFeedback.Get(this)?.OnBleedTick(GlobalPosition + new Vector2(0, 4));
+
+            if (_health <= 0)
+            {
+                _state = EnemyState.Dead;
+                ReleaseAttackSlot();
+                ApplyDeathFeedback(PlayerAttackKind.Light);
+                ZIndex += 1;
+                GetTree().CreateTimer(0.38).Timeout += QueueFree;
+                return;
+            }
+        }
+
+        UpdateWoundVisuals();
     }
 
     public void Execute(Vector2 impulse, ExecutionStyle style)
@@ -543,12 +594,12 @@ public abstract partial class EnemyBase : CharacterBody2D
 
         if (_bleedingWound is not null)
         {
-            _bleedingWound.Visible = _state != EnemyState.Dead && ratio <= 0.5f;
+            _bleedingWound.Visible = _state != EnemyState.Dead && (ratio <= 0.5f || _bleed.IsActive);
         }
 
         if (_deepGash is not null)
         {
-            _deepGash.Visible = _state != EnemyState.Dead && ratio <= 0.34f;
+            _deepGash.Visible = _state != EnemyState.Dead && (ratio <= 0.34f || _bleed.Level == BleedLevel.Heavy);
         }
 
         if (_arm is not null && _state != EnemyState.Dead && ratio <= 0.25f)

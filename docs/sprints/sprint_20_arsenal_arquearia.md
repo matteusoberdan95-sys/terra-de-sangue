@@ -12,34 +12,34 @@ Plano completo: `docs/13_sistema_de_arsenal_e_arquearia.md`.
 
 ### Aljava e flechas
 
-- [ ] Cap de **5 flechas**; HUD mostra contagem.
-- [ ] Pickup `ArrowPickup` no chao (+1 / feixe +3).
-- [ ] `R` segurar = mira; soltar = disparo na direcao do `facing` + ajuste Y leve.
-- [ ] Projétil 2.5D com alcance limitado (~220px).
-- [ ] Custo: **8 stamina** por disparo; recovery 0.28s.
+- [x] Cap de **5 flechas**; HUD mostra contagem.
+- [x] Pickup `ArrowPickup` no chao (+1 / feixe +3).
+- [x] `R` segurar = mira; soltar = disparo na direcao do `facing` + ajuste Y leve.
+- [x] Projétil 2.5D com alcance limitado (~220px).
+- [x] Custo: **8 stamina** por disparo; recovery 0.28s.
 
 ### Sangramento
 
-- [ ] Componente `BleedStatus` em `EnemyBase`.
-- [ ] Flecha aplica **Sangramento I** (0.5 DPS, 4s).
-- [ ] Visual: mancha + wound existente escalada.
-- [ ] Decal de sangue no chao ao tick (reusar sistema de decals).
+- [x] Componente `BleedStatus` em `EnemyBase`.
+- [x] Flecha aplica **Sangramento I** (0.5 DPS, 4s).
+- [x] Visual: mancha + wound existente escalada.
+- [x] Decal de sangue no chao ao tick (reusar sistema de decals).
 
 ### Tacape (fundacao)
 
-- [ ] `WeaponProfile` com tier 0 (atual) e estrutura para tier 1+.
-- [ ] HUD: label `Tacape Ritual` (placeholder upgrade).
-- [ ] Sem mudanca de dano nesta sprint — so arquitetura.
+- [x] `WeaponProfile` com tier 0 (atual) e estrutura para tier 1+.
+- [x] HUD: label `Tacape Ritual` (placeholder upgrade).
+- [x] Sem mudanca de dano nesta sprint — so arquitetura.
 
 ### Artefato (1 tipo)
 
-- [ ] `ArtifactPickup` — **Faca de Ferro Roubada** (3 usos).
-- [ ] Tecla `U` troca modo artefato; proximo `J` = corte rapido com Sangramento II.
-- [ ] Quebra apos 3 usos; feedback sonoro + particula.
+- [x] `ArtifactPickup` — **Faca de Ferro Roubada** (3 usos).
+- [x] Tecla `U` troca modo artefato; proximo `J` = corte rapido com Sangramento II.
+- [x] Quebra apos 3 usos; feedback sonoro + particula.
 
 ### Direcao de fase
 
-- [ ] `PhaseDirector` / Aldeia: 1 spawn de flechas + 1 artefato opcional no 2o encontro.
+- [x] `PhaseDirector` / Aldeia: 1 spawn de flechas + 1 artefato opcional no 2o encontro.
 
 ---
 
@@ -98,7 +98,7 @@ src/Prototype/
 - [ ] Inimigo com bleed perde vida ao longo do tempo e mancha o chao.
 - [ ] Faca quebra no 3o hit e some do HUD.
 - [ ] Tacape combos `J`/`K`/`E` inalterados sem artefato equipado.
-- [ ] Build C# sem erros; validacao visual Godot.
+- [x] Build C# sem erros; validacao visual Godot.
 
 ---
 
@@ -119,4 +119,4 @@ src/Prototype/
 
 ## Registro de validacao visual
 
-Status atual: nao iniciada.
+Status atual: **validado** em 2026-07-07 pelo usuario.

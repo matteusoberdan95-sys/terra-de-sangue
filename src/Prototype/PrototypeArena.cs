@@ -240,6 +240,26 @@ public partial class PrototypeArena : Node2D
         });
     }
 
+    public void SpawnArrowPickup(Vector2 position, int amount = 1)
+    {
+        AddChild(new ArrowPickup
+        {
+            Name = amount >= 3 ? "ArrowBundle" : "ArrowPickup",
+            GlobalPosition = position,
+            ArrowAmount = amount
+        });
+    }
+
+    public void SpawnArtifactPickup(Vector2 position, int uses = 3)
+    {
+        AddChild(new ArtifactPickup
+        {
+            Name = "IronKnifeArtifact",
+            GlobalPosition = position,
+            Uses = uses
+        });
+    }
+
     private void BuildImpactFeedback()
     {
         if (GetNodeOrNull<ImpactFeedback>("ImpactFeedback") is not null)

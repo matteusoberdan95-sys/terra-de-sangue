@@ -157,6 +157,15 @@ public partial class PhaseDirector : Node
             _arena.SpawnEnemy(entry.Kind, entry.Position);
         }
 
+        if (encounterIndex == 0)
+        {
+            _arena.SpawnArrowPickup(new Vector2(180, 158), 3);
+        }
+        else if (encounterIndex == 1)
+        {
+            _arena.SpawnArtifactPickup(new Vector2(200, 150));
+        }
+
         if (encounterIndex >= 1)
         {
             CombatAudio.Get(this)?.PlayEncounterPulse();
