@@ -247,4 +247,20 @@ Ver `docs/13_sistema_de_arsenal_e_arquearia.md` e `docs/sprints/sprint_20_arsena
 
 Upgrade permanente do tacape, hemorragia II, segundo artefato, tipos de flecha.
 
-## Sprint futura - SFX Custom ou Sprites Bruto/Sargento
+Status: validada em 2026-07-07.
+
+## Sprint 22 - Sprites Pixel Bruto e Sargento
+
+Sprites pixel animados para bruto e Sargento do Ferro na Fase 1.
+
+Ver `docs/sprints/sprint_22_sprites_bruto_sargento.md`.
+
+Status: validada em 2026-07-07.
+
+## Sprint 23 - Golpes de Corrida (Final Fight)
+
+Golpes exclusivos com `J` e `K` durante corrida — estilo beat 'em up classico.
+
+Ver `docs/sprints/sprint_23_golpes_de_corrida.md`.
+
+## Sprint futura - SFX Custom

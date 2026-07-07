@@ -4,27 +4,26 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 21 validada. Proximo: conforme `docs/04_plano_de_sprints.md`.
+Sprint 22 validada. Proximo: Sprint 23 golpes de corrida (Final Fight).
 
 ## Direcao
 
-Tacape tier 1, hemorragia e clava quebrada na Fase 1. Arsenal e movimento consolidados.
+Elenco visual da Fase 1 completo com sprites pixel. Proximo foco: golpes `J`/`K` exclusivos durante corrida.
 
 ## Fechamento recente
 
-- Sprint 21: tacape tier 1, hemorragia, clava quebrada. Validada 2026-07-07.
-- Sprint 20: aljava, flechas, bleed, faca de ferro. Validada 2026-07-07.
+- Sprint 22: sprites pixel bruto e Sargento. Validada 2026-07-07.
+- Sprint 21: tacape tier 1, hemorragia, clava. Validada 2026-07-07.
 
 ## Controles atuais
 
 - `WASD`, `J`, `K`, `E`
 - `Space` / `W`+`A`/`D`+`Space`: pulo / pulo frontal
 - `J`/`K` no ar: corte, slam, martelo
-- `Shift`: dash defensivo (22 stamina, i-frames)
-- `A`/`D` 2x: corrida (drena stamina)
-- `R`: arco (segurar = mira, soltar = disparo) | `U`: artefato
-- `J J J` / `J J K`: combos no chao
+- `Shift`: dash defensivo | `A`/`D` 2x: corrida (drena stamina)
+- `R`: arco | `U`: artefato
+- `J` durante corrida: golpe de entrada (basico; melhorar na Sprint 23)
 
 ## Proximo passo
 
-Consultar backlog em `docs/04_plano_de_sprints.md` para proxima sprint.
+Sprint 23 — golpes de corrida `J`/`K` estilo Final Fight.

@@ -11,6 +11,12 @@ public static class PixelSpritePalette
     public static readonly Color Iron = new("#5f6970");
     public static readonly Color Leather = new("#4a3a32");
     public static readonly Color Cape = new("#2b1b16");
+    public static readonly Color BruteBody = new("#4a3a32");
+    public static readonly Color BruteShadow = new("#3a2e28");
+    public static readonly Color BruteChain = new("#707880");
+    public static readonly Color SergeantBody = new("#3a3438");
+    public static readonly Color SergeantCoat = new("#2a2228");
+    public static readonly Color SergeantMetal = new("#5f6970");
     public static readonly Color Transparent = new(0, 0, 0, 0);
 }
 

@@ -13,6 +13,8 @@ public partial class EnemyMiniBoss : EnemyBase
     protected override Color AttackColor => new("#8f1f17");
     protected override EnemyVisualArchetype VisualArchetype => EnemyVisualArchetype.MiniBoss;
 
+    protected override bool UsePixelSprite => true;
+
     protected override float GetAttackStartup() => 0.28f;
 
     public override void _Ready()

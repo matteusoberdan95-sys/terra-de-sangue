@@ -13,6 +13,8 @@ public partial class EnemyBrute : EnemyBase
     protected override Color AttackColor => new("#6b1a14");
     protected override EnemyVisualArchetype VisualArchetype => EnemyVisualArchetype.Brute;
 
+    protected override bool UsePixelSprite => true;
+
     protected override float GetAttackStartup() => 0.38f;
     protected override float GetAttackActive() => 0.12f;
     protected override float GetAttackRecovery() => 0.36f;

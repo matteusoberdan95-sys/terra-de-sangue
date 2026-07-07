@@ -541,9 +541,13 @@ public abstract partial class EnemyBase : CharacterBody2D
             return;
         }
 
-        var frames = VisualArchetype == EnemyVisualArchetype.Mercenary
-            ? MercenarySpriteArt.BuildSpriteFrames()
-            : null;
+        var frames = VisualArchetype switch
+        {
+            EnemyVisualArchetype.Mercenary => MercenarySpriteArt.BuildSpriteFrames(),
+            EnemyVisualArchetype.Brute => BruteSpriteArt.BuildSpriteFrames(),
+            EnemyVisualArchetype.MiniBoss => MiniBossSpriteArt.BuildSpriteFrames(),
+            _ => null
+        };
         if (frames is null)
         {
             return;
@@ -551,7 +555,12 @@ public abstract partial class EnemyBase : CharacterBody2D
 
         _pixelSprite = new SpriteCharacterAnimator { Name = "PixelSprite" };
         _visualRig.AddChild(_pixelSprite);
-        _pixelSprite.Configure(frames, new Vector2(0, -4));
+        _pixelSprite.Configure(frames, VisualArchetype switch
+        {
+            EnemyVisualArchetype.Brute => new Vector2(0, -6),
+            EnemyVisualArchetype.MiniBoss => new Vector2(0, -8),
+            _ => new Vector2(0, -4)
+        });
 
         foreach (var child in _visualRig.GetChildren())
         {
