@@ -125,7 +125,7 @@ J → J → K           Finisher pesado
 Corrida → J         Golpe de abertura
 Esquiva → J         Contra-ataque rapido (janela 0.4s)
 Impulso → J         Dash attack
-J (no ar)           Slam (apos pulo frontal)
+J (no ar)           Slam / martelo (Sprint 19)
 ```
 
 ### Janelas
@@ -173,7 +173,14 @@ Nenhum combo exige mais de **3 inputs** no prototipo da Fase 1.
 - String `J J J` e `J J K`
 - Ajuste balance Fase 1
 
-### Sprint 19 (opcional) — Polish movimento
+### Sprint 19 — Golpes aéreos
+- Slam, martelo, corte no ápice, investida
+- Ver `docs/14_golpes_aereos.md`
+
+### Sprint 20 — Arsenal + Arquearia
+- Aljava, flechas, bleed
+
+### Sprint 21 (opcional) — Polish movimento
 - Poeira, trilha de dash, sprites de roll/jump
 - Bruto/sargento em pixel sprite
 
@@ -202,4 +209,4 @@ Se isso nao for divertido com pixel art, nao avancamos para Fase 2.
 
 ## Proximo passo imediato
 
-Validar **Sprint 18** e iniciar **Sprint 19** (Arsenal e Arquearia).
+Validar **Sprint 19** (golpes aéreos), depois **Sprint 20** (Arsenal).

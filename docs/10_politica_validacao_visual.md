@@ -226,6 +226,12 @@ Registrar sempre:
 - Resultado: aprovado pelo usuario.
 - Conteudo validado: corrida double-tap, impulso Shift, golpe de corrida, dash attack, pulo Space, esquiva Ctrl, facing do ataque.
 
+### 2026-07-07 - Sprint 18
+
+- Cena: `scenes/Main.tscn`
+- Resultado: aprovado pelo usuario.
+- Conteudo validado: pulo frontal, combo J-J-J, finisher J-J-K, janela combo 0.30s.
+
 ## Politica para Codex e Cursor
 
 Codex e Cursor podem implementar e compilar, mas nao devem declarar uma sprint como fechada sem registro de validacao visual no Godot.

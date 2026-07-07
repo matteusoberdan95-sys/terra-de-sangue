@@ -22,8 +22,12 @@ Pulo frontal, string `J-J-J` e finisher `J-J-K`.
 ## Validacao
 
 - Build C# sem erros.
-- Validacao interativa pendente.
+- Validacao interativa: aprovada 2026-07-07.
 
 ## Registro de validacao visual
 
-Status atual: nao iniciada.
+Status atual: aprovado pelo usuario em 2026-07-07.
+
+## Proximo
+
+Golpes aereos — ver `docs/14_golpes_aereos.md` e Sprint 19.

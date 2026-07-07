@@ -105,7 +105,7 @@ src/Prototype/
 ## Dependencias
 
 - Sprint 17 (movimento + facing) validada.
-- Sprint 18 (pulo + combos) recomendada antes — mas 19 pode comecar em paralelo se 18 atrasar.
+- Sprint 18 (pulo + combos) validada.
 
 ---
 

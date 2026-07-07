@@ -4,25 +4,29 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 18 implementada. Validacao visual pendente.
+Sprint 18 validada. Proximo: Sprint 19 golpes aereos.
 
 ## Direcao
 
-Kit de movimento Fase 1 concluido. Proximo: Sprint 19 arsenal/arquearia (`docs/13_sistema_de_arsenal_e_arquearia.md`).
+Kit de movimento no chao concluido. Golpes no pulo (Sprint 19), depois arsenal (Sprint 20).
 
 ## Fechamento recente
 
-- Sprint 17: corrida, impulso, pulo Space, facing, esquiva Ctrl. Validada 2026-07-07.
-- Sprint 16: esquiva + stamina. Validada 2026-07-07.
+- Sprint 18: pulo frontal, J-J-J, J-J-K. Validada 2026-07-07.
+- Sprint 17: corrida, impulso, facing. Validada 2026-07-07.
 
 ## Controles atuais
 
 - `WASD`, `J`, `K`, `E`
-- `Space`: pulo | `W`+`A`/`D`+`Space`: pulo frontal
-- `Shift`: impulso frontal | `Ctrl`: esquiva
-- `A`/`D` 2x: corrida
-- `J J J` / `J J K`: combos
+- `Space` / `W`+`A`/`D`+`Space`: pulo / pulo frontal
+- `Shift`: impulso | `Ctrl`: esquiva
+- `J J J` / `J J K`: combos no chao
+
+## Planejado (Sprint 19)
+
+- Golpes no ar: corte no apice, slam, martelo, investida apos pulo frontal.
+- Ver `docs/14_golpes_aereos.md`.
 
 ## Proximo passo
 
-Validar Sprint 18 no Godot. Depois Sprint 19 (aljava, flechas, bleed).
+Implementar Sprint 19 (golpes aereos).

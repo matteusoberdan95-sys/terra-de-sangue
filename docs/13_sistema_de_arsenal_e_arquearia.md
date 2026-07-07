@@ -210,8 +210,8 @@ Se arco virar spam a distancia segura, **reduzir cap, aumentar recovery pos-disp
 | Sprint | Foco |
 |--------|------|
 | **18** | Pulo + combos 3 hits (movimento) |
-| **19** | Arsenal core: aljava, pickup, disparo, bleed I |
-| **20** | Tacape tier + 1 artefato consumivel |
-| **21** | Hemorragia, tipos de flecha, polish gore bleed |
+| **19** | Golpes aéreos (slam, martelo, investida) |
+| **20** | Arsenal core: aljava, pickup, disparo, bleed I |
+| **21** | Tacape tier + hemorragia, mais artefatos |
 
 Detalhes da Sprint 19 em `docs/sprints/sprint_19_arsenal_arquearia.md`.
