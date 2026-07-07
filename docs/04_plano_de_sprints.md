@@ -209,6 +209,20 @@ Status: validada em 2026-07-07. Placeholders ate SFX custom.
 
 Objetivo: Arandu e mercenario com sprites pixel animados.
 
-Status: implementada, aguardando validacao visual.
+Status: validada em 2026-07-07.
+
+## Sprint 16 - Esquiva e Stamina
+
+Objetivo: esquiva com i-frames, barra de stamina, contra-ataque pos-dodge.
+
+Ver plano: `docs/12_kit_de_movimento_soulslike.md`.
+
+## Sprint 17 - Corrida e Impulso
+
+Double-tap corrida, impulso frontal, ataques de entrada.
+
+## Sprint 18 - Pulo e Combos 3 hits
+
+Pulo, pulo frontal, string J-J-J e J-J-K.
 
 ## Sprint futura - SFX Custom ou Sprites Bruto/Sargento

@@ -208,6 +208,12 @@ Registrar sempre:
 - Conteudo validado: CombatAudio, telegraph sonoro, impactos diferenciados, memoria e mini-chefe.
 - Nota: placeholders procedurais mantidos ate pack SFX custom em `assets/audio/`.
 
+### 2026-07-07 - Sprint 15
+
+- Cena: `scenes/Main.tscn`
+- Resultado: aprovado pelo usuario.
+- Conteudo validado: sprites pixel Arandu e mercenario, AudioLibrary.
+
 ## Politica para Codex e Cursor
 
 Codex e Cursor podem implementar e compilar, mas nao devem declarar uma sprint como fechada sem registro de validacao visual no Godot.

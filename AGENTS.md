@@ -7,8 +7,7 @@ Este arquivo e a primeira leitura obrigatoria para qualquer agente trabalhando n
 - Projeto: `Terra Sangrada`.
 - Engine: Godot .NET 4.7.
 - Linguagem: C# / .NET 10.
-- Sprint atual: Sprint 15 sprites pixel implementada.
-- Proximo foco: validacao visual ou SFX custom em assets/audio.
+- Proximo foco: Sprint 16 esquiva + stamina (`docs/12_kit_de_movimento_soulslike.md`).
 
 ## Ordem de leitura
 

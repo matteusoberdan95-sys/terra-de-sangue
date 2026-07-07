@@ -87,6 +87,6 @@ Nunca iniciar uma nova sprint com a anterior apenas validada localmente, mas ain
 
 ## Sprint Atual
 
-Sprint 14 — Audio Fase 1 implementada, aguardando validacao.
+Sprint 15 — Sprites pixel (Arandu + mercenario). Audio com fallback em `assets/audio/`.
 
-Proximo foco: sprites do Arandu apos validar som.
+Proximo: validar visualmente ou adicionar `.wav` custom nas pastas de audio.
