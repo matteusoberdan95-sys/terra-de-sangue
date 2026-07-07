@@ -18,7 +18,6 @@ Tornar o combate da Aldeia em Cinzas mais legivel, pesado e divertido sem arte n
 
 - Build C# sem erros.
 - Godot carrega combate com telegraphs e hitstop.
-- Validacao interativa pendente para o usuario.
 
 ## Agentes
 
@@ -28,7 +27,9 @@ Tornar o combate da Aldeia em Cinzas mais legivel, pesado e divertido sem arte n
 
 ## Registro de validacao visual
 
-Status atual: pendente.
+Status atual: validado localmente no Godot em 2026-07-07. Aprovado pelo usuario.
+
+Resultado: aprovado pelo usuario em 2026-07-07.
 
 Cena para validar:
 

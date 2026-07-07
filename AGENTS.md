@@ -7,8 +7,8 @@ Este arquivo e a primeira leitura obrigatoria para qualquer agente trabalhando n
 - Projeto: `Terra Sangrada`.
 - Engine: Godot .NET 4.7.
 - Linguagem: C# / .NET 10.
-- Sprint atual: Sprint 13 Game Feel Fase 1 implementada.
-- Proximo foco: validacao visual do combate na fase 1.
+- Sprint atual: Sprint 13 Game Feel Fase 1 validada e fechada.
+- Proximo foco: SFX ricos ou sprites da fase 1.
 
 ## Ordem de leitura
 

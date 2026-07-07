@@ -190,6 +190,6 @@ Entregas:
 - SFX distintos por tipo de ataque.
 - Encontros rebalanceados.
 
-Status: implementada, aguardando validacao visual.
+Status: validada em 2026-07-07.
 
 ## Sprint futura - SFX e Arte Fase 1

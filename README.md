@@ -87,6 +87,6 @@ Nunca iniciar uma nova sprint com a anterior apenas validada localmente, mas ain
 
 ## Sprint Atual
 
-Sprint 12 — Fase 1 Silhuetas validada e fechada no GitHub (2026-07-07).
+Sprint 13 — Game Feel Fase 1 validada e fechada no GitHub (2026-07-07).
 
-Prioridade: polish e game feel da Aldeia em Cinzas antes de expandir conteudo.
+Proximo foco: SFX mais ricos ou primeiros sprites (Arandu, mercenario).
