@@ -44,6 +44,12 @@ public static class PlaceholderSfx
 
     public static AudioStreamWav CreateDodgeRoll() => CreateSweep(0.1f, 200f, 90f, 0.36f);
 
+    public static AudioStreamWav CreateRunBurst() => CreateBurst(0.07f, 96f, 0.48f, 0.24f);
+
+    public static AudioStreamWav CreateDashImpulse() => CreateSweep(0.08f, 280f, 120f, 0.42f);
+
+    public static AudioStreamWav CreateJumpHop() => CreateSweep(0.12f, 140f, 260f, 0.4f);
+
     private static AudioStreamWav CreateBurst(float duration, float frequency, float volume, float noiseAmount)
     {
         var sampleCount = Mathf.Max(1, (int)(MixRate * duration));

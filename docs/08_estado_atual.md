@@ -4,28 +4,25 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 16 validada. Proximo: Sprint 17 Corrida + Impulso.
+Sprint 18 implementada. Validacao visual pendente.
 
 ## Direcao
 
-Kit de movimento soulslike na Fase 1 antes de expandir mapa. Plano em `docs/12_kit_de_movimento_soulslike.md`.
+Kit de movimento Fase 1 concluido. Proximo: Sprint 19 arsenal/arquearia (`docs/13_sistema_de_arsenal_e_arquearia.md`).
 
 ## Fechamento recente
 
-- Sprint 16: esquiva + stamina + contra-ataque. Validada 2026-07-07.
-- Sprint 15: `9713c47` — Sprites pixel Arandu + mercenario. Validada 2026-07-07.
+- Sprint 17: corrida, impulso, pulo Space, facing, esquiva Ctrl. Validada 2026-07-07.
+- Sprint 16: esquiva + stamina. Validada 2026-07-07.
 
 ## Controles atuais
 
 - `WASD`, `J`, `K`, `E`
-- `Space`: esquiva (stamina, i-frames, contra-ataque pos-dodge)
-
-## Controles planejados
-
+- `Space`: pulo | `W`+`A`/`D`+`Space`: pulo frontal
+- `Shift`: impulso frontal | `Ctrl`: esquiva
 - `A`/`D` 2x: corrida
-- `Shift`: impulso frontal
-- `W`+`Space`: pulo / pulo frontal
+- `J J J` / `J J K`: combos
 
 ## Proximo passo
 
-Implementar Sprint 17 (corrida duplo A/D + impulso com Shift).
+Validar Sprint 18 no Godot. Depois Sprint 19 (aljava, flechas, bleed).

@@ -220,6 +220,12 @@ Registrar sempre:
 - Resultado: aprovado pelo usuario.
 - Conteudo validado: esquiva com Space, barra de stamina, contra-ataque pos-dodge, cancel de recovery, SFX de esquiva.
 
+### 2026-07-07 - Sprint 17
+
+- Cena: `scenes/Main.tscn`
+- Resultado: aprovado pelo usuario.
+- Conteudo validado: corrida double-tap, impulso Shift, golpe de corrida, dash attack, pulo Space, esquiva Ctrl, facing do ataque.
+
 ## Politica para Codex e Cursor
 
 Codex e Cursor podem implementar e compilar, mas nao devem declarar uma sprint como fechada sem registro de validacao visual no Godot.

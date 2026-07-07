@@ -40,3 +40,7 @@ Fragmentos encontrados nas fases liberam memorias curtas e habilidades. Exemplos
 - Semente negra: libera cura limitada.
 - Osso talhado: libera agarrar inimigos.
 - Pintura seca: libera furia ancestral.
+- Arco de tendao (futuro): aumenta cap da aljava.
+- Tacape reforcado (futuro): tier permanente da arma principal.
+
+Ver tambem `docs/13_sistema_de_arsenal_e_arquearia.md` para flechas, bleed e artefatos de fase.

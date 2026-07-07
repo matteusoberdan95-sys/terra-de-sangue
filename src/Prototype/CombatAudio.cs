@@ -121,6 +121,21 @@ public partial class CombatAudio : Node
         Play(_swingPlayer, Load($"{SfxRoot}/combat/dodge.wav", PlaceholderSfx.CreateDodgeRoll), 1f);
     }
 
+    public void PlayRunStart()
+    {
+        Play(_swingPlayer, Load($"{SfxRoot}/combat/run_burst.wav", PlaceholderSfx.CreateRunBurst), 1.04f);
+    }
+
+    public void PlayDashImpulse()
+    {
+        Play(_swingPlayer, Load($"{SfxRoot}/combat/dash_impulse.wav", PlaceholderSfx.CreateDashImpulse), 1.08f);
+    }
+
+    public void PlayJump()
+    {
+        Play(_swingPlayer, Load($"{SfxRoot}/combat/jump.wav", PlaceholderSfx.CreateJumpHop), 1f);
+    }
+
     private static AudioStream Load(string path, System.Func<AudioStream> fallback)
     {
         return AudioLibrary.Resolve(path, fallback);

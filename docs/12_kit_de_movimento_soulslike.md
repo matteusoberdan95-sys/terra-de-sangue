@@ -28,13 +28,13 @@ Inspiracao: peso e leitura de **Soulslike** + fluidez de **beat 'em up 2.5D** (e
 | `J` | Ataque leve / combo | Expandir para 3 golpes |
 | `K` | Ataque pesado | Commit forte, mais stamina |
 | `E` | Execucao | Mantido |
-| `Space` | **Esquiva** (rolamento) | I-frames, custo de stamina |
-| `Shift` | **Impulso frontal** | Sprint 17 — gap closer ofensivo |
+| `Space` | **Pulo** | Hop curto na faixa 2.5D |
+| `Shift` | **Impulso frontal** | Gap closer ofensivo |
 | `A` ou `D` 2x rapido | **Corrida** | Sprint 17 |
-| `W` + `Space` | **Pulo** | Hop curto; limpa ataques baixos no futuro |
-| `W` + `A`/`D` + `Space` | **Pulo frontal** | Salto com avanco (engage ou fuga) |
+| `Ctrl` | **Esquiva** | I-frames, custo de stamina |
+| `W` + `A`/`D` + `Space` | **Pulo frontal** | Salto com avanco (Sprint 18) |
 
-> Decisao 2026-07-07: `Space` = esquiva pura. `Shift` = impulso frontal (Sprint 17).
+> Decisao 2026-07-07: `Space` = pulo. `Shift` = impulso frontal. `Ctrl` = esquiva.
 
 ---
 
@@ -102,7 +102,7 @@ Nao e sprint infinito — e ferramenta de engage e kite na faixa Y.
 
 ---
 
-## Impulso frontal (`Space` + `A`/`D`)
+## Impulso frontal (`Shift`)
 
 - Dash rapido **sem** arco (diferente do pulo)
 - Distancia: ~48px, 0.18s
@@ -202,4 +202,4 @@ Se isso nao for divertido com pixel art, nao avancamos para Fase 2.
 
 ## Proximo passo imediato
 
-Iniciar **Sprint 17** (Corrida + Impulso) apos fechamento da Sprint 16.
+Validar **Sprint 18** e iniciar **Sprint 19** (Arsenal e Arquearia).

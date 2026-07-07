@@ -219,10 +219,22 @@ Status: validada em 2026-07-07.
 
 ## Sprint 17 - Corrida e Impulso
 
-Double-tap corrida, impulso frontal, ataques de entrada.
+Double-tap corrida, impulso frontal, ataques de entrada, pulo em Space, esquiva em Ctrl.
 
-## Sprint 18 - Pulo e Combos 3 hits
+Status: validada em 2026-07-07.
 
-Pulo, pulo frontal, string J-J-J e J-J-K.
+## Sprint 18 - Pulo Frontal e Combos 3 hits
+
+Pulo frontal, string J-J-J, finisher J-J-K.
+
+## Sprint 19 - Arsenal, Arquearia e Bleed
+
+Aljava, flechas no chao, disparo com `R`, sangramento, 1 artefato consumivel, base de upgrade do tacape.
+
+Ver `docs/13_sistema_de_arsenal_e_arquearia.md` e `docs/sprints/sprint_19_arsenal_arquearia.md`.
+
+## Sprint 20 - Tacape Tier e Hemorragia
+
+Upgrade permanente do tacape, hemorragia II, segundo artefato, tipos de flecha.
 
 ## Sprint futura - SFX Custom ou Sprites Bruto/Sargento

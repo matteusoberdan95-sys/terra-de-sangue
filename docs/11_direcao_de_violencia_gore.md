@@ -77,6 +77,17 @@ Lanca:
 - Sangue frontal/traseiro.
 - Inimigo preso ou empurrado.
 
+Arco / flecha:
+
+- Sangramento escalavel (I → hemorragia).
+- Pressao a distancia na faixa 2.5D.
+- Nunca desmembra sozinho — prepara mutilacao.
+
+Artefatos de fase (faca, gancho, clava quebrada):
+
+- Uso limitado; quebram rapido.
+- Sangramento forte ou mutilacao contextual em alvo ja ferido.
+
 Machado:
 
 - Cortes pesados.
