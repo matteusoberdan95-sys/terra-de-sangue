@@ -15,6 +15,8 @@ Trocar placeholders da Aldeia em Cinzas por arte 2D real (IA/Krita) sem quebrar 
 - [x] Guias visuais `WalkBandGuide` / `HorizonGuide` na cena
 - [x] Guias/faixas de debug ocultas no runtime PNG
 - [x] Vida ambiente inicial: fogo, fumaca e brasas leves sobre o PNG mestre
+- [x] Spritesheets VFX integrados: `aldeia_fire_sheet`, `aldeia_embers_sheet`, `aldeia_smoke_sheet`
+- [x] Arandu walk sheet inicial integrado e validado (`assets/art/sprites/player/arandu_walk_sheet.png`)
 - [x] Remocao de placeholders quando PNG presente
 - [x] Documentacao de pipeline (`assets/art/README.md`, handoff Codex)
 
@@ -22,7 +24,7 @@ Trocar placeholders da Aldeia em Cinzas por arte 2D real (IA/Krita) sem quebrar 
 
 - [ ] Alinhamento final dos pes (usuario ajusta no editor - ver README)
 - [ ] Parallax 4 camadas (exige PNGs com transparencia real)
-- [ ] Sprite sheet Arandu idle/walk
+- [ ] Sprite sheets Arandu restantes: run, ataques, hit/dano, morte
 - [ ] Capitao / Mata no mesmo estilo visual
 
 ## Receita aprovada pelo usuario
@@ -37,6 +39,7 @@ O resultado aprovado veio de uma regra simples: **preservar a arte mestre e anim
    - fogo pequeno;
    - fumaca transparente;
    - brasas subindo;
+   - spritesheets VFX em `assets/art/vfx/` quando disponiveis;
    - oscilacao sutil do foreground;
    - guias visiveis so no editor.
 5. `AldeiaEmCinzasArena.cs` controla gameplay:
@@ -70,6 +73,9 @@ Por que funcionou rapido: o codigo deixou de tentar reconstruir uma pintura por 
 
 - **2026-07-07:** Usuario validou melhora com compositor estavel (mid+fg). Personagem ainda precisava alinhar ao chao - corrigido com faixa Y + cena editavel. Prints em `bugs/`.
 - **2026-07-07:** Codex validou build e captura local (`outputs/aldeia_validation_game_crop.png`): linhas de debug nao aparecem no runtime, jogador na faixa do chao, efeitos ambientais carregando sem erro.
+- **2026-07-07:** VFX spritesheets integrados e validados em `outputs/aldeia_vfx_validation_game_crop.png`: chamas, brasas e fumaca usam PNGs transparentes em `assets/art/vfx/`, sem fundo preto e sem cobrir o combate.
+- **2026-07-07:** VFX reancorados ao parallax do fundo apos feedback do usuario. Correcao: `AmbientLife` acompanha o mesmo deslocamento horizontal do `AldeiaBackdrop`, com escala/alpha reduzidos para evitar fogo e fumaca soltos no caminho.
+- **2026-07-07:** Arandu walk sheet integrado via `AranduSpriteArt` e validado pelo usuario: personagem apareceu bem no jogo e substitui o bloco no movimento principal.
 - **Pendente:** confirmacao final apos ajuste fino no editor pelo usuario.
 
 ## Referencias

@@ -2,11 +2,19 @@ using Godot;
 
 public static class AranduSpriteArt
 {
+    private const string WalkSheetPath = "res://assets/art/sprites/player/arandu_walk_sheet.png";
+    private const int WalkSheetFrameCount = 8;
+    private const int WalkSheetFrameSize = 256;
     private const int Width = 48;
     private const int Height = 56;
 
     public static SpriteFrames BuildSpriteFrames()
     {
+        if (HasExternalWalkSheet())
+        {
+            return BuildSpriteFramesFromWalkSheet();
+        }
+
         var frames = new SpriteFrames();
         frames.AddAnimation("idle");
         frames.SetAnimationSpeed("idle", 1f);
@@ -44,6 +52,64 @@ public static class AranduSpriteArt
         frames.AddFrame("hit", BuildFrame(0, 0, true));
 
         return frames;
+    }
+
+    public static bool HasExternalWalkSheet()
+    {
+        return FileAccess.FileExists(WalkSheetPath);
+    }
+
+    private static SpriteFrames BuildSpriteFramesFromWalkSheet()
+    {
+        var frames = new SpriteFrames();
+        var image = Image.LoadFromFile(WalkSheetPath);
+        var sheet = ImageTexture.CreateFromImage(image);
+
+        frames.AddAnimation("idle");
+        frames.SetAnimationSpeed("idle", 1f);
+        frames.AddFrame("idle", BuildSheetFrame(sheet, 0));
+
+        frames.AddAnimation("walk");
+        frames.SetAnimationSpeed("walk", 10f);
+        for (var i = 0; i < WalkSheetFrameCount; i++)
+        {
+            frames.AddFrame("walk", BuildSheetFrame(sheet, i));
+        }
+
+        frames.AddAnimation("attack_light");
+        frames.SetAnimationSpeed("attack_light", 12f);
+        frames.AddFrame("attack_light", BuildSheetFrame(sheet, 3));
+        frames.AddFrame("attack_light", BuildSheetFrame(sheet, 4));
+
+        frames.AddAnimation("attack_heavy");
+        frames.SetAnimationSpeed("attack_heavy", 10f);
+        frames.AddFrame("attack_heavy", BuildSheetFrame(sheet, 4));
+        frames.AddFrame("attack_heavy", BuildSheetFrame(sheet, 5));
+
+        frames.AddAnimation("run_attack_light");
+        frames.SetAnimationSpeed("run_attack_light", 14f);
+        frames.AddFrame("run_attack_light", BuildSheetFrame(sheet, 5));
+        frames.AddFrame("run_attack_light", BuildSheetFrame(sheet, 6));
+
+        frames.AddAnimation("run_attack_heavy");
+        frames.SetAnimationSpeed("run_attack_heavy", 11f);
+        frames.AddFrame("run_attack_heavy", BuildSheetFrame(sheet, 6));
+        frames.AddFrame("run_attack_heavy", BuildSheetFrame(sheet, 7));
+
+        frames.AddAnimation("hit");
+        frames.SetAnimationSpeed("hit", 1f);
+        frames.AddFrame("hit", BuildSheetFrame(sheet, 2));
+
+        return frames;
+    }
+
+    private static Texture2D BuildSheetFrame(Texture2D sheet, int frameIndex)
+    {
+        return new AtlasTexture
+        {
+            Atlas = sheet,
+            Region = new Rect2(frameIndex * WalkSheetFrameSize, 0, WalkSheetFrameSize, WalkSheetFrameSize)
+        };
     }
 
     private static Texture2D BuildFrame(int walkPhase, int pose, bool hitFlash)

@@ -32,13 +32,15 @@ Arquivo: `src/Prototype/AldeiaParallaxBackground.cs`
 
 O script cria overlays pequenos por cima do PNG mestre:
 
-- chamas em janelas/ruinas;
-- fumaca transparente;
-- brasas subindo;
+- chamas em janelas/ruinas: `assets/art/vfx/aldeia_fire_sheet.png`;
+- fumaca transparente: `assets/art/vfx/aldeia_smoke_sheet.png`;
+- brasas subindo: `assets/art/vfx/aldeia_embers_sheet.png`;
 - oscilacao sutil do foreground;
 - parallax horizontal suave.
 
-Isso da movimento sem destruir a composicao da arte. Nao transformar isso em fundo procedural completo.
+Se esses spritesheets existirem, o jogo usa os assets. Se nao existirem, o script cai no fallback procedural simples. Isso da movimento sem destruir a composicao da arte. Nao transformar isso em fundo procedural completo.
+
+Importante: os VFX ficam dentro de `AmbientLife`, que acompanha o mesmo parallax horizontal do `AldeiaBackdrop`. Nao ancorar fogo/fumaca em coordenada fixa do mundo, senao a camera anda, o fundo desliza e o VFX parece solto em lugar aleatorio.
 
 ## O que NAO fazer
 
@@ -86,6 +88,10 @@ assets/art/
   aldeia_fg.png       # foreground transparente opcional
   aldeia_sky.png      # reservado para parallax real futuro
   aldeia_ground.png   # reservado para parallax real futuro
+  vfx/
+    aldeia_fire_sheet.png
+    aldeia_embers_sheet.png
+    aldeia_smoke_sheet.png
   concept/
   sprites/player/
   sprites/enemies/

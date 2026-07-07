@@ -5,12 +5,12 @@ public partial class SpriteCharacterAnimator : AnimatedSprite2D
 {
     private string _currentAnimation = "idle";
 
-    public void Configure(SpriteFrames frames, Vector2 offset)
+    public void Configure(SpriteFrames frames, Vector2 offset, float scale = 1.2f)
     {
         SpriteFrames = frames;
         Centered = true;
         Position = offset;
-        Scale = new Vector2(1.2f, 1.2f);
+        Scale = new Vector2(scale, scale);
         ZIndex = 5;
         Play("idle");
     }

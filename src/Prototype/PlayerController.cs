@@ -1447,7 +1447,11 @@ public partial class PlayerController : CharacterBody2D
 
         _pixelSprite = new SpriteCharacterAnimator { Name = "AranduSprite" };
         _visualRig.AddChild(_pixelSprite);
-        _pixelSprite.Configure(AranduSpriteArt.BuildSpriteFrames(), new Vector2(0, -6));
+        var usesExternalWalkSheet = AranduSpriteArt.HasExternalWalkSheet();
+        _pixelSprite.Configure(
+            AranduSpriteArt.BuildSpriteFrames(),
+            usesExternalWalkSheet ? new Vector2(0, -8) : new Vector2(0, -6),
+            usesExternalWalkSheet ? 0.34f : 1.2f);
         _visualRig.Scale = Vector2.One;
 
         foreach (var child in _visualRig.GetChildren())

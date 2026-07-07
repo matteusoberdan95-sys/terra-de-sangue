@@ -1,6 +1,6 @@
 # Estado Atual
 
-Ultima atualizacao: 2026-07-07 (Sprint 25 em andamento - Aldeia integrada, linhas de debug removidas do runtime, vida ambiente inicial).
+Ultima atualizacao: 2026-07-07 (Sprint 25 em andamento - Aldeia integrada, VFX leves e Arandu walk inicial validado).
 
 ## Sprint atual
 
@@ -10,6 +10,8 @@ Ultima atualizacao: 2026-07-07 (Sprint 25 em andamento - Aldeia integrada, linha
 - Cenario montado em **`scenes/levels/AldeiaBackground.tscn`** (ajuste visual no Godot, nao no C#).
 - Codigo: `AldeiaParallaxBackground.cs` (so parallax horizontal), `AldeiaEmCinzasArena.cs` (camera Y travada, faixa de andar Y=152-208).
 - Ajuste 2026-07-07: guias/faixas de debug removidas do runtime PNG; fogo, fumaca e brasas leves adicionados como overlay ambiental.
+- VFX 2026-07-07: spritesheets transparentes em `assets/art/vfx/` para fogo, brasas e fumaca; fallback procedural mantido.
+- Arandu 2026-07-07: `assets/art/sprites/player/arandu_walk_sheet.png` integrado como walk sheet inicial; usuario validou que o personagem ficou bom.
 - Padrao aprovado pelo usuario: poucos assets bem compostos (`aldeia_mid` mestre + `aldeia_fg` transparente + vida ambiente leve), sem remontar PNG opaco em codigo.
 - **Nao** usar fundo procedural em C# (`AldeiaBackgroundArt` foi removido e nao deve voltar).
 
@@ -32,6 +34,6 @@ Tentativas de empilhar/recortar 4 PNGs opacos no **codigo** geraram emendas feia
 ## Proximo passo (ordem sugerida)
 
 1. **Alinhar pes / composicao fina** - abrir `AldeiaBackground.tscn`, mover `AldeiaBackdrop` ate `WalkBandGuide` (F5 + editor).
-2. **Sprites Arandu** idle/walk no estilo do `aldeia_mid` (maior impacto visual).
-3. (Opcional) Regerar `aldeia_sky` / `aldeia_ground` com **transparencia** para parallax real - ver `assets/art/README.md` Opcao B.
-4. Capitao e Mata no mesmo pipeline visual.
+2. **Mercenario inimigo base** no mesmo pipeline visual, para testar combate sem bloquinhos.
+3. **Arandu ataques/run/hit** usando o walk aprovado como referencia de paleta e proporcao.
+4. (Opcional) Regerar `aldeia_sky` / `aldeia_ground` com **transparencia** para parallax real - ver `assets/art/README.md` Opcao B.

@@ -9,6 +9,39 @@ using System.Collections.Generic;
 [GlobalClass]
 public partial class AldeiaParallaxBackground : Node2D
 {
+    private enum AmbientMotion
+    {
+        Fire,
+        Smoke,
+        Embers
+    }
+
+    private sealed class AnimatedSheet
+    {
+        public AnimatedSheet(Sprite2D sprite, Vector2 anchor, Vector2 frameSize, int frameCount, float fps, float phase, float amplitude, float baseAlpha, AmbientMotion motion)
+        {
+            Sprite = sprite;
+            Anchor = anchor;
+            FrameSize = frameSize;
+            FrameCount = frameCount;
+            Fps = fps;
+            Phase = phase;
+            Amplitude = amplitude;
+            BaseAlpha = baseAlpha;
+            Motion = motion;
+        }
+
+        public Sprite2D Sprite { get; }
+        public Vector2 Anchor { get; }
+        public Vector2 FrameSize { get; }
+        public int FrameCount { get; }
+        public float Fps { get; }
+        public float Phase { get; }
+        public float Amplitude { get; }
+        public float BaseAlpha { get; }
+        public AmbientMotion Motion { get; }
+    }
+
     private sealed class AmbientPolygon
     {
         public AmbientPolygon(Polygon2D polygon, Vector2 anchor, float speed, float amplitude, float phase, float baseAlpha)
@@ -53,6 +86,9 @@ public partial class AldeiaParallaxBackground : Node2D
     private readonly List<AmbientPolygon> _flames = new();
     private readonly List<AmbientPolygon> _smokeWisps = new();
     private readonly List<AmbientPolygon> _embers = new();
+    private readonly List<AnimatedSheet> _animatedSheets = new();
+    private Node2D? _ambientRoot;
+    private Vector2 _ambientRootAnchor;
     private float _cameraOriginX;
     private float _ambientTime;
     private bool _ready;
@@ -94,6 +130,11 @@ public partial class AldeiaParallaxBackground : Node2D
         {
             layer.Sprite.Position = layer.Anchor + new Vector2(deltaX * layer.Parallax, 0f);
         }
+
+        if (_ambientRoot is not null)
+        {
+            _ambientRoot.Position = _ambientRootAnchor + new Vector2(deltaX * ScrollFactor, 0f);
+        }
     }
 
     private void CacheParallaxLayers()
@@ -126,28 +167,90 @@ public partial class AldeiaParallaxBackground : Node2D
             return;
         }
 
-        var ambientRoot = new Node2D
+        _ambientRoot = new Node2D
         {
             Name = "AmbientLife",
-            ZIndex = -20,
+            ZIndex = -60,
             ZAsRelative = false
         };
-        AddChild(ambientRoot);
+        _ambientRootAnchor = _ambientRoot.Position;
+        AddChild(_ambientRoot);
 
-        AddFire(ambientRoot, "FireLeftWindow", new Vector2(-102f, 134f), 1.15f, 0.2f);
-        AddFire(ambientRoot, "FireCenterWindow", new Vector2(69f, 132f), 1.05f, 1.4f);
-        AddFire(ambientRoot, "FireRightRuin", new Vector2(315f, 142f), 0.9f, 2.1f);
+        var fireSheet = LoadVfxTexture("res://assets/art/vfx/aldeia_fire_sheet.png");
+        var emberSheet = LoadVfxTexture("res://assets/art/vfx/aldeia_embers_sheet.png");
+        var smokeSheet = LoadVfxTexture("res://assets/art/vfx/aldeia_smoke_sheet.png");
 
-        AddSmoke(ambientRoot, "SmokeLeftA", new Vector2(-150f, 72f), 0.95f, 0.1f);
-        AddSmoke(ambientRoot, "SmokeLeftB", new Vector2(-72f, 58f), 0.8f, 1.3f);
-        AddSmoke(ambientRoot, "SmokeRightA", new Vector2(126f, 50f), 0.9f, 2.4f);
-        AddSmoke(ambientRoot, "SmokeFarRight", new Vector2(336f, 72f), 0.72f, 3.1f);
+        if (fireSheet is not null)
+        {
+            AddSheet(_ambientRoot, "FireLeftWindow", fireSheet, new Vector2(300f, 300f), 8, new Vector2(-214f, 142f), 0.065f, 8f, 0.2f, 0.8f, 0.72f, AmbientMotion.Fire);
+            AddSheet(_ambientRoot, "FireCenterWindow", fireSheet, new Vector2(300f, 300f), 8, new Vector2(-76f, 140f), 0.058f, 7.6f, 1.4f, 0.7f, 0.66f, AmbientMotion.Fire);
+            AddSheet(_ambientRoot, "FireRightWindow", fireSheet, new Vector2(300f, 300f), 8, new Vector2(90f, 140f), 0.052f, 8.4f, 2.1f, 0.65f, 0.62f, AmbientMotion.Fire);
+        }
+        else
+        {
+            AddFire(_ambientRoot, "FireLeftWindow", new Vector2(-214f, 146f), 0.64f, 0.2f);
+            AddFire(_ambientRoot, "FireCenterWindow", new Vector2(-76f, 144f), 0.56f, 1.4f);
+            AddFire(_ambientRoot, "FireRightWindow", new Vector2(90f, 144f), 0.5f, 2.1f);
+        }
 
-        AddEmber(ambientRoot, "EmberFloatA", new Vector2(-188f, 156f), 0.1f);
-        AddEmber(ambientRoot, "EmberFloatB", new Vector2(-28f, 170f), 1.2f);
-        AddEmber(ambientRoot, "EmberFloatC", new Vector2(142f, 152f), 2.1f);
-        AddEmber(ambientRoot, "EmberFloatD", new Vector2(278f, 168f), 3.3f);
-        AddEmber(ambientRoot, "EmberFloatE", new Vector2(372f, 146f), 4.2f);
+        if (smokeSheet is not null)
+        {
+            AddSheet(_ambientRoot, "SmokeLeftRoof", smokeSheet, new Vector2(222f, 887f), 8, new Vector2(-180f, 64f), 0.045f, 2.8f, 0.1f, 3.2f, 0.16f, AmbientMotion.Smoke);
+            AddSheet(_ambientRoot, "SmokeCenterRoof", smokeSheet, new Vector2(222f, 887f), 8, new Vector2(-24f, 58f), 0.04f, 2.5f, 1.3f, 2.8f, 0.13f, AmbientMotion.Smoke);
+            AddSheet(_ambientRoot, "SmokeRightRoof", smokeSheet, new Vector2(222f, 887f), 8, new Vector2(132f, 66f), 0.038f, 2.7f, 2.4f, 2.8f, 0.12f, AmbientMotion.Smoke);
+        }
+        else
+        {
+            AddSmoke(_ambientRoot, "SmokeLeftRoof", new Vector2(-180f, 64f), 0.46f, 0.1f);
+            AddSmoke(_ambientRoot, "SmokeCenterRoof", new Vector2(-24f, 58f), 0.4f, 1.3f);
+            AddSmoke(_ambientRoot, "SmokeRightRoof", new Vector2(132f, 66f), 0.38f, 2.4f);
+        }
+
+        if (emberSheet is not null)
+        {
+            AddSheet(_ambientRoot, "EmbersLeft", emberSheet, new Vector2(256f, 256f), 8, new Vector2(-210f, 150f), 0.075f, 6.8f, 0.4f, 3.4f, 0.36f, AmbientMotion.Embers);
+            AddSheet(_ambientRoot, "EmbersCenter", emberSheet, new Vector2(256f, 256f), 8, new Vector2(-76f, 148f), 0.07f, 6.4f, 1.8f, 3.2f, 0.32f, AmbientMotion.Embers);
+            AddSheet(_ambientRoot, "EmbersRight", emberSheet, new Vector2(256f, 256f), 8, new Vector2(92f, 148f), 0.065f, 7f, 3.0f, 3f, 0.3f, AmbientMotion.Embers);
+        }
+        else
+        {
+            AddEmber(_ambientRoot, "EmberFloatA", new Vector2(-210f, 150f), 0.4f);
+            AddEmber(_ambientRoot, "EmberFloatB", new Vector2(-76f, 148f), 1.8f);
+            AddEmber(_ambientRoot, "EmberFloatC", new Vector2(92f, 148f), 3.0f);
+        }
+    }
+
+    private static Texture2D? LoadVfxTexture(string path)
+    {
+        return ResourceLoader.Exists(path) ? GD.Load<Texture2D>(path) : null;
+    }
+
+    private void AddSheet(
+        Node parent,
+        string name,
+        Texture2D texture,
+        Vector2 frameSize,
+        int frameCount,
+        Vector2 position,
+        float scale,
+        float fps,
+        float phase,
+        float amplitude,
+        float alpha,
+        AmbientMotion motion)
+    {
+        var sprite = new Sprite2D
+        {
+            Name = name,
+            Texture = texture,
+            Position = position,
+            Scale = new Vector2(scale, scale),
+            RegionEnabled = true,
+            RegionRect = new Rect2(Vector2.Zero, frameSize),
+            Modulate = new Color(1f, 1f, 1f, alpha)
+        };
+        parent.AddChild(sprite);
+        _animatedSheets.Add(new AnimatedSheet(sprite, position, frameSize, frameCount, fps, phase, amplitude, alpha, motion));
     }
 
     private void AddFire(Node parent, string name, Vector2 position, float scale, float phase)
@@ -220,6 +323,11 @@ public partial class AldeiaParallaxBackground : Node2D
 
     private void AnimateAmbientLife()
     {
+        foreach (var sheet in _animatedSheets)
+        {
+            AnimateSheet(sheet);
+        }
+
         foreach (var flame in _flames)
         {
             var pulse = Mathf.Sin(_ambientTime * flame.Speed + flame.Phase);
@@ -249,6 +357,37 @@ public partial class AldeiaParallaxBackground : Node2D
         {
             foreground.Rotation = Mathf.Sin(_ambientTime * 0.75f) * 0.0035f;
             foreground.Offset = new Vector2(Mathf.Sin(_ambientTime * 0.9f) * 1.2f, 0f);
+        }
+    }
+
+    private void AnimateSheet(AnimatedSheet sheet)
+    {
+        var rawFrame = Mathf.FloorToInt(_ambientTime * sheet.Fps + sheet.Phase);
+        var frame = rawFrame % sheet.FrameCount;
+        if (frame < 0)
+        {
+            frame += sheet.FrameCount;
+        }
+
+        sheet.Sprite.RegionRect = new Rect2(new Vector2(frame * sheet.FrameSize.X, 0f), sheet.FrameSize);
+
+        var pulse = Mathf.Sin(_ambientTime * 2.4f + sheet.Phase);
+        switch (sheet.Motion)
+        {
+            case AmbientMotion.Fire:
+                sheet.Sprite.Position = sheet.Anchor + new Vector2(pulse * sheet.Amplitude * 0.22f, -Mathf.Abs(pulse) * sheet.Amplitude);
+                sheet.Sprite.Modulate = new Color(1f, 0.9f + pulse * 0.05f, 0.72f, sheet.BaseAlpha);
+                break;
+            case AmbientMotion.Smoke:
+                sheet.Sprite.Position = sheet.Anchor + new Vector2(pulse * sheet.Amplitude, Mathf.Sin(_ambientTime * 1.1f + sheet.Phase) * -2f);
+                sheet.Sprite.Rotation = pulse * 0.025f;
+                sheet.Sprite.Modulate = new Color(0.62f, 0.62f, 0.58f, sheet.BaseAlpha + pulse * 0.035f);
+                break;
+            case AmbientMotion.Embers:
+                var rise = (_ambientTime * 9f + sheet.Phase * 15f) % 34f;
+                sheet.Sprite.Position = sheet.Anchor + new Vector2(pulse * sheet.Amplitude, -rise);
+                sheet.Sprite.Modulate = new Color(1f, 0.88f, 0.58f, Mathf.Max(0.08f, sheet.BaseAlpha * (1f - rise / 48f)));
+                break;
         }
     }
 
