@@ -220,7 +220,7 @@ public partial class PlayerController : CharacterBody2D
                 continue;
             }
 
-            enemy.Execute(new Vector2(_facing.X * 120f, -14f));
+            enemy.Execute(new Vector2(_facing.X * 120f, -14f), PickExecutionStyle(enemy));
             GetParent<PrototypeArena>()?.ApplyCombatImpact(6f, 0.06f);
             return;
         }
@@ -278,10 +278,13 @@ public partial class PlayerController : CharacterBody2D
 
             _hitEnemiesThisAttack.Add(enemy.GetInstanceId());
             var impulse = new Vector2(_facing.X * (_isHeavyAttack ? 128f : 96f), _isHeavyAttack ? -16f : -10f);
-            enemy.TakeHit(impulse);
+            var attackKind = _isHeavyAttack
+                ? PlayerAttackKind.Heavy
+                : _comboStep == 2 ? PlayerAttackKind.ComboFinisher : PlayerAttackKind.Light;
+            enemy.TakeHit(impulse, attackKind);
             if (_comboStep == 2)
             {
-                enemy.TakeHit(impulse * 0.5f);
+                enemy.TakeHit(impulse * 0.5f, PlayerAttackKind.ComboFinisher);
             }
 
             GetParent<PrototypeArena>()?.ApplyCombatImpact(_isHeavyAttack ? 6f : 4.5f, _isHeavyAttack ? 0.05f : 0.04f);
@@ -466,6 +469,17 @@ public partial class PlayerController : CharacterBody2D
             _paint.Color = _state is PlayerState.LightAttack or PlayerState.HeavyAttack ? new Color("#f0d06a") : new Color("#e0b75d");
             _paint.Visible = _state != PlayerState.Dead;
         }
+    }
+
+    private static ExecutionStyle PickExecutionStyle(EnemyBase enemy)
+    {
+        var bucket = Mathf.Abs((int)(enemy.GetInstanceId() % 3));
+        return bucket switch
+        {
+            1 => ExecutionStyle.GutRip,
+            2 => ExecutionStyle.SkullCrush,
+            _ => ExecutionStyle.Decapitate
+        };
     }
 
     private static void EnsureInputMap()

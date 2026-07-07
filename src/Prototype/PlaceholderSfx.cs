@@ -9,6 +9,11 @@ public static class PlaceholderSfx
         return CreateBurst(0.2f, 48f, 0.75f, 0.5f);
     }
 
+    public static AudioStreamWav CreateDismemberRip()
+    {
+        return CreateBurst(0.14f, 36f, 0.8f, 0.62f);
+    }
+
     public static AudioStreamWav CreateHitThud()
     {
         return CreateBurst(0.08f, 92f, 0.55f, 0.25f);

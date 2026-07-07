@@ -7,6 +7,7 @@ public partial class PersistentBloodDecal : Node2D
 
     public override void _Ready()
     {
+        AddToGroup("gore_effect");
         _stain = new Polygon2D
         {
             Name = "PersistentStain",

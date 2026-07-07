@@ -153,7 +153,7 @@ Entregas:
 - Contador de memorias coletadas.
 - Integracao com `MemoryRegistry`.
 
-## Sprint futura - Gore Avancado
+## Sprint 11 - Gore Avancado
 
 Objetivo: desmembramento, execucoes por arma e sangue em vegetacao.
 
@@ -163,3 +163,7 @@ Entregas:
 - Desmembramento por tipo de arma.
 - Execucoes contextuais completas.
 - Regras de legibilidade reforçadas.
+
+Status: implementada, aguardando validacao visual.
+
+## Sprint futura - Conteudo adicional

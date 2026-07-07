@@ -10,6 +10,7 @@ public partial class BloodDecal : Node2D
 
     public override void _Ready()
     {
+        AddToGroup("gore_effect");
         _stain = new Polygon2D
         {
             Name = "Stain",

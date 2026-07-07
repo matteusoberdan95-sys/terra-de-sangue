@@ -7,6 +7,7 @@ public partial class MataFechadaArena : PrototypeArena
     {
         base._Ready();
         ApplyForestPalette();
+        BuildVegetation();
         GetNodeOrNull<PhaseDirector>("PhaseDirector")?.QueueFree();
         AddChild(new MataFechadaDirector { Name = "MataFechadaDirector" });
     }
@@ -35,5 +36,54 @@ public partial class MataFechadaArena : PrototypeArena
                 new Vector2(-500, 130)
             }
         });
+    }
+
+    private void BuildVegetation()
+    {
+        AddVegetationProp("FernLeft", new Vector2(-260, 148), new Color("#243528"), new[]
+        {
+            new Vector2(-18, 8),
+            new Vector2(-4, -16),
+            new Vector2(10, -8),
+            new Vector2(6, 12),
+            new Vector2(-14, 10)
+        });
+
+        AddVegetationProp("RootMass", new Vector2(40, 156), new Color("#1a241c"), new[]
+        {
+            new Vector2(-22, 6),
+            new Vector2(-8, -10),
+            new Vector2(16, -4),
+            new Vector2(20, 10),
+            new Vector2(-10, 12)
+        });
+
+        AddVegetationProp("FernRight", new Vector2(300, 150), new Color("#2a3f2d"), new[]
+        {
+            new Vector2(-12, 10),
+            new Vector2(0, -14),
+            new Vector2(16, -6),
+            new Vector2(12, 12),
+            new Vector2(-8, 8)
+        });
+    }
+
+    private void AddVegetationProp(string name, Vector2 position, Color color, Vector2[] polygon)
+    {
+        if (HasNode(name))
+        {
+            return;
+        }
+
+        var prop = new Polygon2D
+        {
+            Name = name,
+            Color = color,
+            Position = position,
+            Polygon = polygon,
+            ZIndex = Mathf.RoundToInt(position.Y) - 3
+        };
+        prop.AddToGroup("vegetation");
+        AddChild(prop);
     }
 }

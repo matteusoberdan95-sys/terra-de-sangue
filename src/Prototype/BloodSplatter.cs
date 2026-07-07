@@ -16,6 +16,7 @@ public partial class BloodSplatter : Node2D
 
     public override void _Ready()
     {
+        AddToGroup("gore_effect");
         for (var i = 0; i < _drops.Length; i++)
         {
             _drops[i] = new Polygon2D

@@ -4,15 +4,12 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprints 6-10 validadas visualmente e fechadas no remoto.
+Sprint 11 — Gore Avancado implementada, aguardando validacao visual.
 
 ## Fechamento recente
 
-- Sprint 6: `a880c97` — Capitao do Ferro. Validada 2026-07-07.
-- Sprint 7: `5724cf1` — Gore e execucoes. Validada 2026-07-07.
-- Sprint 8: `5724cf1` — Kit do jogador. Validada 2026-07-07.
-- Sprint 9: `c4e08da` — Mata Fechada. Validada 2026-07-07.
-- Sprint 10: `c31f43b` — HUD e progressao. Validada 2026-07-07.
+- Sprints 6-10: validadas e fechadas em 2026-07-07.
+- Sprint 11: implementada localmente — desmembramento, execucoes contextuais, sangue em vegetacao.
 
 ## Progressao do prototipo
 
@@ -25,8 +22,16 @@ Sprints 6-10 validadas visualmente e fechadas no remoto.
 - `WASD`: movimento
 - `J`: ataque leve / combo
 - `K`: ataque pesado
-- `E`: execucao
+- `E`: execucao contextual
+
+## Gore avancado
+
+- Leve fatal: braco arrancado.
+- Combo fatal: decapitacao.
+- Pesado fatal: torso + braco.
+- Execucao `E`: decapitacao, estocada visceral ou esmagamento (varia por inimigo).
+- Mata Fechada: sangue mancha vegetacao proxima.
 
 ## Proximo passo
 
-Iniciar sprint futura de gore avancado ou balanceamento fino do chefe e execucoes.
+Validar visualmente no Godot e ajustar caps de legibilidade se necessario.
