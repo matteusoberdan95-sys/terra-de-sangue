@@ -1,0 +1,96 @@
+using Godot;
+
+[GlobalClass]
+public partial class CombatHud : CanvasLayer
+{
+    private Label? _healthLabel;
+    private Label? _bossLabel;
+    private Label? _memoryLabel;
+    private ProgressBar? _healthBar;
+    private ProgressBar? _bossBar;
+
+    public override void _Ready()
+    {
+        Layer = 10;
+        BuildUi();
+    }
+
+    public override void _Process(double delta)
+    {
+        _ = delta;
+        Refresh();
+    }
+
+    private void Refresh()
+    {
+        var player = GetTree().GetFirstNodeInGroup("player") as PlayerController;
+        if (player is not null && _healthBar is not null && _healthLabel is not null)
+        {
+            _healthBar.MaxValue = player.MaxHealthValue;
+            _healthBar.Value = player.CurrentHealth;
+            _healthLabel.Text = $"Vida {player.CurrentHealth}/{player.MaxHealthValue}";
+        }
+
+        EnemyBase? boss = null;
+        foreach (var node in GetTree().GetNodesInGroup("boss"))
+        {
+            if (node is EnemyBase enemy && enemy.IsAlive)
+            {
+                boss = enemy;
+                break;
+            }
+        }
+
+        if (_bossBar is not null && _bossLabel is not null)
+        {
+            var visible = boss is not null;
+            _bossBar.Visible = visible;
+            _bossLabel.Visible = visible;
+            if (boss is not null)
+            {
+                _bossBar.MaxValue = boss.MaxHealth;
+                _bossBar.Value = boss.HealthRemaining;
+                _bossLabel.Text = $"Chefe {boss.HealthRemaining}/{boss.MaxHealth}";
+            }
+        }
+
+        if (_memoryLabel is not null)
+        {
+            _memoryLabel.Text = $"Memorias: {MemoryRegistry.All.Count}";
+        }
+    }
+
+    private void BuildUi()
+    {
+        _healthLabel = new Label { Position = new Vector2(12, 8) };
+        _healthLabel.AddThemeColorOverride("font_color", new Color("#e0b75d"));
+        AddChild(_healthLabel);
+
+        _healthBar = new ProgressBar
+        {
+            Position = new Vector2(12, 28),
+            CustomMinimumSize = new Vector2(120, 10),
+            MaxValue = 8,
+            Value = 8,
+            ShowPercentage = false
+        };
+        AddChild(_healthBar);
+
+        _bossLabel = new Label { Position = new Vector2(12, 44), Visible = false };
+        _bossLabel.AddThemeColorOverride("font_color", new Color("#b51f1f"));
+        AddChild(_bossLabel);
+
+        _bossBar = new ProgressBar
+        {
+            Position = new Vector2(12, 64),
+            CustomMinimumSize = new Vector2(160, 12),
+            Visible = false,
+            ShowPercentage = false
+        };
+        AddChild(_bossBar);
+
+        _memoryLabel = new Label { Position = new Vector2(12, 84) };
+        _memoryLabel.AddThemeColorOverride("font_color", new Color("#bb9a5d"));
+        AddChild(_memoryLabel);
+    }
+}

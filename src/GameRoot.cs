@@ -10,6 +10,7 @@ public partial class GameRoot : Node2D
         AddToGroup("game_flow");
         Engine.MaxFps = 60;
         MemoryRegistry.Reset();
+        AddChild(new CombatHud { Name = "CombatHud" });
         LoadLevel("res://scenes/levels/AldeiaEmCinzas.tscn");
     }
 
