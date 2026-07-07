@@ -17,3 +17,6 @@ Desktop.ini
 
 # Generated local work
 work/
+
+# Godot UID sidecars
+*.uid
