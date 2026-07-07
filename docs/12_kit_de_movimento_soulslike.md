@@ -29,12 +29,12 @@ Inspiracao: peso e leitura de **Soulslike** + fluidez de **beat 'em up 2.5D** (e
 | `K` | Ataque pesado | Commit forte, mais stamina |
 | `E` | Execucao | Mantido |
 | `Space` | **Esquiva** (rolamento) | I-frames, custo de stamina |
-| `A` ou `D` 2x rapido | **Corrida** | Burst de velocidade na direcao |
-| `Space` + direcao (`A`/`D`) | **Impulso frontal** | Dash curto ofensivo (gap closer) |
+| `Shift` | **Impulso frontal** | Sprint 17 — gap closer ofensivo |
+| `A` ou `D` 2x rapido | **Corrida** | Sprint 17 |
 | `W` + `Space` | **Pulo** | Hop curto; limpa ataques baixos no futuro |
 | `W` + `A`/`D` + `Space` | **Pulo frontal** | Salto com avanco (engage ou fuga) |
 
-> Alternativa se `Space`+direcao conflitar: `Shift` = impulso frontal, `Space` = esquiva pura.
+> Decisao 2026-07-07: `Space` = esquiva pura. `Shift` = impulso frontal (Sprint 17).
 
 ---
 
@@ -164,7 +164,7 @@ Nenhum combo exige mais de **3 inputs** no prototipo da Fase 1.
 
 ### Sprint 17 — Corrida + Impulso
 - Double-tap `A`/`D`
-- `Space`+direcao impulso frontal
+- `Shift` impulso frontal
 - Golpe de corrida e dash attack
 - SFX dedicados
 
@@ -202,4 +202,4 @@ Se isso nao for divertido com pixel art, nao avancamos para Fase 2.
 
 ## Proximo passo imediato
 
-Iniciar **Sprint 16** (Esquiva + Stamina) apos validacao deste plano.
+Iniciar **Sprint 17** (Corrida + Impulso) apos fechamento da Sprint 16.

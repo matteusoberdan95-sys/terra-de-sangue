@@ -4,7 +4,7 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 15 validada. Proximo: Sprint 16 Esquiva + Stamina.
+Sprint 16 validada. Proximo: Sprint 17 Corrida + Impulso.
 
 ## Direcao
 
@@ -12,20 +12,20 @@ Kit de movimento soulslike na Fase 1 antes de expandir mapa. Plano em `docs/12_k
 
 ## Fechamento recente
 
+- Sprint 16: esquiva + stamina + contra-ataque. Validada 2026-07-07.
 - Sprint 15: `9713c47` — Sprites pixel Arandu + mercenario. Validada 2026-07-07.
-- Sprint 14: Audio validada 2026-07-07.
 
 ## Controles atuais
 
 - `WASD`, `J`, `K`, `E`
+- `Space`: esquiva (stamina, i-frames, contra-ataque pos-dodge)
 
 ## Controles planejados
 
-- `Space`: esquiva
 - `A`/`D` 2x: corrida
-- `Space`+direcao: impulso frontal
+- `Shift`: impulso frontal
 - `W`+`Space`: pulo / pulo frontal
 
 ## Proximo passo
 
-Implementar Sprint 16 (esquiva + stamina + contra-ataque).
+Implementar Sprint 17 (corrida duplo A/D + impulso com Shift).

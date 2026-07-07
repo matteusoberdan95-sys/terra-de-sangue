@@ -4,9 +4,11 @@ using Godot;
 public partial class CombatHud : CanvasLayer
 {
     private Label? _healthLabel;
+    private Label? _staminaLabel;
     private Label? _bossLabel;
     private Label? _memoryLabel;
     private ProgressBar? _healthBar;
+    private ProgressBar? _staminaBar;
     private ProgressBar? _bossBar;
 
     public override void _Ready()
@@ -29,6 +31,16 @@ public partial class CombatHud : CanvasLayer
             _healthBar.MaxValue = player.MaxHealthValue;
             _healthBar.Value = player.CurrentHealth;
             _healthLabel.Text = $"Vida {player.CurrentHealth}/{player.MaxHealthValue}";
+        }
+
+        if (player is not null && _staminaBar is not null && _staminaLabel is not null)
+        {
+            _staminaBar.MaxValue = player.MaxStaminaValue;
+            _staminaBar.Value = player.CurrentStamina;
+            _staminaLabel.Text = $"Stamina {Mathf.CeilToInt(player.CurrentStamina)}";
+            _staminaBar.Modulate = player.StaminaExhaustedFlash
+                ? new Color(1f, 0.45f, 0.4f)
+                : Colors.White;
         }
 
         EnemyBase? boss = null;
@@ -76,20 +88,34 @@ public partial class CombatHud : CanvasLayer
         };
         AddChild(_healthBar);
 
-        _bossLabel = new Label { Position = new Vector2(12, 44), Visible = false };
+        _staminaLabel = new Label { Position = new Vector2(12, 42) };
+        _staminaLabel.AddThemeColorOverride("font_color", new Color("#c9a84a"));
+        AddChild(_staminaLabel);
+
+        _staminaBar = new ProgressBar
+        {
+            Position = new Vector2(12, 62),
+            CustomMinimumSize = new Vector2(120, 8),
+            MaxValue = 100,
+            Value = 100,
+            ShowPercentage = false
+        };
+        AddChild(_staminaBar);
+
+        _bossLabel = new Label { Position = new Vector2(12, 76), Visible = false };
         _bossLabel.AddThemeColorOverride("font_color", new Color("#b51f1f"));
         AddChild(_bossLabel);
 
         _bossBar = new ProgressBar
         {
-            Position = new Vector2(12, 64),
+            Position = new Vector2(12, 96),
             CustomMinimumSize = new Vector2(160, 12),
             Visible = false,
             ShowPercentage = false
         };
         AddChild(_bossBar);
 
-        _memoryLabel = new Label { Position = new Vector2(12, 84) };
+        _memoryLabel = new Label { Position = new Vector2(12, 116) };
         _memoryLabel.AddThemeColorOverride("font_color", new Color("#bb9a5d"));
         AddChild(_memoryLabel);
     }

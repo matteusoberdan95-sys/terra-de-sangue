@@ -215,7 +215,7 @@ Status: validada em 2026-07-07.
 
 Objetivo: esquiva com i-frames, barra de stamina, contra-ataque pos-dodge.
 
-Ver plano: `docs/12_kit_de_movimento_soulslike.md`.
+Status: validada em 2026-07-07.
 
 ## Sprint 17 - Corrida e Impulso
 

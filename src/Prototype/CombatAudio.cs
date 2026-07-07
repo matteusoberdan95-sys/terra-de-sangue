@@ -116,6 +116,11 @@ public partial class CombatAudio : Node
         Play(_uiPlayer, Load($"{SfxRoot}/ui/encounter_pulse.wav", PlaceholderSfx.CreateEncounterPulse), 0.92f);
     }
 
+    public void PlayDodge()
+    {
+        Play(_swingPlayer, Load($"{SfxRoot}/combat/dodge.wav", PlaceholderSfx.CreateDodgeRoll), 1f);
+    }
+
     private static AudioStream Load(string path, System.Func<AudioStream> fallback)
     {
         return AudioLibrary.Resolve(path, fallback);
