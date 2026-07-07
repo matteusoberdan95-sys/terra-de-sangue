@@ -4,17 +4,17 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 14 — Audio Fase 1 implementada, aguardando validacao visual.
+Sprint 15 — Sprites pixel Arandu e mercenario implementada, aguardando validacao.
 
 ## Direcao
 
-Prioridade: Fase 1 completa em sensacao (visual + combate + som) antes de sprites.
+Fase 1 quase completa em sensacao: silhuetas, game feel, audio, sprites pixel iniciais.
 
 ## Fechamento recente
 
-- Sprint 13: Game feel validada 2026-07-07.
-- Sprint 14: camada sonora da fase 1.
+- Sprint 14: Audio validada 2026-07-07 (placeholders ate SFX custom).
+- Sprint 15: sprites pixel Arandu + mercenario, AudioLibrary para assets futuros.
 
 ## Proximo passo
 
-Validar audio no Godot; depois sprites do Arandu.
+Validar sprites no Godot; depois sprites do bruto/sargento ou pack SFX custom em `assets/audio/`.

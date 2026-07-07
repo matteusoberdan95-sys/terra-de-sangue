@@ -35,6 +35,7 @@ public abstract partial class EnemyBase : CharacterBody2D
     private Polygon2D? _telegraphMark;
     private Node2D? _visualRig;
     private VisualRigAnimator? _visualAnimator;
+    private SpriteCharacterAnimator? _pixelSprite;
     private Area2D? _attackHitbox;
     private CollisionShape2D? _attackHitboxShape;
     private EnemyState _state = EnemyState.Idle;
@@ -74,6 +75,7 @@ public abstract partial class EnemyBase : CharacterBody2D
     protected abstract Color ApproachColor { get; }
     protected abstract Color AttackColor { get; }
     protected abstract EnemyVisualArchetype VisualArchetype { get; }
+    protected virtual bool UsePixelSprite => false;
 
     protected virtual float GetAttackStartup() => AttackStartupSeconds;
     protected virtual float GetAttackActive() => AttackActiveSeconds;
@@ -106,6 +108,7 @@ public abstract partial class EnemyBase : CharacterBody2D
         _hitFlash = Mathf.Max(0f, _hitFlash - dt);
         _visualAnimator?.SetMoving(_state == EnemyState.Approach && Velocity.LengthSquared() > 1f);
         _visualAnimator?.SetFacing(_facing.X);
+        UpdatePixelSprite();
         UpdateVisualState();
     }
 
@@ -461,6 +464,55 @@ public abstract partial class EnemyBase : CharacterBody2D
             }
         };
         _visualRig.AddChild(_telegraphMark);
+
+        if (UsePixelSprite)
+        {
+            AttachPixelSprite();
+        }
+    }
+
+    private void AttachPixelSprite()
+    {
+        if (_visualRig is null)
+        {
+            return;
+        }
+
+        var frames = VisualArchetype == EnemyVisualArchetype.Mercenary
+            ? MercenarySpriteArt.BuildSpriteFrames()
+            : null;
+        if (frames is null)
+        {
+            return;
+        }
+
+        _pixelSprite = new SpriteCharacterAnimator { Name = "PixelSprite" };
+        _visualRig.AddChild(_pixelSprite);
+        _pixelSprite.Configure(frames, new Vector2(0, -4));
+
+        foreach (var child in _visualRig.GetChildren())
+        {
+            var childName = child.Name.ToString();
+            if (child is Polygon2D polygon && childName != "AttackSwing" && childName != "TelegraphMark")
+            {
+                polygon.Visible = false;
+            }
+        }
+    }
+
+    private void UpdatePixelSprite()
+    {
+        if (_pixelSprite is null)
+        {
+            return;
+        }
+
+        _pixelSprite.SetFacing(_facing.X);
+        _pixelSprite.UpdateEnemyPresentation(
+            _state == EnemyState.Approach && Velocity.LengthSquared() > 1f,
+            _state == EnemyState.Attack,
+            _hitFlash > 0f,
+            _state == EnemyState.Dead);
     }
 
     private void UpdateTelegraphMarker(bool visible, float progress)

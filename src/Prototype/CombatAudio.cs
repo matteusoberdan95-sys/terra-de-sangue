@@ -3,6 +3,8 @@ using Godot;
 [GlobalClass]
 public partial class CombatAudio : Node
 {
+    private const string SfxRoot = "res://assets/audio/sfx";
+
     private AudioStreamPlayer? _swingPlayer;
     private AudioStreamPlayer? _hitPlayer;
     private AudioStreamPlayer? _deathPlayer;
@@ -43,9 +45,9 @@ public partial class CombatAudio : Node
     {
         var stream = attackKind switch
         {
-            PlayerAttackKind.Heavy => PlaceholderSfx.CreateHeavySwing(),
-            PlayerAttackKind.ComboFinisher => PlaceholderSfx.CreateComboSwing(),
-            _ => PlaceholderSfx.CreateLightSwing()
+            PlayerAttackKind.Heavy => Load($"{SfxRoot}/combat/swing_heavy.wav", PlaceholderSfx.CreateHeavySwing),
+            PlayerAttackKind.ComboFinisher => Load($"{SfxRoot}/combat/swing_combo.wav", PlaceholderSfx.CreateComboSwing),
+            _ => Load($"{SfxRoot}/combat/swing_light.wav", PlaceholderSfx.CreateLightSwing)
         };
         Play(_swingPlayer, stream, 0.94f + (float)GD.RandRange(0, 0.08));
     }
@@ -54,15 +56,15 @@ public partial class CombatAudio : Node
     {
         var stream = attackKind switch
         {
-            PlayerAttackKind.Heavy => PlaceholderSfx.CreateHitHeavy(),
-            PlayerAttackKind.ComboFinisher => PlaceholderSfx.CreateHitCombo(),
-            _ => PlaceholderSfx.CreateHitLight()
+            PlayerAttackKind.Heavy => Load($"{SfxRoot}/combat/hit_heavy.wav", PlaceholderSfx.CreateHitHeavy),
+            PlayerAttackKind.ComboFinisher => Load($"{SfxRoot}/combat/hit_combo.wav", PlaceholderSfx.CreateHitCombo),
+            _ => Load($"{SfxRoot}/combat/hit_light.wav", PlaceholderSfx.CreateHitLight)
         };
         Play(_hitPlayer, stream, 0.92f + (float)GD.RandRange(0, 0.1));
 
         if (isFatal)
         {
-            Play(_deathPlayer, PlaceholderSfx.CreateDeathCrunch(), 0.9f + (float)GD.RandRange(0, 0.06));
+            Play(_deathPlayer, Load($"{SfxRoot}/combat/death.wav", PlaceholderSfx.CreateDeathCrunch), 0.9f + (float)GD.RandRange(0, 0.06));
         }
     }
 
@@ -70,44 +72,53 @@ public partial class CombatAudio : Node
     {
         var stream = style switch
         {
-            ExecutionStyle.GutRip => PlaceholderSfx.CreateGutRip(),
-            ExecutionStyle.SkullCrush => PlaceholderSfx.CreateSkullCrush(),
-            _ => PlaceholderSfx.CreateExecutionCrunch()
+            ExecutionStyle.GutRip => Load($"{SfxRoot}/combat/execute_gut.wav", PlaceholderSfx.CreateGutRip),
+            ExecutionStyle.SkullCrush => Load($"{SfxRoot}/combat/execute_skull.wav", PlaceholderSfx.CreateSkullCrush),
+            _ => Load($"{SfxRoot}/combat/execute_decap.wav", PlaceholderSfx.CreateExecutionCrunch)
         };
         Play(_executePlayer, stream, 1f);
-        Play(_deathPlayer, PlaceholderSfx.CreateDismemberRip(), 0.95f);
+        Play(_deathPlayer, Load($"{SfxRoot}/combat/dismember.wav", PlaceholderSfx.CreateDismemberRip), 0.95f);
     }
 
     public void PlayPlayerHurt(int damage)
     {
-        var stream = damage >= 2 ? PlaceholderSfx.CreatePlayerHurtHeavy() : PlaceholderSfx.CreatePlayerHurtLight();
+        var stream = damage >= 2
+            ? Load($"{SfxRoot}/combat/player_hurt_heavy.wav", PlaceholderSfx.CreatePlayerHurtHeavy)
+            : Load($"{SfxRoot}/combat/player_hurt_light.wav", PlaceholderSfx.CreatePlayerHurtLight);
         Play(_hurtPlayer, stream, 0.96f + (float)GD.RandRange(0, 0.05));
     }
 
     public void PlayEnemyTelegraph(bool heavy = false)
     {
-        Play(_telegraphPlayer, PlaceholderSfx.CreateEnemyTelegraph(), heavy ? 0.88f : 1f);
+        Play(_telegraphPlayer, Load($"{SfxRoot}/combat/enemy_telegraph.wav", PlaceholderSfx.CreateEnemyTelegraph), heavy ? 0.88f : 1f);
     }
 
     public void PlayEnemySwing(int damage)
     {
-        var stream = damage >= 2 ? PlaceholderSfx.CreateEnemySwingHeavy() : PlaceholderSfx.CreateEnemySwing();
+        var stream = damage >= 2
+            ? Load($"{SfxRoot}/combat/enemy_swing_heavy.wav", PlaceholderSfx.CreateEnemySwingHeavy)
+            : Load($"{SfxRoot}/combat/enemy_swing.wav", PlaceholderSfx.CreateEnemySwing);
         Play(_enemySwingPlayer, stream, 0.94f + (float)GD.RandRange(0, 0.08));
     }
 
     public void PlayMemoryCollect()
     {
-        Play(_uiPlayer, PlaceholderSfx.CreateMemoryCollect(), 1f);
+        Play(_uiPlayer, Load($"{SfxRoot}/ui/memory_collect.wav", PlaceholderSfx.CreateMemoryCollect), 1f);
     }
 
     public void PlayMiniBossIntro()
     {
-        Play(_uiPlayer, PlaceholderSfx.CreateMiniBossIntro(), 1f);
+        Play(_uiPlayer, Load($"{SfxRoot}/ui/miniboss_intro.wav", PlaceholderSfx.CreateMiniBossIntro), 1f);
     }
 
     public void PlayEncounterPulse()
     {
-        Play(_uiPlayer, PlaceholderSfx.CreateEncounterPulse(), 0.92f);
+        Play(_uiPlayer, Load($"{SfxRoot}/ui/encounter_pulse.wav", PlaceholderSfx.CreateEncounterPulse), 0.92f);
+    }
+
+    private static AudioStream Load(string path, System.Func<AudioStream> fallback)
+    {
+        return AudioLibrary.Resolve(path, fallback);
     }
 
     private static AudioStreamPlayer CreatePlayer(string name, float volumeDb)

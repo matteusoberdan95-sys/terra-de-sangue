@@ -1,0 +1,66 @@
+using Godot;
+
+[GlobalClass]
+public partial class SpriteCharacterAnimator : AnimatedSprite2D
+{
+    private string _currentAnimation = "idle";
+
+    public void Configure(SpriteFrames frames, Vector2 offset)
+    {
+        SpriteFrames = frames;
+        Centered = true;
+        Position = offset;
+        Scale = new Vector2(1.2f, 1.2f);
+        ZIndex = 5;
+        Play("idle");
+    }
+
+    public void SetFacing(float directionX)
+    {
+        FlipH = directionX < 0f;
+    }
+
+    public void UpdatePresentation(bool moving, bool attacking, bool heavyAttack, bool hitFlash, bool dead)
+    {
+        if (SpriteFrames is null)
+        {
+            return;
+        }
+
+        var next = dead ? "idle"
+            : hitFlash ? "hit"
+            : attacking ? heavyAttack ? "attack_heavy" : "attack_light"
+            : moving ? "walk"
+            : "idle";
+
+        if (next != _currentAnimation || !IsPlaying())
+        {
+            _currentAnimation = next;
+            Play(next);
+        }
+
+        Modulate = dead ? new Color("#4a2f24") : Colors.White;
+    }
+
+    public void UpdateEnemyPresentation(bool moving, bool attacking, bool hitFlash, bool dead)
+    {
+        if (SpriteFrames is null)
+        {
+            return;
+        }
+
+        var next = dead ? "idle"
+            : hitFlash ? "hit"
+            : attacking ? "attack"
+            : moving ? "walk"
+            : "idle";
+
+        if (next != _currentAnimation || !IsPlaying())
+        {
+            _currentAnimation = next;
+            Play(next);
+        }
+
+        Modulate = dead ? new Color("#332424") : Colors.White;
+    }
+}

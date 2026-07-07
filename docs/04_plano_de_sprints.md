@@ -203,6 +203,12 @@ Entregas:
 - Telegraph e swing inimigo.
 - Feedback de memoria e encontros.
 
+Status: validada em 2026-07-07. Placeholders ate SFX custom.
+
+## Sprint 15 - Sprites Pixel Fase 1
+
+Objetivo: Arandu e mercenario com sprites pixel animados.
+
 Status: implementada, aguardando validacao visual.
 
-## Sprint futura - Sprites Arandu
+## Sprint futura - SFX Custom ou Sprites Bruto/Sargento

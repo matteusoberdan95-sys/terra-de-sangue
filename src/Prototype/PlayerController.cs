@@ -40,6 +40,7 @@ public partial class PlayerController : CharacterBody2D
     private CollisionShape2D? _attackHitboxShape;
     private Node2D? _visualRig;
     private VisualRigAnimator? _visualAnimator;
+    private SpriteCharacterAnimator? _pixelSprite;
     private readonly HashSet<ulong> _hitEnemiesThisAttack = new();
     private PlayerState _state = PlayerState.Idle;
     private Vector2 _facing = Vector2.Right;
@@ -84,6 +85,7 @@ public partial class PlayerController : CharacterBody2D
         }
 
         BuildVisuals();
+        AttachAranduSprite();
         BuildCollision();
         BuildAttackHitbox();
         BuildHurtbox();
@@ -379,6 +381,26 @@ public partial class PlayerController : CharacterBody2D
         _visualRig.AddChild(_attackSlash);
     }
 
+    private void AttachAranduSprite()
+    {
+        if (_visualRig is null)
+        {
+            return;
+        }
+
+        _pixelSprite = new SpriteCharacterAnimator { Name = "AranduSprite" };
+        _visualRig.AddChild(_pixelSprite);
+        _pixelSprite.Configure(AranduSpriteArt.BuildSpriteFrames(), new Vector2(0, -6));
+
+        foreach (var child in _visualRig.GetChildren())
+        {
+            if (child is Polygon2D polygon && child.Name.ToString() != "AttackSlash")
+            {
+                polygon.Visible = false;
+            }
+        }
+    }
+
     private void BuildCollision()
     {
         if (GetNodeOrNull<CollisionShape2D>("Collision") is not null)
@@ -501,6 +523,14 @@ public partial class PlayerController : CharacterBody2D
             _paint.Color = _state is PlayerState.LightAttack or PlayerState.HeavyAttack ? new Color("#f0d06a") : new Color("#e0b75d");
             _paint.Visible = _state != PlayerState.Dead;
         }
+
+        _pixelSprite?.SetFacing(_facing.X);
+        _pixelSprite?.UpdatePresentation(
+            _state == PlayerState.Walk && Velocity.LengthSquared() > 1f,
+            _state is PlayerState.LightAttack or PlayerState.HeavyAttack,
+            _state == PlayerState.HeavyAttack,
+            _hitFlash > 0f,
+            _state == PlayerState.Dead);
     }
 
     private static ExecutionStyle PickExecutionStyle(EnemyBase enemy)

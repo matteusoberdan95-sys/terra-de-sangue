@@ -198,8 +198,15 @@ Registrar sempre:
 - Projeto local: `C:\Users\mober\OneDrive\Desktop\fauna-do-sangue`
 - Cena: `scenes/Main.tscn`
 - Resultado: aprovado pelo usuario.
-- Build: `dotnet build TerraSangrada.csproj --no-restore` com 0 erros e 0 avisos.
-- Conteudo validado: telegraph inimigo, hitstop por golpe, knockback/stun, SFX J/combo/K, encontros rebalanceados.
+- Conteudo validado: telegraph, hitstop, knockback, encontros rebalanceados.
+
+### 2026-07-07 - Sprint 14
+
+- Projeto local: `C:\Users\mober\OneDrive\Desktop\fauna-do-sangue`
+- Cena: `scenes/Main.tscn`
+- Resultado: aprovado pelo usuario.
+- Conteudo validado: CombatAudio, telegraph sonoro, impactos diferenciados, memoria e mini-chefe.
+- Nota: placeholders procedurais mantidos ate pack SFX custom em `assets/audio/`.
 
 ## Politica para Codex e Cursor
 

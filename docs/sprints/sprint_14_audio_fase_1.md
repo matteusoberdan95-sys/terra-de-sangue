@@ -28,7 +28,9 @@ Dar camada sonora completa ao combate da Aldeia em Cinzas, alinhada ao game feel
 
 ## Registro de validacao visual
 
-Status atual: pendente.
+Status atual: validado localmente no Godot em 2026-07-07. Aprovado pelo usuario.
+
+Resultado: aprovado pelo usuario em 2026-07-07. Placeholders procedurais mantidos ate sprint de SFX custom.
 
 Cena para validar:
 
