@@ -4,16 +4,20 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 11 — Gore Avancado validada e fechada no remoto.
+Sprint 12 — Fase 1 Silhuetas e Identidade implementada, aguardando validacao visual.
+
+## Direcao
+
+Prioridade: tornar a Fase 1 divertida e legivel antes de expandir fases ou sistemas.
 
 ## Fechamento recente
 
-- Sprint 11: `c03302c` — Gore avancado. Validada 2026-07-07.
-- Sprints 6-10: validadas e fechadas em 2026-07-07.
+- Sprint 11: Gore Avancado validada 2026-07-07.
+- Sprint 12: silhuetas, animacao basica e polish da Aldeia em Cinzas.
 
 ## Progressao do prototipo
 
-1. Aldeia em Cinzas (Fase 1)
+1. Aldeia em Cinzas (Fase 1) — foco de polish atual
 2. Arena do Capitao do Ferro (Chefe 1)
 3. Mata Fechada (Fase 2)
 
@@ -24,14 +28,6 @@ Sprint 11 — Gore Avancado validada e fechada no remoto.
 - `K`: ataque pesado
 - `E`: execucao contextual
 
-## Gore avancado
-
-- Leve fatal: braco arrancado.
-- Combo fatal: decapitacao.
-- Pesado fatal: torso + braco.
-- Execucao `E`: decapitacao, estocada visceral ou esmagamento (varia por inimigo).
-- Mata Fechada: sangue mancha vegetacao proxima.
-
 ## Proximo passo
 
-Definir proxima sprint (conteudo adicional, balanceamento ou nova fase).
+Validar visualmente a Fase 1 no Godot e iterar ate o combate parecer divertido.

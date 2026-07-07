@@ -12,8 +12,8 @@ public partial class PhaseDirector : Node
         [new("brute", new Vector2(270, 150)), new("brute", new Vector2(410, 170)), new("mercenary", new Vector2(340, 138))]
     ];
 
-    private const float IntroSeconds = 3.6f;
-    private const float InterEncounterDelaySeconds = 2.2f;
+    private const float IntroSeconds = 3.2f;
+    private const float InterEncounterDelaySeconds = 1.6f;
     private const float OutroSeconds = 4f;
     private static readonly Vector2 MemorySpawnPosition = new(480, 164);
     private static readonly Vector2 MiniBossSpawnPosition = new(320, 160);
@@ -33,6 +33,7 @@ public partial class PhaseDirector : Node
     private Label? _phaseTitleLabel;
     private Label? _statusLabel;
     private Label? _bannerLabel;
+    private ColorRect? _bannerBackdrop;
     private PhaseState _state = PhaseState.Intro;
     private int _nextEncounterIndex;
     private int _activeEncounterNumber;
@@ -219,6 +220,16 @@ public partial class PhaseDirector : Node
         _statusLabel.AddThemeColorOverride("font_color", new Color("#bb9a5d"));
         AddChild(_statusLabel);
 
+        _bannerBackdrop = new ColorRect
+        {
+            Name = "BannerBackdrop",
+            Visible = false,
+            Color = new Color("#15110f", 0.78f),
+            Position = new Vector2(-150, -132),
+            Size = new Vector2(300, 72)
+        };
+        AddChild(_bannerBackdrop);
+
         _bannerLabel = new Label
         {
             Name = "BannerLabel",
@@ -238,12 +249,22 @@ public partial class PhaseDirector : Node
             return;
         }
 
+        if (_bannerBackdrop is not null)
+        {
+            _bannerBackdrop.Visible = true;
+        }
+
         _bannerLabel.Visible = true;
         _bannerLabel.Text = $"{title}\n{body}";
     }
 
     private void HideBanner()
     {
+        if (_bannerBackdrop is not null)
+        {
+            _bannerBackdrop.Visible = false;
+        }
+
         if (_bannerLabel is not null)
         {
             _bannerLabel.Visible = false;

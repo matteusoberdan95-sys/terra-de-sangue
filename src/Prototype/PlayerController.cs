@@ -38,6 +38,8 @@ public partial class PlayerController : CharacterBody2D
     private Area2D? _attackHitbox;
     private Area2D? _hurtbox;
     private CollisionShape2D? _attackHitboxShape;
+    private Node2D? _visualRig;
+    private VisualRigAnimator? _visualAnimator;
     private readonly HashSet<ulong> _hitEnemiesThisAttack = new();
     private PlayerState _state = PlayerState.Idle;
     private Vector2 _facing = Vector2.Right;
@@ -71,6 +73,16 @@ public partial class PlayerController : CharacterBody2D
         AddToGroup("player");
         _spawnPosition = GlobalPosition;
         EnsureInputMap();
+        SilhouetteArt.EnsurePlayerVisualRig(this);
+        _visualRig = GetNode<Node2D>("VisualRig");
+        _visualAnimator = GetNodeOrNull<VisualRigAnimator>("VisualAnimator");
+        if (_visualAnimator is null)
+        {
+            _visualAnimator = new VisualRigAnimator { Name = "VisualAnimator" };
+            AddChild(_visualAnimator);
+            _visualAnimator.Bind(_visualRig);
+        }
+
         BuildVisuals();
         BuildCollision();
         BuildAttackHitbox();
@@ -148,6 +160,9 @@ public partial class PlayerController : CharacterBody2D
         ClampToMovementBounds();
         ZIndex = Mathf.RoundToInt(GlobalPosition.Y);
 
+        _visualAnimator?.SetMoving(_state == PlayerState.Walk && Velocity.LengthSquared() > 1f);
+        _visualAnimator?.SetFacing(_facing.X);
+
         if (Input.IsActionJustPressed("attack_light") && _attackCooldown <= 0f && _state is PlayerState.Idle or PlayerState.Walk)
         {
             StartLightAttack(_comboWindow > 0f ? 2 : 1);
@@ -166,7 +181,6 @@ public partial class PlayerController : CharacterBody2D
         if (_attackSlash is not null)
         {
             _attackSlash.Visible = _slashTimer > 0f;
-            _attackSlash.Scale = new Vector2(_facing.X, 1f);
         }
 
         UpdateVisualState();
@@ -191,6 +205,7 @@ public partial class PlayerController : CharacterBody2D
         _attackTimer = AttackStartupSeconds + AttackActiveSeconds + AttackRecoverySeconds;
         _slashTimer = AttackActiveSeconds + AttackRecoverySeconds;
         _hitEnemiesThisAttack.Clear();
+        _visualAnimator?.PulseAttack();
         SetAttackHitboxEnabled(false);
     }
 
@@ -203,6 +218,7 @@ public partial class PlayerController : CharacterBody2D
         _attackTimer = HeavyAttackStartupSeconds + HeavyAttackActiveSeconds + HeavyAttackRecoverySeconds;
         _slashTimer = HeavyAttackActiveSeconds + HeavyAttackRecoverySeconds;
         _hitEnemiesThisAttack.Clear();
+        _visualAnimator?.PulseAttack();
         SetAttackHitboxEnabled(false);
     }
 
@@ -293,13 +309,19 @@ public partial class PlayerController : CharacterBody2D
 
     private void BuildVisuals()
     {
-        _body = GetNodeOrNull<Polygon2D>("WarriorPlaceholder");
-        _paint = GetNodeOrNull<Polygon2D>("Paint");
-        _attackSlash = GetNodeOrNull<Polygon2D>("AttackSlash");
+        _body = _visualRig?.GetNodeOrNull<Polygon2D>("WarriorPlaceholder");
+        _paint = _visualRig?.GetNodeOrNull<Polygon2D>("Paint");
+        _attackSlash = _visualRig?.GetNodeOrNull<Polygon2D>("AttackSlash");
 
         if (_body is not null && _paint is not null && _attackSlash is not null)
         {
             return;
+        }
+
+        _visualRig ??= new Node2D { Name = "VisualRig" };
+        if (_visualRig.GetParent() is null)
+        {
+            AddChild(_visualRig);
         }
 
         _body = new Polygon2D
@@ -315,7 +337,7 @@ public partial class PlayerController : CharacterBody2D
                 new Vector2(12, 12)
             }
         };
-        AddChild(_body);
+        _visualRig.AddChild(_body);
 
         _paint = new Polygon2D
         {
@@ -329,7 +351,7 @@ public partial class PlayerController : CharacterBody2D
                 new Vector2(-8, -5)
             }
         };
-        AddChild(_paint);
+        _visualRig.AddChild(_paint);
 
         _attackSlash = new Polygon2D
         {
@@ -344,7 +366,7 @@ public partial class PlayerController : CharacterBody2D
                 new Vector2(12, 3)
             }
         };
-        AddChild(_attackSlash);
+        _visualRig.AddChild(_attackSlash);
     }
 
     private void BuildCollision()

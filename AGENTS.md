@@ -7,9 +7,9 @@ Este arquivo e a primeira leitura obrigatoria para qualquer agente trabalhando n
 - Projeto: `Terra Sangrada`.
 - Engine: Godot .NET 4.7.
 - Linguagem: C# / .NET 10.
-- Sprint atual: Sprint 11 Gore Avancado validada e fechada.
+- Sprint atual: Sprint 12 Fase 1 Silhuetas implementada.
 - Cena principal: `res://scenes/Main.tscn`.
-- Proximo foco: definir proxima sprint.
+- Proximo foco: validacao visual da fase 1 polida.
 
 ## Ordem de leitura
 

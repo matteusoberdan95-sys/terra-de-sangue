@@ -32,6 +32,8 @@ public abstract partial class EnemyBase : CharacterBody2D
     private Polygon2D? _bleedingWound;
     private Polygon2D? _deepGash;
     private Polygon2D? _attackSwing;
+    private Node2D? _visualRig;
+    private VisualRigAnimator? _visualAnimator;
     private Area2D? _attackHitbox;
     private CollisionShape2D? _attackHitboxShape;
     private EnemyState _state = EnemyState.Idle;
@@ -68,6 +70,7 @@ public abstract partial class EnemyBase : CharacterBody2D
     protected abstract Color BodyColor { get; }
     protected abstract Color ApproachColor { get; }
     protected abstract Color AttackColor { get; }
+    protected abstract EnemyVisualArchetype VisualArchetype { get; }
 
     protected virtual float GetAttackStartup() => AttackStartupSeconds;
     protected virtual float GetAttackActive() => AttackActiveSeconds;
@@ -98,6 +101,8 @@ public abstract partial class EnemyBase : CharacterBody2D
         ZIndex = Mathf.RoundToInt(GlobalPosition.Y);
 
         _hitFlash = Mathf.Max(0f, _hitFlash - dt);
+        _visualAnimator?.SetMoving(_state == EnemyState.Approach && Velocity.LengthSquared() > 1f);
+        _visualAnimator?.SetFacing(_facing.X);
         UpdateVisualState();
     }
 
@@ -252,6 +257,7 @@ public abstract partial class EnemyBase : CharacterBody2D
         _state = EnemyState.Attack;
         _attackCooldown = AttackCooldownSeconds;
         OnAttackPatternStarted();
+        _visualAnimator?.PulseAttack();
         _attackTimer = GetAttackStartup() + GetAttackActive() + GetAttackRecovery();
         _hitPlayerThisAttack = false;
         SetAttackHitboxEnabled(false);
@@ -334,152 +340,83 @@ public abstract partial class EnemyBase : CharacterBody2D
 
     private void BuildVisuals()
     {
-        _body = GetNodeOrNull<Polygon2D>("InvaderPlaceholder");
+        _visualRig = new Node2D { Name = "VisualRig" };
+        AddChild(_visualRig);
+
+        _visualAnimator = new VisualRigAnimator { Name = "VisualAnimator" };
+        AddChild(_visualAnimator);
+        _visualAnimator.Bind(_visualRig);
+
+        var parts = SilhouetteArt.BuildEnemy(_visualRig, VisualArchetype, BodyColor);
+        _body = parts.Body;
+        _head = parts.Head;
+        _arm = parts.Arm;
+
         _mark = GetNodeOrNull<Polygon2D>("RedMark");
-        _attackSwing = GetNodeOrNull<Polygon2D>("AttackSwing");
 
-        if (_body is null)
+        _attackSwing = new Polygon2D
         {
-            _body = new Polygon2D
+            Name = "AttackSwing",
+            Color = new Color("#8f1f17"),
+            Visible = false,
+            ZIndex = 20,
+            Polygon = new[]
             {
-                Name = "InvaderPlaceholder",
-                Polygon = new[]
-                {
-                    new Vector2(-12, 12),
-                    new Vector2(-13, -8),
-                    new Vector2(-4, -26),
-                    new Vector2(9, -18),
-                    new Vector2(14, -4),
-                    new Vector2(11, 12),
-                    new Vector2(0, 16)
-                }
-            };
-            AddChild(_body);
-        }
+                new Vector2(8, -12),
+                new Vector2(44, -8),
+                new Vector2(40, 6),
+                new Vector2(10, 2)
+            }
+        };
+        _visualRig.AddChild(_attackSwing);
 
-        if (_mark is null)
+        _tornCloth = new Polygon2D
         {
-            _mark = new Polygon2D
+            Name = "TornCloth",
+            Visible = false,
+            ZIndex = 12,
+            Color = new Color("#560f0b", 0.72f),
+            Polygon = new[]
             {
-                Name = "RedMark",
-                Color = new Color("#560f0b"),
-                Polygon = new[]
-                {
-                    new Vector2(-8, -8),
-                    new Vector2(10, -6),
-                    new Vector2(9, 1),
-                    new Vector2(-9, -1)
-                }
-            };
-            AddChild(_mark);
-        }
+                new Vector2(-9, 0),
+                new Vector2(7, -4),
+                new Vector2(11, 6),
+                new Vector2(-6, 9)
+            }
+        };
+        _visualRig.AddChild(_tornCloth);
 
-        if (_attackSwing is null)
+        _bleedingWound = new Polygon2D
         {
-            _attackSwing = new Polygon2D
+            Name = "BleedingWound",
+            Visible = false,
+            ZIndex = 13,
+            Color = new Color("#8f1f17", 0.88f),
+            Polygon = new[]
             {
-                Name = "AttackSwing",
-                Color = new Color("#8f1f17"),
-                Visible = false,
-                Polygon = new[]
-                {
-                    new Vector2(8, -12),
-                    new Vector2(44, -8),
-                    new Vector2(40, 6),
-                    new Vector2(10, 2)
-                }
-            };
-            AddChild(_attackSwing);
-        }
+                new Vector2(-5, -6),
+                new Vector2(6, -8),
+                new Vector2(4, 2),
+                new Vector2(-7, 0)
+            }
+        };
+        _visualRig.AddChild(_bleedingWound);
 
-        if (_tornCloth is null)
+        _deepGash = new Polygon2D
         {
-            _tornCloth = new Polygon2D
+            Name = "DeepGash",
+            Visible = false,
+            ZIndex = 14,
+            Color = new Color("#5a0f0c", 0.92f),
+            Polygon = new[]
             {
-                Name = "TornCloth",
-                Visible = false,
-                Color = new Color("#560f0b", 0.72f),
-                Polygon = new[]
-                {
-                    new Vector2(-9, 0),
-                    new Vector2(7, -4),
-                    new Vector2(11, 6),
-                    new Vector2(-6, 9)
-                }
-            };
-            AddChild(_tornCloth);
-        }
-
-        if (_bleedingWound is null)
-        {
-            _bleedingWound = new Polygon2D
-            {
-                Name = "BleedingWound",
-                Visible = false,
-                Color = new Color("#8f1f17", 0.88f),
-                Polygon = new[]
-                {
-                    new Vector2(-5, -6),
-                    new Vector2(6, -8),
-                    new Vector2(4, 2),
-                    new Vector2(-7, 0)
-                }
-            };
-            AddChild(_bleedingWound);
-        }
-
-        if (_deepGash is null)
-        {
-            _deepGash = new Polygon2D
-            {
-                Name = "DeepGash",
-                Visible = false,
-                Color = new Color("#5a0f0c", 0.92f),
-                Polygon = new[]
-                {
-                    new Vector2(-3, -10),
-                    new Vector2(5, -12),
-                    new Vector2(3, 4),
-                    new Vector2(-5, 2)
-                }
-            };
-            AddChild(_deepGash);
-        }
-
-        if (_head is null)
-        {
-            _head = new Polygon2D
-            {
-                Name = "Head",
-                Color = new Color("#6a3a34"),
-                Polygon = new[]
-                {
-                    new Vector2(-6, -18),
-                    new Vector2(0, -26),
-                    new Vector2(7, -18),
-                    new Vector2(5, -12),
-                    new Vector2(-5, -12)
-                }
-            };
-            AddChild(_head);
-        }
-
-        if (_arm is null)
-        {
-            _arm = new Polygon2D
-            {
-                Name = "Arm",
-                Color = BodyColor.Darkened(0.85f),
-                Polygon = new[]
-                {
-                    new Vector2(10, -6),
-                    new Vector2(16, -4),
-                    new Vector2(14, 6),
-                    new Vector2(8, 4)
-                }
-            };
-            AddChild(_arm);
-        }
+                new Vector2(-3, -10),
+                new Vector2(5, -12),
+                new Vector2(3, 4),
+                new Vector2(-5, 2)
+            }
+        };
+        _visualRig.AddChild(_deepGash);
     }
 
     private void UpdateWoundVisuals()
@@ -598,7 +535,6 @@ public abstract partial class EnemyBase : CharacterBody2D
         if (_attackSwing is not null)
         {
             _attackSwing.Visible = enabled;
-            _attackSwing.Scale = new Vector2(_facing.X, 1f);
         }
     }
 
@@ -626,7 +562,7 @@ public abstract partial class EnemyBase : CharacterBody2D
 
         if (_mark is not null)
         {
-            _mark.Visible = _state != EnemyState.Dead;
+            _mark.Visible = false;
         }
 
         if (_head is not null)

@@ -21,15 +21,19 @@ public partial class BossIronCaptain : EnemyBase
     protected override Color BodyColor => new("#2e2a30");
     protected override Color ApproachColor => new("#3d3840");
     protected override Color AttackColor => new("#b51f1f");
+    protected override EnemyVisualArchetype VisualArchetype => EnemyVisualArchetype.MiniBoss;
 
     public override void _Ready()
     {
         base._Ready();
         AddToGroup("boss");
         Scale = new Vector2(1.42f, 1.42f);
-        AddChild(new Polygon2D
+
+        var rig = GetNode<Node2D>("VisualRig");
+        rig.AddChild(new Polygon2D
         {
             Name = "IronChain",
+            ZIndex = 15,
             Color = new Color("#5f6970"),
             Polygon = new[]
             {
@@ -39,9 +43,10 @@ public partial class BossIronCaptain : EnemyBase
                 new Vector2(-16, 2)
             }
         });
-        AddChild(new Polygon2D
+        rig.AddChild(new Polygon2D
         {
             Name = "CaptainCape",
+            ZIndex = 1,
             Color = new Color("#560f0b", 0.8f),
             Polygon = new[]
             {

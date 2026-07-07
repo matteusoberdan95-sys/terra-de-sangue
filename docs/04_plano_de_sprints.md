@@ -166,4 +166,17 @@ Entregas:
 
 Status: validada em 2026-07-07.
 
+## Sprint 12 - Fase 1 Silhuetas e Identidade
+
+Objetivo: silhuetas 2D definidas, animacao basica e fase 1 polida antes de expandir.
+
+Entregas:
+
+- Silhuetas compostas para player e inimigos da fase 1.
+- VisualRig com bob e impulso de ataque.
+- Cenario Aldeia em Cinzas com props e brasas pulsantes.
+- Memoria e banners mais legiveis.
+
+Status: implementada, aguardando validacao visual.
+
 ## Sprint futura - Conteudo adicional

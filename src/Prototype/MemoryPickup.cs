@@ -6,6 +6,8 @@ public partial class MemoryPickup : Area2D
     private const uint PlayerBodyLayer = 1u;
 
     private Polygon2D? _glow;
+    private Polygon2D? _maskShardA;
+    private Polygon2D? _maskShardB;
     private bool _collected;
     private float _pulseTime;
 
@@ -25,13 +27,28 @@ public partial class MemoryPickup : Area2D
 
     public override void _Process(double delta)
     {
-        if (_collected || _glow is null)
+        if (_collected)
         {
             return;
         }
 
         _pulseTime += (float)delta;
-        _glow.Modulate = new Color(1f, 1f, 1f, 0.55f + Mathf.Sin(_pulseTime * 4f) * 0.2f);
+        var pulse = 0.55f + Mathf.Sin(_pulseTime * 4f) * 0.2f;
+
+        if (_glow is not null)
+        {
+            _glow.Modulate = new Color(1f, 1f, 1f, pulse);
+        }
+
+        if (_maskShardA is not null)
+        {
+            _maskShardA.Rotation = Mathf.Sin(_pulseTime * 2f) * 0.08f;
+        }
+
+        if (_maskShardB is not null)
+        {
+            _maskShardB.Rotation = -0.2f + Mathf.Sin(_pulseTime * 2.4f) * 0.1f;
+        }
     }
 
     private void OnBodyEntered(Node2D body)
@@ -64,24 +81,52 @@ public partial class MemoryPickup : Area2D
             Color = new Color("#e0b75d", 0.35f),
             Polygon = new[]
             {
-                new Vector2(-16, 0),
-                new Vector2(0, -18),
-                new Vector2(16, 0),
-                new Vector2(0, 18)
+                new Vector2(-20, 0),
+                new Vector2(0, -22),
+                new Vector2(20, 0),
+                new Vector2(0, 22)
             }
         };
         AddChild(_glow);
 
-        AddChild(new Polygon2D
+        _maskShardA = new Polygon2D
         {
-            Name = "Shard",
+            Name = "MaskShardA",
             Color = new Color("#878431"),
             Polygon = new[]
             {
-                new Vector2(-8, 4),
-                new Vector2(-2, -10),
-                new Vector2(10, -2),
-                new Vector2(4, 10)
+                new Vector2(-12, 2),
+                new Vector2(-4, -14),
+                new Vector2(6, -8),
+                new Vector2(2, 8)
+            }
+        };
+        AddChild(_maskShardA);
+
+        _maskShardB = new Polygon2D
+        {
+            Name = "MaskShardB",
+            Color = new Color("#6a5a28"),
+            Polygon = new[]
+            {
+                new Vector2(4, -6),
+                new Vector2(14, -10),
+                new Vector2(10, 6),
+                new Vector2(0, 10)
+            }
+        };
+        AddChild(_maskShardB);
+
+        AddChild(new Polygon2D
+        {
+            Name = "PaintTrace",
+            Color = new Color("#b51f1f", 0.55f),
+            Polygon = new[]
+            {
+                new Vector2(-6, 0),
+                new Vector2(0, -4),
+                new Vector2(6, 0),
+                new Vector2(0, 4)
             }
         });
     }

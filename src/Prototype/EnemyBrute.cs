@@ -11,6 +11,7 @@ public partial class EnemyBrute : EnemyBase
     protected override Color BodyColor => new("#4a3a32");
     protected override Color ApproachColor => new("#5c4a40");
     protected override Color AttackColor => new("#6b1a14");
+    protected override EnemyVisualArchetype VisualArchetype => EnemyVisualArchetype.Brute;
 
     public override void _Ready()
     {

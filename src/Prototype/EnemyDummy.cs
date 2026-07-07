@@ -11,4 +11,5 @@ public partial class EnemyDummy : EnemyBase
     protected override Color BodyColor => new("#5f6970");
     protected override Color ApproachColor => new("#707a80");
     protected override Color AttackColor => new("#8f1f17");
+    protected override EnemyVisualArchetype VisualArchetype => EnemyVisualArchetype.Mercenary;
 }

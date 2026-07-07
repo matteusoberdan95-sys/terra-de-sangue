@@ -87,6 +87,6 @@ Nunca iniciar uma nova sprint com a anterior apenas validada localmente, mas ain
 
 ## Sprint Atual
 
-Sprint 11 — Gore Avancado validada e fechada no GitHub (2026-07-07).
+Sprint 12 — Fase 1 Silhuetas e Identidade. Prioridade: polish da Aldeia em Cinzas antes de expandir.
 
 Progressao: Aldeia em Cinzas -> Capitao do Ferro -> Mata Fechada.
