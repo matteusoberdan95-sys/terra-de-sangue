@@ -87,8 +87,6 @@ Nunca iniciar uma nova sprint com a anterior apenas validada localmente, mas ain
 
 ## Sprint Atual
 
-Sprint 11 — Gore Avancado implementada, aguardando validacao visual.
+Sprint 11 — Gore Avancado validada e fechada no GitHub (2026-07-07).
 
 Progressao: Aldeia em Cinzas -> Capitao do Ferro -> Mata Fechada.
-
-Gore: desmembramento por arma, execucoes contextuais, sangue em vegetacao.

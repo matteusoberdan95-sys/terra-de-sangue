@@ -164,6 +164,6 @@ Entregas:
 - Execucoes contextuais completas.
 - Regras de legibilidade reforçadas.
 
-Status: implementada, aguardando validacao visual.
+Status: validada em 2026-07-07.
 
 ## Sprint futura - Conteudo adicional

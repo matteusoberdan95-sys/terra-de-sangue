@@ -177,6 +177,14 @@ Registrar sempre:
   - Sprint 9: Mata Fechada, 2 encontros, memoria semente negra.
   - Sprint 10: `CombatHud` com vida, barra do chefe e contador de memorias.
 
+### 2026-07-07 - Sprint 11
+
+- Projeto local: `C:\Users\mober\OneDrive\Desktop\fauna-do-sangue`
+- Cena: `scenes/Main.tscn`
+- Resultado: aprovado pelo usuario.
+- Build: `dotnet build TerraSangrada.csproj --no-restore` com 0 erros e 0 avisos.
+- Conteudo validado: desmembramento por arma, execucoes contextuais, feridas avancadas, sangue em vegetacao, caps de legibilidade.
+
 ## Politica para Codex e Cursor
 
 Codex e Cursor podem implementar e compilar, mas nao devem declarar uma sprint como fechada sem registro de validacao visual no Godot.

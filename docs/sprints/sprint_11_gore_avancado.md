@@ -23,7 +23,6 @@ Transformar a brutalidade em sistema jogavel com desmembramento por arma, execuc
 
 - Build C# sem erros.
 - Godot carrega cena e scripts de gore avancado.
-- Validacao interativa pendente para o usuario.
 
 ## Agentes
 
@@ -35,7 +34,9 @@ Transformar a brutalidade em sistema jogavel com desmembramento por arma, execuc
 
 ## Registro de validacao visual
 
-Status atual: pendente.
+Status atual: validado localmente no Godot em 2026-07-07. Aprovado pelo usuario.
+
+Resultado: aprovado pelo usuario em 2026-07-07.
 
 Cena para validar:
 

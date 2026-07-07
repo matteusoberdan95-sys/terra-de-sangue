@@ -4,12 +4,12 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 11 — Gore Avancado implementada, aguardando validacao visual.
+Sprint 11 — Gore Avancado validada e fechada no remoto.
 
 ## Fechamento recente
 
+- Sprint 11: `c03302c` — Gore avancado. Validada 2026-07-07.
 - Sprints 6-10: validadas e fechadas em 2026-07-07.
-- Sprint 11: implementada localmente — desmembramento, execucoes contextuais, sangue em vegetacao.
 
 ## Progressao do prototipo
 
@@ -34,4 +34,4 @@ Sprint 11 — Gore Avancado implementada, aguardando validacao visual.
 
 ## Proximo passo
 
-Validar visualmente no Godot e ajustar caps de legibilidade se necessario.
+Definir proxima sprint (conteudo adicional, balanceamento ou nova fase).
