@@ -87,6 +87,6 @@ Nunca iniciar uma nova sprint com a anterior apenas validada localmente, mas ain
 
 ## Sprint Atual
 
-Sprint 13 — Game Feel Fase 1 validada e fechada no GitHub (2026-07-07).
+Sprint 14 — Audio Fase 1 implementada, aguardando validacao.
 
-Proximo foco: SFX mais ricos ou primeiros sprites (Arandu, mercenario).
+Proximo foco: sprites do Arandu apos validar som.

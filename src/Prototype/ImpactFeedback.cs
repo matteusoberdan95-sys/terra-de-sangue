@@ -3,11 +3,6 @@ using Godot;
 [GlobalClass]
 public partial class ImpactFeedback : Node
 {
-    private AudioStreamPlayer? _hitPlayer;
-    private AudioStreamPlayer? _deathPlayer;
-    private AudioStreamPlayer? _hurtPlayer;
-    private AudioStreamPlayer? _executePlayer;
-    private AudioStreamPlayer? _dismemberPlayer;
     private Node2D? _effectsRoot;
 
     public override void _Ready()
@@ -15,17 +10,6 @@ public partial class ImpactFeedback : Node
         AddToGroup("impact_feedback");
         _effectsRoot = new Node2D { Name = "EffectsRoot" };
         AddChild(_effectsRoot);
-
-        _hitPlayer = CreatePlayer("HitSfx", PlaceholderSfx.CreateHitThud());
-        _deathPlayer = CreatePlayer("DeathSfx", PlaceholderSfx.CreateDeathCrunch());
-        _hurtPlayer = CreatePlayer("HurtSfx", PlaceholderSfx.CreatePlayerHurt());
-        _executePlayer = CreatePlayer("ExecuteSfx", PlaceholderSfx.CreateExecutionCrunch());
-        _dismemberPlayer = CreatePlayer("DismemberSfx", PlaceholderSfx.CreateDismemberRip());
-        AddChild(_hitPlayer);
-        AddChild(_deathPlayer);
-        AddChild(_hurtPlayer);
-        AddChild(_executePlayer);
-        AddChild(_dismemberPlayer);
     }
 
     public static ImpactFeedback? Get(Node from)
@@ -43,7 +27,7 @@ public partial class ImpactFeedback : Node
             SpawnSplatter(worldPosition, impulse * 0.8f);
         }
 
-        Play(_hitPlayer);
+        CombatAudio.Get(this)?.PlayEnemyHit(attackKind, isFatal);
 
         if (isFatal)
         {
@@ -51,7 +35,6 @@ public partial class ImpactFeedback : Node
             SpawnDecal(worldPosition + new Vector2((float)GD.RandRange(-8, 8), 12));
             SpawnPersistentDecal(worldPosition + new Vector2(0, 12));
             ApplyFatalGore(worldPosition, impulse, attackKind);
-            Play(_deathPlayer);
         }
         else if (attackKind == PlayerAttackKind.Heavy)
         {
@@ -82,14 +65,13 @@ public partial class ImpactFeedback : Node
                 break;
         }
 
-        Play(_executePlayer);
-        Play(_dismemberPlayer);
+        CombatAudio.Get(this)?.PlayExecution(style);
     }
 
-    public void OnPlayerHit(Vector2 worldPosition)
+    public void OnPlayerHit(Vector2 worldPosition, int damage)
     {
         SpawnSplatter(worldPosition, new Vector2((float)GD.RandRange(-1, 1), -0.4f));
-        Play(_hurtPlayer);
+        CombatAudio.Get(this)?.PlayPlayerHurt(damage);
     }
 
     public void SpawnDismemberment(Vector2 worldPosition, Vector2 impulse, LimbKind kind)
@@ -211,26 +193,5 @@ public partial class ImpactFeedback : Node
             ZIndex = Mathf.RoundToInt(worldPosition.Y) - 2
         };
         _effectsRoot.AddChild(decal);
-    }
-
-    private static AudioStreamPlayer CreatePlayer(string name, AudioStream stream)
-    {
-        return new AudioStreamPlayer
-        {
-            Name = name,
-            Stream = stream,
-            VolumeDb = -4f
-        };
-    }
-
-    private void Play(AudioStreamPlayer? player)
-    {
-        if (player is null)
-        {
-            return;
-        }
-
-        player.Stop();
-        player.Play();
     }
 }

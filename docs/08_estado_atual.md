@@ -4,17 +4,17 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 13 — Game Feel Fase 1 validada e fechada no remoto.
+Sprint 14 — Audio Fase 1 implementada, aguardando validacao visual.
 
 ## Direcao
 
-Prioridade: combate divertido na Aldeia em Cinzas antes de expandir conteudo.
+Prioridade: Fase 1 completa em sensacao (visual + combate + som) antes de sprites.
 
 ## Fechamento recente
 
-- Sprint 13: `6ec098e` — Game feel da fase 1. Validada 2026-07-07.
-- Sprint 12: Silhuetas validada 2026-07-07.
+- Sprint 13: Game feel validada 2026-07-07.
+- Sprint 14: camada sonora da fase 1.
 
 ## Proximo passo
 
-SFX mais ricos e/ou primeiros sprites da fase 1 (Arandu e mercenario).
+Validar audio no Godot; depois sprites do Arandu.

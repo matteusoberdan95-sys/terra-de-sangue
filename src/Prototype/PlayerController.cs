@@ -40,7 +40,6 @@ public partial class PlayerController : CharacterBody2D
     private CollisionShape2D? _attackHitboxShape;
     private Node2D? _visualRig;
     private VisualRigAnimator? _visualAnimator;
-    private AudioStreamPlayer? _swingPlayer;
     private readonly HashSet<ulong> _hitEnemiesThisAttack = new();
     private PlayerState _state = PlayerState.Idle;
     private Vector2 _facing = Vector2.Right;
@@ -88,17 +87,6 @@ public partial class PlayerController : CharacterBody2D
         BuildCollision();
         BuildAttackHitbox();
         BuildHurtbox();
-        BuildSwingAudio();
-    }
-
-    private void BuildSwingAudio()
-    {
-        _swingPlayer = new AudioStreamPlayer
-        {
-            Name = "SwingSfx",
-            VolumeDb = -6f
-        };
-        AddChild(_swingPlayer);
     }
 
     public void TakeHit(Vector2 impulse, int damage)
@@ -112,7 +100,7 @@ public partial class PlayerController : CharacterBody2D
         _hitFlash = 0.12f;
         _hitStunTimer = HitStunSeconds + (damage - 1) * 0.05f;
         Velocity = impulse;
-        ImpactFeedback.Get(this)?.OnPlayerHit(GlobalPosition + new Vector2(0, -4));
+        ImpactFeedback.Get(this)?.OnPlayerHit(GlobalPosition + new Vector2(0, -4), damage);
 
         if (_health <= 0)
         {
@@ -323,18 +311,10 @@ public partial class PlayerController : CharacterBody2D
 
     private void PlaySwingSfx(bool heavy, bool comboFinisher)
     {
-        if (_swingPlayer is null)
-        {
-            return;
-        }
-
-        _swingPlayer.Stream = comboFinisher
-            ? PlaceholderSfx.CreateComboSwing()
-            : heavy
-                ? PlaceholderSfx.CreateHeavySwing()
-                : PlaceholderSfx.CreateLightSwing();
-        _swingPlayer.Stop();
-        _swingPlayer.Play();
+        var kind = heavy
+            ? PlayerAttackKind.Heavy
+            : comboFinisher ? PlayerAttackKind.ComboFinisher : PlayerAttackKind.Light;
+        CombatAudio.Get(this)?.PlayPlayerSwing(kind);
     }
 
     private void BuildVisuals()

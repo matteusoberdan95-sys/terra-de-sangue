@@ -60,6 +60,7 @@ public partial class MemoryPickup : Area2D
 
         _collected = true;
         Monitoring = false;
+        CombatAudio.Get(this)?.PlayMemoryCollect();
         Visible = false;
 
         var director = GetTree().GetFirstNodeInGroup("phase_director") as PhaseDirector;

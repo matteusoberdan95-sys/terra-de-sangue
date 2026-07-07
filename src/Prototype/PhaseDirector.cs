@@ -157,6 +157,11 @@ public partial class PhaseDirector : Node
             _arena.SpawnEnemy(entry.Kind, entry.Position);
         }
 
+        if (encounterIndex >= 1)
+        {
+            CombatAudio.Get(this)?.PlayEncounterPulse();
+        }
+
         _activeEncounterNumber = encounterIndex + 1;
         _nextEncounterIndex = encounterIndex + 1;
         _state = PhaseState.Encounter;
@@ -173,6 +178,7 @@ public partial class PhaseDirector : Node
         }
 
         ShowBanner("Sargento do Ferro", "O ultimo guardiao da retirada ainda nao caiu.");
+        CombatAudio.Get(this)?.PlayMiniBossIntro();
         _arena.SpawnEnemy("miniboss", MiniBossSpawnPosition);
         _state = PhaseState.MiniBoss;
         _encounterActive = true;

@@ -192,4 +192,17 @@ Entregas:
 
 Status: validada em 2026-07-07.
 
-## Sprint futura - SFX e Arte Fase 1
+## Sprint 14 - Audio Fase 1
+
+Objetivo: sons de combate, telegraph, mini-chefe e memoria na Aldeia em Cinzas.
+
+Entregas:
+
+- CombatAudio centralizado.
+- Impactos e dano diferenciados.
+- Telegraph e swing inimigo.
+- Feedback de memoria e encontros.
+
+Status: implementada, aguardando validacao visual.
+
+## Sprint futura - Sprites Arandu

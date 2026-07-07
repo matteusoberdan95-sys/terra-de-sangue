@@ -39,6 +39,7 @@ public partial class PrototypeArena : Node2D
         SpawnPlayer();
         BuildPhaseDirector();
         BuildImpactFeedback();
+        BuildCombatAudio();
         CacheAmbientParticles();
         BuildCamera();
     }
@@ -247,6 +248,16 @@ public partial class PrototypeArena : Node2D
         }
 
         AddChild(new ImpactFeedback { Name = "ImpactFeedback" });
+    }
+
+    private void BuildCombatAudio()
+    {
+        if (GetNodeOrNull<CombatAudio>("CombatAudio") is not null)
+        {
+            return;
+        }
+
+        AddChild(new CombatAudio { Name = "CombatAudio" });
     }
 
     private void BuildPhaseDirector()

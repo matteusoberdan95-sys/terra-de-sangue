@@ -46,6 +46,7 @@ public abstract partial class EnemyBase : CharacterBody2D
     private float _attackTimer;
     private Vector2 _facing = Vector2.Left;
     private bool _attackWindUpPulsed;
+    private bool _telegraphSfxPlayed;
 
     protected Vector2 FacingDirection => _facing;
     private bool _hitPlayerThisAttack;
@@ -260,6 +261,7 @@ public abstract partial class EnemyBase : CharacterBody2D
         _attackCooldown = AttackCooldownSeconds;
         OnAttackPatternStarted();
         _attackWindUpPulsed = false;
+        _telegraphSfxPlayed = false;
         _attackTimer = GetAttackStartup() + GetAttackActive() + GetAttackRecovery();
         _hitPlayerThisAttack = false;
         SetAttackHitboxEnabled(false);
@@ -281,6 +283,11 @@ public abstract partial class EnemyBase : CharacterBody2D
             var progress = startup <= 0f ? 1f : (_attackTimer - activeEndsAt) / startup;
             _visualAnimator?.SetTelegraph(progress);
             UpdateTelegraphMarker(true, progress);
+            if (!_telegraphSfxPlayed && progress > 0.2f)
+            {
+                _telegraphSfxPlayed = true;
+                CombatAudio.Get(this)?.PlayEnemyTelegraph(GetAttackDamageAmount() >= 2);
+            }
         }
         else
         {
@@ -290,6 +297,7 @@ public abstract partial class EnemyBase : CharacterBody2D
             {
                 _attackWindUpPulsed = true;
                 _visualAnimator?.PulseAttack();
+                CombatAudio.Get(this)?.PlayEnemySwing(GetAttackDamageAmount());
             }
         }
 
