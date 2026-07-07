@@ -1,0 +1,22 @@
+; Engine configuration file.
+; Best edited using the Godot editor.
+
+config_version=5
+
+[application]
+
+config/name="Terra Sangrada"
+run/main_scene="res://scenes/Main.tscn"
+config/features=PackedStringArray("4.3", "C#")
+config/icon="res://assets/icon.svg"
+
+[display]
+
+window/size/viewport_width=480
+window/size/viewport_height=270
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0

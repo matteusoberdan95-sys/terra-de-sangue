@@ -1,0 +1,31 @@
+# Registro de Decisoes
+
+## 2026-07-07 - Nome do jogo
+
+Decisao: usar `Terra Sangrada` como nome de producao.
+
+Motivo: comunica territorio, violencia, luto e profanacao.
+
+## 2026-07-07 - Processo por sprints
+
+Decisao: cada sprint precisa terminar com validacao visual no Godot antes da proxima comecar.
+
+Motivo: evitar repetir o problema do projeto anterior, onde muitas cenas foram criadas antes do polimento do nucleo.
+
+## 2026-07-07 - Cultura ficticia
+
+Decisao: o povo, simbolos e rituais do jogo serao ficticios ate haver pesquisa dedicada.
+
+Motivo: permitir liberdade artistica sem tratar culturas indigenas reais de forma rasa.
+
+## 2026-07-07 - Agentes com nomes de Dragon Ball Z
+
+Decisao: usar apelidos de Dragon Ball Z para agentes de validacao.
+
+Motivo: facilitar memoria operacional e dividir responsabilidades de qualidade.
+
+## 2026-07-07 - Primeiro foco tecnico
+
+Decisao: provar combate com placeholders antes de produzir arte final.
+
+Motivo: se o combate nao for bom com formas simples, arte final nao resolve o problema central.

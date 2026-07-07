@@ -1,0 +1,32 @@
+---
+description: Terra Sangrada project context and operating rules
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Terra Sangrada
+
+Antes de editar codigo, leia:
+
+1. `AGENTS.md`
+2. `docs/08_estado_atual.md`
+3. `docs/04_plano_de_sprints.md`
+4. O arquivo da sprint atual em `docs/sprints/`
+
+## Processo
+
+- Trabalhe por sprint.
+- Nao expanda escopo sem atualizar `docs/08_estado_atual.md`.
+- Preserve a arquitetura simples do prototipo.
+- Use C# idiomatico para Godot.
+- Mantenha cenas, scripts e documentos sincronizados.
+- Valide com `dotnet build TerraSangrada.csproj --no-restore` apos restore quando alterar C#.
+
+## Sprint atual
+
+Sprint 0 ainda precisa de validacao visual no Godot. A proxima sprint e Sprint 1: combate prototipo.
+
+## Agentes
+
+Os papeis de revisao estao em `docs/06_agentes.md` e `.agents/`.
