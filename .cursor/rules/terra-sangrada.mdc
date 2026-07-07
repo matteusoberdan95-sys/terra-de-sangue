@@ -24,6 +24,7 @@ Antes de editar codigo, leia:
 - Mantenha cenas, scripts e documentos sincronizados.
 - Valide com `dotnet build TerraSangrada.csproj --no-restore` apos restore quando alterar C#.
 - Depois de qualquer modificacao em gameplay, cena, camera, arte ou UI, abra o Godot e registre validacao visual conforme `docs/10_politica_validacao_visual.md`.
+- Nunca inicie a proxima sprint sem commit e push da sprint validada no GitHub.
 
 Godot local confirmado:
 
@@ -33,7 +34,7 @@ C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_m
 
 ## Sprint atual
 
-Sprint 2 foi validada localmente no Godot. A proxima etapa e commitar/subir a Sprint 2 e iniciar Sprint 3: sistema de inimigos.
+Sprint 3 validada localmente no Godot. Proxima etapa: commitar Sprint 3 e iniciar Sprint 4: Fase 1 Jogavel.
 
 ## Agentes
 

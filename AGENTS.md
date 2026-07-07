@@ -7,9 +7,9 @@ Este arquivo e a primeira leitura obrigatoria para qualquer agente trabalhando n
 - Projeto: `Terra Sangrada`.
 - Engine: Godot .NET 4.7.
 - Linguagem: C# / .NET 10.
-- Sprint atual: Sprint 2 implementada localmente, aguardando validacao visual.
+- Sprint atual: Sprint 3 validada localmente no Godot.
 - Cena principal: `res://scenes/Main.tscn`.
-- Proximo foco: validar visualmente Sprint 2 no Godot local.
+- Proximo foco: commitar Sprint 3 e iniciar Sprint 4: Fase 1 Jogavel.
 
 ## Ordem de leitura
 
@@ -34,6 +34,7 @@ Para arte e narrativa, ler tambem:
 - Validar visualmente no Godot antes de fechar uma sprint.
 - Apos qualquer modificacao em gameplay, cena, camera, arte ou UI, registrar validacao visual conforme `docs/10_politica_validacao_visual.md`.
 - So fazer commit/push depois da validacao visual local quando a alteracao afetar gameplay, cena, camera, arte ou UI.
+- Nunca iniciar a proxima sprint sem commit e push da sprint validada no GitHub.
 - Manter documentacao atualizada quando uma decisao mudar.
 - Preservar a cultura indigena como ficticia e respeitosa ate haver pesquisa dedicada.
 - Nao tratar arte final como prioridade antes do combate basico parecer bom.
@@ -57,6 +58,12 @@ Antes de marcar uma sprint como concluida:
 - Validacao visual registrada.
 - Checklist da sprint atualizado.
 - `docs/08_estado_atual.md` atualizado.
+- Commit local criado.
+- Push enviado para o GitHub.
+
+Antes de iniciar a proxima sprint:
+
+- A sprint anterior precisa estar validada, commitada e no remoto.
 
 ## Agentes principais
 

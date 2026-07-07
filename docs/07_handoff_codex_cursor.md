@@ -78,8 +78,15 @@ Atualizar:
 - Qualquer decisao nova em `docs/09_decisoes.md`.
 - Registro de validacao visual quando a tarefa alterar gameplay, cena, camera, arte ou UI.
 
+Antes de iniciar a proxima sprint:
+
+- Criar commit local da sprint validada.
+- Dar push para o GitHub.
+- Confirmar que o remoto esta atualizado.
+
 Registrar no resumo final:
 
 - Arquivos alterados.
 - Validacao feita.
+- Commit e push realizados.
 - Pendencias para a proxima ferramenta.

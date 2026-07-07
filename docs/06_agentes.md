@@ -9,6 +9,7 @@ Os agentes usam nomes de Dragon Ball Z como apelidos operacionais. Eles nao muda
 3. Krillin consolida bugs e regressao.
 4. Trunks atualiza estado, decisoes e proximo passo.
 5. A sprint so fecha depois da validacao visual no Godot.
+6. Commit e push da sprint validada sao obrigatorios antes de iniciar a proxima sprint.
 
 ## Goku - Gameplay e Combate
 

@@ -29,7 +29,7 @@ Um guerreiro de uma cultura indigena ficticia atravessa uma terra brasileira pro
 2. **Brasil mitico e escuro**: floresta, rio, barro, fogo, ruina, ferro e sangue.
 3. **Cultura ficticia respeitosa**: inspiracao brasileira, mas sem copiar rituais reais de forma rasa.
 4. **Arte de silhueta forte**: personagens reconheciveis mesmo pequenos.
-5. **Sprints fechadas**: nada entra na proxima sprint sem validacao visual no Godot.
+5. **Sprints fechadas**: nada entra na proxima sprint sem validacao visual no Godot e sem commit/push da sprint anterior.
 
 ## Violencia e Gore
 

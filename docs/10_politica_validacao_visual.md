@@ -19,8 +19,34 @@ C:\Users\mober\OneDrive\Desktop\fauna-do-sangue
 4. Validar visualmente a cena afetada.
 5. Registrar o resultado nos documentos da sprint.
 6. Somente depois criar commit e subir para o GitHub.
+7. Somente depois iniciar a proxima sprint.
 
 Nunca subir para o repositorio remoto antes da validacao visual quando a alteracao afetar gameplay, cena, camera, arte ou UI.
+
+Nunca iniciar a proxima sprint sem commit e push da sprint validada no GitHub.
+
+## Politica de commit e push obrigatorio
+
+Assim como a validacao visual, commit e push fazem parte do fechamento da sprint — nao sao etapas opcionais.
+
+Regra principal:
+
+- A sprint so pode ser considerada encerrada depois de validada, commitada e enviada ao remoto.
+- Codex, Cursor e qualquer agente devem commitar e dar push antes de abrir a proxima sprint.
+- Se a sprint foi validada mas ainda nao foi para o GitHub, a proxima sprint fica bloqueada.
+
+Comandos minimos:
+
+```powershell
+git add .
+git commit -m "mensagem da sprint"
+git push
+```
+
+Registrar no fechamento:
+
+- Hash ou mensagem do commit.
+- Confirmacao de que o push chegou ao remoto.
 
 ## Godot local
 
@@ -121,8 +147,27 @@ Registrar sempre:
 - Build: `dotnet build TerraSangrada.csproj --no-restore` com 0 erros e 0 avisos.
 - Conteudo validado: Aldeia em Cinzas, silhuetas refinadas, mercenarios com arma/metal, brasas/cinzas animadas e direcao gore registrada.
 
+### 2026-07-07 - Sprint 3
+
+- Projeto local: `C:\Users\mober\OneDrive\Desktop\fauna-do-sangue`
+- Cena: `scenes/Main.tscn`
+- Resultado: aprovado pelo usuario.
+- Build: `dotnet build TerraSangrada.csproj --no-restore` com 0 erros e 0 avisos.
+- Conteudo validado: ataque inimigo, dano no player, inimigo bruto, ondas e regressao do combate.
+
+### 2026-07-07 - Sprint 3 (tecnica)
+
+- Projeto local: `C:\Users\mober\OneDrive\Desktop\fauna-do-sangue`
+- Cena: `scenes/Main.tscn`
+- Editor aberto via `Start-Process` conforme documentado.
+- Execucao automatica: `--verbose res://scenes/Main.tscn --quit-after 12`
+- Resultado tecnico: aprovado — .NET, scripts C# e cena carregaram sem erro.
+- Pendencia: confirmacao humana do gameplay interativo (WASD, J, dano, ondas).
+
 ## Politica para Codex e Cursor
 
 Codex e Cursor podem implementar e compilar, mas nao devem declarar uma sprint como fechada sem registro de validacao visual no Godot.
+
+Codex e Cursor tambem nao devem iniciar a proxima sprint sem commit e push da sprint validada no GitHub.
 
 Se o agente nao conseguir inspecionar visualmente a janela, deve marcar a validacao como pendente para o usuario confirmar.

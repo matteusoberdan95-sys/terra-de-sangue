@@ -14,56 +14,47 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 2 - Vertical Slice Visual.
+Sprint 3 - Sistema de Inimigos.
 
 Status: validada localmente no Godot.
 
-Sprint 1 fechada com:
+Sprint 3 fechada com:
 
-- Build .NET 10 aprovado.
-- Godot console sem erro de assembly/script.
-- Validacao visual aprovada pelo usuario.
-- Cena `scenes/Main.tscn` rodando localmente.
-
-Sprint 2 implementada localmente com:
-
-- Aldeia em Cinzas com camadas visuais.
-- Protagonista com silhueta mais forte.
-- Mercenario com machete e metal visiveis.
-- Brasas/cinzas animadas.
-- Paleta da biblia de arte aplicada.
-- Direcao gore 18+ registrada oficialmente.
+- `EnemyBase` com IA compartilhada de aproximacao e ataque.
+- Slot unico de ataque para evitar spam simultaneo.
+- `EnemyDummy` como mercenario leve.
+- `EnemyBrute` mais lento, resistente e pesado.
+- Player com hurtbox, vida, hit stun, invulnerabilidade pos-respawn e respawn.
+- `WaveSpawner` com 3 ondas progressivas e label de progresso.
+- Validacao visual aprovada pelo usuario em 2026-07-07.
 
 ## Implementado
 
 - Projeto Godot criado.
 - Projeto C# criado.
 - Cena principal `scenes/Main.tscn`.
-- Arena prototipo `scenes/levels/PrototypeArena.tscn` agora visivel tambem no editor do Godot, nao apenas em runtime.
-- Player placeholder com movimento `WASD`.
-- Ataque leve em `J`.
-- Estados basicos de player: idle, walk e light attack.
+- Arena prototipo `scenes/levels/PrototypeArena.tscn`.
+- Player com movimento `WASD`, ataque leve em `J`, hurtbox e vida.
+- Estados de player: idle, walk, light attack, hit stun, dead.
 - Hitbox de ataque separada da colisao do player.
-- Inimigos placeholder com hurtbox, vida, hit flash, hit stun, knockback e morte.
-- Inimigos se aproximam lentamente do player.
+- Inimigos com hurtbox, vida, hit flash, hit stun, knockback, morte e ataque.
+- Inimigos se aproximam e atacam com leitura de profundidade.
 - Camera seguindo o player.
-- Primeiro passe de hit pause e screen shake.
+- Hit pause e screen shake.
 - Limites de movimento no eixo Y.
 - Primeiro passe visual da Aldeia em Cinzas.
 - Silhuetas refinadas de Arandu e mercenarios.
 - Brasas e cinzas animadas na arena.
+- Sistema de ondas com mercenarios e brutos.
 - Documentos de producao e agentes.
 
 ## Validacao feita
 
 - `dotnet restore TerraSangrada.csproj`: sucesso.
-- `dotnet build TerraSangrada.csproj --no-restore`: sucesso, 0 erros e 0 avisos, executado localmente no Desktop.
-- Godot encontrado e aberto em 2026-07-07 pelo caminho local informado pelo usuario.
-- Godot console validado sem erros de assembly/script apos corrigir `[dotnet] project/assembly_name="TerraSangrada"`.
-- Validacao visual aprovada pelo usuario em 2026-07-07.
-- Sprint 2: `dotnet build TerraSangrada.csproj --no-restore` sucesso, 0 erros e 0 avisos.
-- Sprint 2: Godot console sem erro de assembly/script.
-- Sprint 2: validacao visual aprovada pelo usuario em 2026-07-07.
+- `dotnet build TerraSangrada.csproj --no-restore`: sucesso, 0 erros e 0 avisos.
+- Sprint 3: Godot aberto via `Start-Process` documentado em 2026-07-07.
+- Sprint 3: `res://scenes/Main.tscn` executada sem erro de assembly/script.
+- Sprint 3: validacao visual aprovada pelo usuario em 2026-07-07.
 
 Godot local:
 
@@ -79,10 +70,10 @@ C:\Users\mober\OneDrive\Desktop\fauna-do-sangue
 
 ## Proximo passo
 
-Criar commit local da Sprint 2 validada e subir para o GitHub. Depois iniciar Sprint 3: sistema de inimigos.
+Commitar Sprint 3 validada, dar push para o GitHub e somente depois iniciar Sprint 4: Fase 1 Jogavel.
 
 ## Riscos atuais
 
-- Godot nao foi encontrado no PATH do ambiente atual.
-- Godot abre por caminho absoluto local.
-- Inimigos ainda nao atacam; isso fica para a sprint de sistema de inimigos.
+- Godot nao esta no PATH; abre por caminho absoluto local.
+- Inimigos spawnados em runtime ainda usam silhueta procedural simples.
+- Player ainda nao tem HUD de vida; feedback e por flash/stun/respawn.

@@ -67,23 +67,28 @@ Para continuar o projeto em outra ferramenta, leia nesta ordem:
 4. `docs/04_plano_de_sprints.md`
 5. `docs/10_politica_validacao_visual.md`
 
-## Validacao Visual
+## Validacao Visual e Fechamento de Sprint
 
 Depois de qualquer alteracao em gameplay, cena, camera, arte ou UI, e obrigatorio abrir o projeto no Godot e validar visualmente antes de considerar a sprint concluida.
 
 Detalhes em `docs/10_politica_validacao_visual.md`.
 
-Fluxo obrigatorio:
+Fluxo obrigatorio de fechamento:
 
 1. Alterar localmente no Desktop.
-2. Validar no Godot.
-3. Registrar a validacao.
-4. Somente depois commitar e subir para o GitHub.
+2. Compilar com `dotnet build`.
+3. Validar no Godot.
+4. Registrar a validacao nos docs da sprint.
+5. Criar commit local da sprint validada.
+6. Dar push para o GitHub.
+7. Somente depois iniciar a proxima sprint.
+
+Nunca iniciar uma nova sprint com a anterior apenas validada localmente, mas ainda sem commit/push no remoto.
 
 ## Sprint Atual
 
-Sprint 2: vertical slice visual.
+Sprint 4: fase 1 jogavel.
 
-Status: implementada localmente e aguardando validacao visual no Godot.
+Status: proxima sprint.
 
-O objetivo e substituir os placeholders por uma primeira identidade visual real: protagonista, inimigo basico e atmosfera inicial da Aldeia em Cinzas, mantendo o combate validado na Sprint 1.
+Sprint 3 validada localmente no Godot em 2026-07-07.

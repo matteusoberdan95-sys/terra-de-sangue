@@ -16,6 +16,7 @@ Garantir que ninguem perca onde o projeto parou.
 - Sprint atual esta clara?
 - Proximo passo esta explicito?
 - Checklists refletem a realidade?
+- Sprint validada foi commitada e enviada ao GitHub antes da proxima?
 - Decisoes novas foram registradas?
 - Handoff Codex/Cursor esta atualizado?
 

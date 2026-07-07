@@ -8,6 +8,10 @@ Cada sprint termina com:
 - Validacao visual no editor ou jogo rodando.
 - Checklist marcado.
 - Decisao clara: aprovar, ajustar ou cortar.
+- Commit local da sprint validada.
+- Push para o GitHub.
+
+Nenhuma sprint seguinte comeca sem validacao visual registrada **e** sem commit/push da sprint anterior no remoto.
 
 ## Sprint 0 - Fundacao
 

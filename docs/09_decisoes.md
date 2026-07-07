@@ -1,5 +1,11 @@
 # Registro de Decisoes
 
+## 2026-07-07 - Commit e push antes da proxima sprint
+
+Decisao: toda sprint validada precisa ser commitada e enviada ao GitHub antes de iniciar a proxima sprint.
+
+Motivo: manter o mesmo rigor da validacao visual e evitar perda de contexto entre Codex, Cursor e o repositorio remoto.
+
 ## 2026-07-07 - Nome do jogo
 
 Decisao: usar `Terra Sangrada` como nome de producao.

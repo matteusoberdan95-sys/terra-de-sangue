@@ -40,4 +40,6 @@ C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_m
 
 - [ ] Resultado registrado no documento da sprint.
 - [ ] `docs/08_estado_atual.md` atualizado.
-- [ ] Proximo passo definido.
+- [ ] Commit local criado com a sprint validada.
+- [ ] Push enviado para o GitHub.
+- [ ] Proximo passo definido somente apos o push.

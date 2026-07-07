@@ -37,7 +37,7 @@ public partial class PrototypeArena : Node2D
         BuildBackground();
         BuildPlayAreaGuides();
         SpawnPlayer();
-        SpawnDefaultEnemies();
+        BuildWaveSpawner();
         CacheAmbientParticles();
         BuildCamera();
     }
@@ -206,37 +206,28 @@ public partial class PrototypeArena : Node2D
         AddChild(_player);
     }
 
-    private void SpawnDefaultEnemies()
+    public void SpawnEnemy(string kind, Vector2 position)
     {
-        var hasSceneEnemies = false;
-        foreach (var child in GetChildren())
+        EnemyBase enemy = kind switch
         {
-            if (child is EnemyDummy enemy)
-            {
-                enemy.MovementBounds = PlayArea;
-                hasSceneEnemies = true;
-            }
-        }
+            "brute" => new EnemyBrute(),
+            _ => new EnemyDummy()
+        };
 
-        if (hasSceneEnemies)
+        enemy.Name = kind == "brute" ? "Brute" : "Mercenary";
+        enemy.GlobalPosition = position;
+        enemy.MovementBounds = PlayArea;
+        AddChild(enemy);
+    }
+
+    private void BuildWaveSpawner()
+    {
+        if (GetNodeOrNull<WaveSpawner>("WaveSpawner") is not null)
         {
             return;
         }
 
-        SpawnEnemy(new Vector2(260, 148));
-        SpawnEnemy(new Vector2(340, 176));
-        SpawnEnemy(new Vector2(430, 156));
-    }
-
-    private void SpawnEnemy(Vector2 position)
-    {
-        var enemy = new EnemyDummy
-        {
-            Name = "InvaderDummy",
-            GlobalPosition = position,
-            MovementBounds = PlayArea
-        };
-        AddChild(enemy);
+        AddChild(new WaveSpawner { Name = "WaveSpawner" });
     }
 
     private void BuildCamera()

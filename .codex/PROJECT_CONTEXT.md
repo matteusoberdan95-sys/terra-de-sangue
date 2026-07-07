@@ -14,15 +14,12 @@ Construir Terra Sangrada por sprints, com Codex atuando como executor principal 
 
 ## Sprint atual
 
-Sprint 2 - Vertical Slice Visual foi validada localmente no Godot.
+Sprint 3 - Sistema de Inimigos validada localmente no Godot.
 
 Estado atual:
 
-- Sprint 1 validada visualmente pelo usuario em 2026-07-07.
-- Sprint 2 compila em .NET 10.
-- Sprint 2 com Godot console sem erro de assembly/script.
-- Sprint 2 aprovada visualmente pelo usuario em 2026-07-07.
-- Proxima etapa: commitar/subir Sprint 2 e iniciar Sprint 3.
+- Sprint 1, 2 e 3 validadas visualmente pelo usuario em 2026-07-07.
+- Proxima etapa: commitar Sprint 3 e iniciar Sprint 4: Fase 1 Jogavel.
 
 Godot local confirmado:
 
@@ -31,6 +28,8 @@ C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_m
 ```
 
 Regra obrigatoria: seguir `docs/10_politica_validacao_visual.md` apos qualquer modificacao que afete gameplay, cena, camera, arte ou UI.
+
+Regra obrigatoria: commitar e dar push da sprint validada antes de iniciar a proxima sprint.
 
 ## Decisoes ja tomadas
 
