@@ -7,13 +7,13 @@ public partial class PhaseDirector : Node
 
     private static readonly SpawnEntry[][] Encounters =
     [
-        [new("mercenary", new Vector2(250, 148)), new("mercenary", new Vector2(360, 168))],
-        [new("mercenary", new Vector2(220, 140)), new("mercenary", new Vector2(390, 176)), new("brute", new Vector2(300, 160))],
-        [new("brute", new Vector2(270, 150)), new("brute", new Vector2(410, 170)), new("mercenary", new Vector2(340, 138))]
+        [new("mercenary", new Vector2(280, 152)), new("mercenary", new Vector2(380, 168))],
+        [new("mercenary", new Vector2(240, 144)), new("brute", new Vector2(340, 162))],
+        [new("brute", new Vector2(280, 154)), new("mercenary", new Vector2(400, 168)), new("brute", new Vector2(330, 140))]
     ];
 
-    private const float IntroSeconds = 3.2f;
-    private const float InterEncounterDelaySeconds = 1.6f;
+    private const float IntroSeconds = 2.8f;
+    private const float InterEncounterDelaySeconds = 1.3f;
     private const float OutroSeconds = 4f;
     private static readonly Vector2 MemorySpawnPosition = new(480, 164);
     private static readonly Vector2 MiniBossSpawnPosition = new(320, 160);

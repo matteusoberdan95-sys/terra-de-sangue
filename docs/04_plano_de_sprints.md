@@ -179,4 +179,17 @@ Entregas:
 
 Status: validada em 2026-07-07.
 
-## Sprint futura - Game Feel Fase 1
+## Sprint 13 - Game Feel Fase 1
+
+Objetivo: telegraph, hitstop por golpe, knockback e ritmo dos encontros.
+
+Entregas:
+
+- CombatFeel centralizado.
+- Telegraph visual nos inimigos.
+- SFX distintos por tipo de ataque.
+- Encontros rebalanceados.
+
+Status: implementada, aguardando validacao visual.
+
+## Sprint futura - SFX e Arte Fase 1

@@ -8,17 +8,17 @@ public partial class PlayerController : CharacterBody2D
 
     private const float Speed = 120f;
     private const int MaxHealth = 8;
-    private const float HitStunSeconds = 0.24f;
+    private const float HitStunSeconds = 0.22f;
     private const float RespawnDelaySeconds = 1.2f;
-    private const float AttackCooldownSeconds = 0.34f;
-    private const float AttackStartupSeconds = 0.06f;
-    private const float AttackActiveSeconds = 0.09f;
-    private const float AttackRecoverySeconds = 0.16f;
-    private const float HeavyAttackCooldownSeconds = 0.62f;
-    private const float HeavyAttackStartupSeconds = 0.14f;
-    private const float HeavyAttackActiveSeconds = 0.12f;
-    private const float HeavyAttackRecoverySeconds = 0.28f;
-    private const float ComboWindowSeconds = 0.22f;
+    private const float AttackCooldownSeconds = 0.32f;
+    private const float AttackStartupSeconds = 0.05f;
+    private const float AttackActiveSeconds = 0.1f;
+    private const float AttackRecoverySeconds = 0.14f;
+    private const float HeavyAttackCooldownSeconds = 0.58f;
+    private const float HeavyAttackStartupSeconds = 0.12f;
+    private const float HeavyAttackActiveSeconds = 0.13f;
+    private const float HeavyAttackRecoverySeconds = 0.26f;
+    private const float ComboWindowSeconds = 0.28f;
     private const float ExecuteRange = 42f;
     private static readonly Rect2 DefaultMovementBounds = new(new Vector2(-380, 124), new Vector2(760, 92));
 
@@ -40,6 +40,7 @@ public partial class PlayerController : CharacterBody2D
     private CollisionShape2D? _attackHitboxShape;
     private Node2D? _visualRig;
     private VisualRigAnimator? _visualAnimator;
+    private AudioStreamPlayer? _swingPlayer;
     private readonly HashSet<ulong> _hitEnemiesThisAttack = new();
     private PlayerState _state = PlayerState.Idle;
     private Vector2 _facing = Vector2.Right;
@@ -87,6 +88,17 @@ public partial class PlayerController : CharacterBody2D
         BuildCollision();
         BuildAttackHitbox();
         BuildHurtbox();
+        BuildSwingAudio();
+    }
+
+    private void BuildSwingAudio()
+    {
+        _swingPlayer = new AudioStreamPlayer
+        {
+            Name = "SwingSfx",
+            VolumeDb = -6f
+        };
+        AddChild(_swingPlayer);
     }
 
     public void TakeHit(Vector2 impulse, int damage)
@@ -98,7 +110,7 @@ public partial class PlayerController : CharacterBody2D
 
         _health -= damage;
         _hitFlash = 0.12f;
-        _hitStunTimer = HitStunSeconds;
+        _hitStunTimer = HitStunSeconds + (damage - 1) * 0.05f;
         Velocity = impulse;
         ImpactFeedback.Get(this)?.OnPlayerHit(GlobalPosition + new Vector2(0, -4));
 
@@ -206,6 +218,7 @@ public partial class PlayerController : CharacterBody2D
         _slashTimer = AttackActiveSeconds + AttackRecoverySeconds;
         _hitEnemiesThisAttack.Clear();
         _visualAnimator?.PulseAttack();
+        PlaySwingSfx(false, comboStep == 2);
         SetAttackHitboxEnabled(false);
     }
 
@@ -219,6 +232,7 @@ public partial class PlayerController : CharacterBody2D
         _slashTimer = HeavyAttackActiveSeconds + HeavyAttackRecoverySeconds;
         _hitEnemiesThisAttack.Clear();
         _visualAnimator?.PulseAttack();
+        PlaySwingSfx(true, false);
         SetAttackHitboxEnabled(false);
     }
 
@@ -237,7 +251,7 @@ public partial class PlayerController : CharacterBody2D
             }
 
             enemy.Execute(new Vector2(_facing.X * 120f, -14f), PickExecutionStyle(enemy));
-            GetParent<PrototypeArena>()?.ApplyCombatImpact(6f, 0.06f);
+            CombatFeel.ApplyExecuteImpact(GetParent<PrototypeArena>());
             return;
         }
     }
@@ -303,8 +317,24 @@ public partial class PlayerController : CharacterBody2D
                 enemy.TakeHit(impulse * 0.5f, PlayerAttackKind.ComboFinisher);
             }
 
-            GetParent<PrototypeArena>()?.ApplyCombatImpact(_isHeavyAttack ? 6f : 4.5f, _isHeavyAttack ? 0.05f : 0.04f);
+            CombatFeel.ApplyPlayerAttackImpact(GetParent<PrototypeArena>(), attackKind);
         }
+    }
+
+    private void PlaySwingSfx(bool heavy, bool comboFinisher)
+    {
+        if (_swingPlayer is null)
+        {
+            return;
+        }
+
+        _swingPlayer.Stream = comboFinisher
+            ? PlaceholderSfx.CreateComboSwing()
+            : heavy
+                ? PlaceholderSfx.CreateHeavySwing()
+                : PlaceholderSfx.CreateLightSwing();
+        _swingPlayer.Stop();
+        _swingPlayer.Play();
     }
 
     private void BuildVisuals()

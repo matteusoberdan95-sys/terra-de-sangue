@@ -3,7 +3,7 @@ using Godot;
 [GlobalClass]
 public partial class EnemyBrute : EnemyBase
 {
-    protected override int MaxHealthValue => 6;
+    protected override int MaxHealthValue => 5;
     protected override float ApproachSpeed => 28f;
     protected override float AttackRange => 38f;
     protected override float AttackCooldownSeconds => 1.5f;
@@ -12,6 +12,10 @@ public partial class EnemyBrute : EnemyBase
     protected override Color ApproachColor => new("#5c4a40");
     protected override Color AttackColor => new("#6b1a14");
     protected override EnemyVisualArchetype VisualArchetype => EnemyVisualArchetype.Brute;
+
+    protected override float GetAttackStartup() => 0.38f;
+    protected override float GetAttackActive() => 0.12f;
+    protected override float GetAttackRecovery() => 0.36f;
 
     public override void _Ready()
     {

@@ -32,6 +32,7 @@ public abstract partial class EnemyBase : CharacterBody2D
     private Polygon2D? _bleedingWound;
     private Polygon2D? _deepGash;
     private Polygon2D? _attackSwing;
+    private Polygon2D? _telegraphMark;
     private Node2D? _visualRig;
     private VisualRigAnimator? _visualAnimator;
     private Area2D? _attackHitbox;
@@ -44,6 +45,7 @@ public abstract partial class EnemyBase : CharacterBody2D
     private float _attackCooldown;
     private float _attackTimer;
     private Vector2 _facing = Vector2.Left;
+    private bool _attackWindUpPulsed;
 
     protected Vector2 FacingDirection => _facing;
     private bool _hitPlayerThisAttack;
@@ -121,9 +123,9 @@ public abstract partial class EnemyBase : CharacterBody2D
 
         _health -= 1;
         _hitFlash = 0.1f;
-        _hitStunTimer = 0.18f;
+        _hitStunTimer = CombatFeel.GetEnemyHitStun(attackKind);
         _state = _health <= 0 ? EnemyState.Dead : EnemyState.HitStun;
-        Velocity = impulse;
+        Velocity = CombatFeel.ScaleKnockback(impulse, attackKind);
 
         ImpactFeedback.Get(this)?.OnEnemyHit(GlobalPosition + new Vector2(0, -4), impulse, _health <= 0, attackKind);
         UpdateWoundVisuals();
@@ -257,7 +259,7 @@ public abstract partial class EnemyBase : CharacterBody2D
         _state = EnemyState.Attack;
         _attackCooldown = AttackCooldownSeconds;
         OnAttackPatternStarted();
-        _visualAnimator?.PulseAttack();
+        _attackWindUpPulsed = false;
         _attackTimer = GetAttackStartup() + GetAttackActive() + GetAttackRecovery();
         _hitPlayerThisAttack = false;
         SetAttackHitboxEnabled(false);
@@ -269,9 +271,27 @@ public abstract partial class EnemyBase : CharacterBody2D
 
         var recovery = GetAttackRecovery();
         var active = GetAttackActive();
-        var activeStartsAt = recovery;
         var activeEndsAt = recovery + active;
-        var isActive = _attackTimer > activeStartsAt && _attackTimer <= activeEndsAt;
+        var isWindUp = _attackTimer > activeEndsAt;
+        var isActive = _attackTimer > recovery && _attackTimer <= activeEndsAt;
+
+        if (isWindUp)
+        {
+            var startup = GetAttackStartup();
+            var progress = startup <= 0f ? 1f : (_attackTimer - activeEndsAt) / startup;
+            _visualAnimator?.SetTelegraph(progress);
+            UpdateTelegraphMarker(true, progress);
+        }
+        else
+        {
+            _visualAnimator?.SetTelegraph(0f);
+            UpdateTelegraphMarker(false, 0f);
+            if (isActive && !_attackWindUpPulsed)
+            {
+                _attackWindUpPulsed = true;
+                _visualAnimator?.PulseAttack();
+            }
+        }
 
         SetAttackHitboxEnabled(isActive);
         if (isActive)
@@ -283,6 +303,7 @@ public abstract partial class EnemyBase : CharacterBody2D
         if (_attackTimer <= 0f)
         {
             SetAttackHitboxEnabled(false);
+            UpdateTelegraphMarker(false, 0f);
             ReleaseAttackSlot();
             _state = EnemyState.Idle;
         }
@@ -313,8 +334,8 @@ public abstract partial class EnemyBase : CharacterBody2D
             }
 
             _hitPlayerThisAttack = true;
-            player.TakeHit(new Vector2(_facing.X * 72f, -6f), GetAttackDamageAmount());
-            GetParent<PrototypeArena>()?.ApplyCombatImpact(3f, 0.03f);
+            player.TakeHit(new Vector2(_facing.X * 84f, -8f), GetAttackDamageAmount());
+            CombatFeel.ApplyEnemyHitOnPlayer(GetParent<PrototypeArena>(), GetAttackDamageAmount());
             break;
         }
     }
@@ -417,6 +438,38 @@ public abstract partial class EnemyBase : CharacterBody2D
             }
         };
         _visualRig.AddChild(_deepGash);
+
+        _telegraphMark = new Polygon2D
+        {
+            Name = "TelegraphMark",
+            Visible = false,
+            ZIndex = 30,
+            Color = new Color("#e06b2f", 0.92f),
+            Polygon = new[]
+            {
+                new Vector2(-3, -34),
+                new Vector2(3, -34),
+                new Vector2(0, -26)
+            }
+        };
+        _visualRig.AddChild(_telegraphMark);
+    }
+
+    private void UpdateTelegraphMarker(bool visible, float progress)
+    {
+        if (_telegraphMark is null)
+        {
+            return;
+        }
+
+        _telegraphMark.Visible = visible;
+        if (!visible)
+        {
+            return;
+        }
+
+        _telegraphMark.Modulate = new Color(1f, 1f, 1f, 0.45f + progress * 0.55f);
+        _telegraphMark.Scale = Vector2.One * (0.8f + progress * 0.5f);
     }
 
     private void UpdateWoundVisuals()

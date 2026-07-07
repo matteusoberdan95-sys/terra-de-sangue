@@ -59,12 +59,14 @@ public partial class PrototypeArena : Node2D
         if (_shakeTimer > 0f)
         {
             _shakeTimer = Mathf.Max(0f, _shakeTimer - dt);
+            var falloff = _shakeTimer / 0.18f;
             _camera.Offset = new Vector2(
-                (float)GD.RandRange(-_shakeStrength, _shakeStrength),
-                (float)GD.RandRange(-_shakeStrength, _shakeStrength));
+                (float)GD.RandRange(-_shakeStrength, _shakeStrength) * falloff,
+                (float)GD.RandRange(-_shakeStrength, _shakeStrength) * falloff);
         }
         else
         {
+            _shakeStrength = Mathf.Lerp(_shakeStrength, 0f, 10f * dt);
             _camera.Offset = Vector2.Zero;
         }
     }
@@ -107,9 +109,9 @@ public partial class PrototypeArena : Node2D
         }
     }
 
-    public async void ApplyCombatImpact(float shakeStrength, float hitPauseSeconds)
+    public async void ApplyCombatImpact(float shakeStrength, float hitPauseSeconds, float hitPauseTimeScale = 0.08f)
     {
-        _shakeTimer = 0.14f;
+        _shakeTimer = Mathf.Max(_shakeTimer, 0.18f);
         _shakeStrength = Mathf.Max(_shakeStrength, shakeStrength);
 
         if (Engine.TimeScale < 1f)
@@ -117,10 +119,9 @@ public partial class PrototypeArena : Node2D
             return;
         }
 
-        Engine.TimeScale = 0.08;
+        Engine.TimeScale = hitPauseTimeScale;
         await ToSignal(GetTree().CreateTimer(hitPauseSeconds, true, false, true), SceneTreeTimer.SignalName.Timeout);
-        Engine.TimeScale = 1.0;
-        _shakeStrength = 0f;
+        Engine.TimeScale = 1.0f;
     }
 
     private void BuildBackground()
