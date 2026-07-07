@@ -5,11 +5,11 @@ Este arquivo e a primeira leitura obrigatoria para qualquer agente trabalhando n
 ## Estado atual
 
 - Projeto: `Terra Sangrada`.
-- Engine: Godot .NET 4.x.
-- Linguagem: C#.
-- Sprint atual: Sprint 1, implementada tecnicamente e aguardando validacao visual no Godot.
+- Engine: Godot .NET 4.7.
+- Linguagem: C# / .NET 10.
+- Sprint atual: Sprint 1 validada localmente no Godot.
 - Cena principal: `res://scenes/Main.tscn`.
-- Proximo foco: validar visualmente Sprint 1 no Godot .NET.
+- Proximo foco: Sprint 2, vertical slice visual.
 
 ## Ordem de leitura
 
@@ -29,9 +29,11 @@ Para arte e narrativa, ler tambem:
 ## Regras de trabalho
 
 - Trabalhar por sprint.
+- Fazer alteracoes primeiro na copia local `C:\Users\mober\OneDrive\Desktop\fauna-do-sangue`.
 - Nao adicionar sistemas grandes fora do escopo da sprint atual.
 - Validar visualmente no Godot antes de fechar uma sprint.
 - Apos qualquer modificacao em gameplay, cena, camera, arte ou UI, registrar validacao visual conforme `docs/10_politica_validacao_visual.md`.
+- So fazer commit/push depois da validacao visual local quando a alteracao afetar gameplay, cena, camera, arte ou UI.
 - Manter documentacao atualizada quando uma decisao mudar.
 - Preservar a cultura indigena como ficticia e respeitosa ate haver pesquisa dedicada.
 - Nao tratar arte final como prioridade antes do combate basico parecer bom.

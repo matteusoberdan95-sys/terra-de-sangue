@@ -6,6 +6,22 @@ Depois de qualquer modificacao que afete gameplay, cena, camera, arte, UI, colis
 
 E obrigatorio abrir o projeto no Godot e validar visualmente.
 
+## Ordem obrigatoria de trabalho
+
+1. Fazer a alteracao localmente em:
+
+```text
+C:\Users\mober\OneDrive\Desktop\fauna-do-sangue
+```
+
+2. Compilar localmente.
+3. Abrir no Godot local.
+4. Validar visualmente a cena afetada.
+5. Registrar o resultado nos documentos da sprint.
+6. Somente depois criar commit e subir para o GitHub.
+
+Nunca subir para o repositorio remoto antes da validacao visual quando a alteracao afetar gameplay, cena, camera, arte ou UI.
+
 ## Godot local
 
 Executavel confirmado em 2026-07-07:
@@ -14,10 +30,37 @@ Executavel confirmado em 2026-07-07:
 C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe
 ```
 
+Versao confirmada:
+
+```text
+4.7.stable.mono.official.5b4e0cb0f
+```
+
+Runtime .NET local confirmado:
+
+```text
+Microsoft.NETCore.App 10.0.1
+```
+
+O projeto usa `net10.0` por decisao tecnica do projeto. A validacao local precisa confirmar que o Godot 4.7 Mono carrega a assembly `TerraSangrada.dll` sem erros.
+
+Configuracao obrigatoria no `project.godot`:
+
+```text
+[dotnet]
+project/assembly_name="TerraSangrada"
+```
+
 Comando para abrir o projeto:
 
 ```powershell
 Start-Process -FilePath 'C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe' -ArgumentList '--path','C:\Users\mober\Documents\Codex\2026-07-07\boa-cara-estamos-num-reposit-rio'
+```
+
+Comando para abrir a copia local principal no Desktop:
+
+```powershell
+Start-Process -FilePath 'C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe' -ArgumentList '--path','C:\Users\mober\OneDrive\Desktop\fauna-do-sangue'
 ```
 
 ## Quando validar
@@ -59,6 +102,16 @@ Registrar sempre:
 - Cena validada.
 - Resultado: aprovado, ajustar ou bloqueado.
 - Observacoes visuais importantes.
+
+## Validacoes registradas
+
+### 2026-07-07 - Sprint 1
+
+- Projeto local: `C:\Users\mober\OneDrive\Desktop\fauna-do-sangue`
+- Cena: `scenes/Main.tscn`
+- Resultado: aprovado pelo usuario.
+- Build: `dotnet build TerraSangrada.csproj --no-restore` com 0 erros e 0 avisos.
+- Godot console: sem erro de assembly/script apos corrigir `project/assembly_name`.
 
 ## Politica para Codex e Cursor
 

@@ -1,7 +1,6 @@
 using Godot;
 
-namespace TerraSangrada.Prototype;
-
+[GlobalClass]
 public partial class EnemyDummy : CharacterBody2D
 {
     public const uint HurtboxCollisionLayer = 1u << 2;
@@ -114,6 +113,14 @@ public partial class EnemyDummy : CharacterBody2D
 
     private void BuildVisuals()
     {
+        _body = GetNodeOrNull<Polygon2D>("InvaderPlaceholder");
+        _mark = GetNodeOrNull<Polygon2D>("RedMark");
+
+        if (_body is not null && _mark is not null)
+        {
+            return;
+        }
+
         _body = new Polygon2D
         {
             Name = "InvaderPlaceholder",
@@ -146,6 +153,11 @@ public partial class EnemyDummy : CharacterBody2D
 
     private void BuildCollision()
     {
+        if (GetNodeOrNull<CollisionShape2D>("Collision") is not null)
+        {
+            return;
+        }
+
         AddChild(new CollisionShape2D
         {
             Name = "Collision",
@@ -159,6 +171,11 @@ public partial class EnemyDummy : CharacterBody2D
 
     private void BuildHurtbox()
     {
+        if (GetNodeOrNull<Area2D>("Hurtbox") is not null)
+        {
+            return;
+        }
+
         var hurtbox = new Area2D
         {
             Name = "Hurtbox",

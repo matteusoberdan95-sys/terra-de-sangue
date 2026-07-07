@@ -33,7 +33,7 @@ C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_m
 
 ## Sprint atual
 
-Sprint 1 esta implementada tecnicamente e precisa de validacao visual no Godot. A proxima etapa e rodar `scenes/Main.tscn` e confirmar movimento, ataque, knockback, hit pause, camera shake e limites de arena.
+Sprint 1 foi validada localmente no Godot. A proxima etapa e Sprint 2: vertical slice visual.
 
 ## Agentes
 

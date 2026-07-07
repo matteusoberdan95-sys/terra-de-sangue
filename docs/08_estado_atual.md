@@ -6,29 +6,31 @@ Ultima atualizacao: 2026-07-07.
 
 - Nome: Terra Sangrada.
 - Genero: hack and slash / beat 'em up 2D.
-- Engine: Godot .NET 4.x.
+- Engine: Godot .NET 4.7.
 - Linguagem: C#.
+- Runtime local: .NET 10.0.
+- Target framework do jogo: `net10.0`.
 - Tom: adulto, dark, sangrento, melancolico.
 
 ## Sprint atual
 
 Sprint 1 - Combate Prototipo.
 
-Status: implementada tecnicamente, aguardando validacao visual.
+Status: validada localmente no Godot.
 
-Falta para fechar:
+Sprint 1 fechada com:
 
-- Abrir o projeto no Godot .NET.
-- Rodar `scenes/Main.tscn`.
-- Validar visualmente movimento, ataque, knockback, hit pause, camera shake e limites da arena.
-- Marcar o checklist final de Sprint 1.
+- Build .NET 10 aprovado.
+- Godot console sem erro de assembly/script.
+- Validacao visual aprovada pelo usuario.
+- Cena `scenes/Main.tscn` rodando localmente.
 
 ## Implementado
 
 - Projeto Godot criado.
 - Projeto C# criado.
 - Cena principal `scenes/Main.tscn`.
-- Arena prototipo `scenes/levels/PrototypeArena.tscn`.
+- Arena prototipo `scenes/levels/PrototypeArena.tscn` agora visivel tambem no editor do Godot, nao apenas em runtime.
 - Player placeholder com movimento `WASD`.
 - Ataque leve em `J`.
 - Estados basicos de player: idle, walk e light attack.
@@ -43,8 +45,10 @@ Falta para fechar:
 ## Validacao feita
 
 - `dotnet restore TerraSangrada.csproj`: sucesso.
-- `dotnet build TerraSangrada.csproj --no-restore`: sucesso, 0 erros e 0 avisos, executado fora do sandbox por permissao.
+- `dotnet build TerraSangrada.csproj --no-restore`: sucesso, 0 erros e 0 avisos, executado localmente no Desktop.
 - Godot encontrado e aberto em 2026-07-07 pelo caminho local informado pelo usuario.
+- Godot console validado sem erros de assembly/script apos corrigir `[dotnet] project/assembly_name="TerraSangrada"`.
+- Validacao visual aprovada pelo usuario em 2026-07-07.
 
 Godot local:
 
@@ -52,12 +56,18 @@ Godot local:
 C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe
 ```
 
+Repositorio local principal para desenvolvimento e validacao:
+
+```text
+C:\Users\mober\OneDrive\Desktop\fauna-do-sangue
+```
+
 ## Proximo passo
 
-Validar visualmente a Sprint 1 no Godot. Se aprovado, iniciar Sprint 2: vertical slice visual.
+Criar commit local da Sprint 1 validada e subir para o GitHub. Depois iniciar Sprint 2: vertical slice visual.
 
 ## Riscos atuais
 
 - Godot nao foi encontrado no PATH do ambiente atual.
-- Godot abre por caminho absoluto local, mas a validacao visual da Sprint 1 ainda precisa de confirmacao humana dentro da janela.
+- Godot abre por caminho absoluto local.
 - Inimigos ainda nao atacam; isso fica para a sprint de sistema de inimigos.

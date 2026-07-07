@@ -1,7 +1,6 @@
 using Godot;
 
-namespace TerraSangrada.Prototype;
-
+[GlobalClass]
 public partial class PrototypeArena : Node2D
 {
     private static readonly Rect2 PlayArea = new(new Vector2(-380, 124), new Vector2(760, 92));
@@ -17,9 +16,7 @@ public partial class PrototypeArena : Node2D
         BuildBackground();
         BuildPlayAreaGuides();
         SpawnPlayer();
-        SpawnEnemy(new Vector2(260, 148));
-        SpawnEnemy(new Vector2(340, 176));
-        SpawnEnemy(new Vector2(430, 156));
+        SpawnDefaultEnemies();
         BuildCamera();
     }
 
@@ -64,6 +61,11 @@ public partial class PrototypeArena : Node2D
 
     private void BuildBackground()
     {
+        if (HasNode("NightCanopy") || HasNode("BloodlitGround"))
+        {
+            return;
+        }
+
         AddChild(new Polygon2D
         {
             Name = "NightCanopy",
@@ -103,6 +105,11 @@ public partial class PrototypeArena : Node2D
 
     private void AddLayer(string name, Color color, float y, float x, float width, float height)
     {
+        if (HasNode(name))
+        {
+            return;
+        }
+
         AddChild(new Polygon2D
         {
             Name = name,
@@ -119,6 +126,14 @@ public partial class PrototypeArena : Node2D
 
     private void SpawnPlayer()
     {
+        var existingPlayer = GetNodeOrNull<PlayerController>("Arandu");
+        if (existingPlayer is not null)
+        {
+            _player = existingPlayer;
+            _player.MovementBounds = PlayArea;
+            return;
+        }
+
         _player = new PlayerController
         {
             Name = "Arandu",
@@ -126,6 +141,28 @@ public partial class PrototypeArena : Node2D
             MovementBounds = PlayArea
         };
         AddChild(_player);
+    }
+
+    private void SpawnDefaultEnemies()
+    {
+        var hasSceneEnemies = false;
+        foreach (var child in GetChildren())
+        {
+            if (child is EnemyDummy enemy)
+            {
+                enemy.MovementBounds = PlayArea;
+                hasSceneEnemies = true;
+            }
+        }
+
+        if (hasSceneEnemies)
+        {
+            return;
+        }
+
+        SpawnEnemy(new Vector2(260, 148));
+        SpawnEnemy(new Vector2(340, 176));
+        SpawnEnemy(new Vector2(430, 156));
     }
 
     private void SpawnEnemy(Vector2 position)

@@ -38,12 +38,12 @@ Nao entra:
 
 ## Checklist de sensacao
 
-- [ ] Golpe parece pesado.
-- [ ] Inimigo reage de forma satisfatoria.
-- [ ] Leitura de profundidade esta clara.
-- [ ] Cena tem clima, mesmo com placeholder.
+- [x] Golpe parece pesado.
+- [x] Inimigo reage de forma satisfatoria.
+- [x] Leitura de profundidade esta clara.
+- [x] Cena tem clima, mesmo com placeholder.
 
-Observacao: itens de sensacao dependem de validacao visual no Godot. O build tecnico passou.
+Observacao: validado visualmente no Godot local em 2026-07-07.
 
 ## Validacao
 
@@ -53,7 +53,26 @@ Rodar `scenes/Main.tscn` no Godot e gravar decisoes:
 - Ajustar.
 - Cortar.
 
-Status atual: implementado tecnicamente, aguardando validacao visual no Godot.
+Status atual: validado localmente no Godot.
+
+## Registro de validacao visual
+
+Data: 2026-07-07.
+
+Ambiente:
+
+- Projeto local: `C:\Users\mober\OneDrive\Desktop\fauna-do-sangue`
+- Godot: `4.7.stable.mono.official.5b4e0cb0f`
+- .NET: `10.0`
+
+Resultado: aprovado pelo usuario.
+
+Observacoes:
+
+- A primeira tentativa abriu tela cinza porque o Godot nao carregava a assembly do projeto.
+- Corrigido `project/assembly_name` de `Terra Sangrada` para `TerraSangrada`.
+- `Main.tscn` passou a instanciar `PrototypeArena.tscn` diretamente.
+- `PrototypeArena.tscn` agora tem conteudo visivel no editor, nao apenas criado em runtime por C#.
 
 ## Agentes envolvidos
 

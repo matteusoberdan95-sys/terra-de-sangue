@@ -15,14 +15,14 @@ O projeto sera construido em sprints curtas. Cada sprint deve terminar com uma v
 ## Stack
 
 - Godot .NET 4.x
-- C#
+- C# / .NET 10
 - Camera 2D com profundidade beat 'em up
 - Assets gerados por IA e refinados por sprint
 
 ## Como abrir
 
 1. Abra o Godot .NET.
-2. Importe a pasta deste projeto.
+2. Importe a pasta local `C:\Users\mober\OneDrive\Desktop\fauna-do-sangue`.
 3. Abra `project.godot`.
 4. Rode a cena principal `scenes/Main.tscn`.
 
@@ -72,8 +72,15 @@ Depois de qualquer alteracao em gameplay, cena, camera, arte ou UI, e obrigatori
 
 Detalhes em `docs/10_politica_validacao_visual.md`.
 
+Fluxo obrigatorio:
+
+1. Alterar localmente no Desktop.
+2. Validar no Godot.
+3. Registrar a validacao.
+4. Somente depois commitar e subir para o GitHub.
+
 ## Proxima sprint
 
-Sprint 1: prototipo de combate em arena.
+Sprint 2: vertical slice visual.
 
-O objetivo nao e fazer uma fase bonita ainda. O objetivo e provar que andar, bater, receber impacto, derrubar inimigo e controlar camera ja parecem bons.
+O objetivo agora e substituir os placeholders por uma primeira identidade visual real: protagonista, inimigo basico e atmosfera inicial da Aldeia em Cinzas, mantendo o combate validado na Sprint 1.

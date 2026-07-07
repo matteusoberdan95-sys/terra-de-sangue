@@ -1,7 +1,6 @@
 using Godot;
 
-namespace TerraSangrada;
-
+[GlobalClass]
 public partial class GameRoot : Node2D
 {
     public override void _Ready()

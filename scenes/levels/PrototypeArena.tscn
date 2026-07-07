@@ -1,6 +1,111 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://src/Prototype/PrototypeArena.cs" id="1_arena"]
+[ext_resource type="Script" path="res://src/Prototype/PlayerController.cs" id="2_player"]
+[ext_resource type="Script" path="res://src/Prototype/EnemyDummy.cs" id="3_enemy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
+size = Vector2(18, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_enemy"]
+size = Vector2(18, 28)
 
 [node name="PrototypeArena" type="Node2D"]
 script = ExtResource("1_arena")
+
+[node name="NightCanopy" type="Polygon2D" parent="."]
+color = Color(0.0823529, 0.0666667, 0.0588235, 1)
+polygon = PackedVector2Array(-500, -300, 900, -300, 900, 130, -500, 130)
+
+[node name="BloodlitGround" type="Polygon2D" parent="."]
+color = Color(0.168627, 0.105882, 0.0862745, 1)
+polygon = PackedVector2Array(-500, 108, 900, 108, 900, 260, -500, 260)
+
+[node name="DistantTrees" type="Polygon2D" parent="."]
+color = Color(0.117647, 0.164706, 0.12549, 1)
+polygon = PackedVector2Array(-420, 96, 440, 96, 440, 130, -420, 130)
+
+[node name="AshLine" type="Polygon2D" parent="."]
+color = Color(0.419608, 0.219608, 0.156863, 1)
+polygon = PackedVector2Array(-420, 132, 440, 132, 440, 142, -420, 142)
+
+[node name="WalkBand" type="Polygon2D" parent="."]
+color = Color(0.247059, 0.168627, 0.12549, 1)
+polygon = PackedVector2Array(-420, 184, 440, 184, 440, 220, -420, 220)
+
+[node name="BackDepthLimit" type="Polygon2D" parent="."]
+color = Color(0.27451, 0.2, 0.14902, 1)
+polygon = PackedVector2Array(-380, 124, 380, 124, 380, 126, -380, 126)
+
+[node name="FrontDepthLimit" type="Polygon2D" parent="."]
+color = Color(0.470588, 0.313726, 0.227451, 1)
+polygon = PackedVector2Array(-380, 216, 380, 216, 380, 218, -380, 218)
+
+[node name="Arandu" type="CharacterBody2D" parent="."]
+position = Vector2(120, 164)
+script = ExtResource("2_player")
+
+[node name="WarriorPlaceholder" type="Polygon2D" parent="Arandu"]
+color = Color(0.768627, 0.435294, 0.207843, 1)
+polygon = PackedVector2Array(-10, 12, -7, -18, 0, -30, 10, -18, 12, 12)
+
+[node name="Paint" type="Polygon2D" parent="Arandu"]
+color = Color(0.878431, 0.717647, 0.364706, 1)
+polygon = PackedVector2Array(-7, -10, 8, -14, 7, -9, -8, -5)
+
+[node name="AttackSlash" type="Polygon2D" parent="Arandu"]
+visible = false
+color = Color(0.709804, 0.121569, 0.121569, 1)
+polygon = PackedVector2Array(10, -16, 58, -5, 54, 8, 12, 3)
+
+[node name="Collision" type="CollisionShape2D" parent="Arandu"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_player")
+
+[node name="InvaderDummyA" type="CharacterBody2D" parent="."]
+position = Vector2(260, 148)
+script = ExtResource("3_enemy")
+
+[node name="InvaderPlaceholder" type="Polygon2D" parent="InvaderDummyA"]
+color = Color(0.372549, 0.411765, 0.439216, 1)
+polygon = PackedVector2Array(-10, 12, -12, -12, -2, -24, 11, -10, 10, 12)
+
+[node name="RedMark" type="Polygon2D" parent="InvaderDummyA"]
+color = Color(0.560784, 0.121569, 0.0901961, 1)
+polygon = PackedVector2Array(-8, -8, 10, -6, 9, 1, -9, -1)
+
+[node name="Collision" type="CollisionShape2D" parent="InvaderDummyA"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_enemy")
+
+[node name="InvaderDummyB" type="CharacterBody2D" parent="."]
+position = Vector2(340, 176)
+script = ExtResource("3_enemy")
+
+[node name="InvaderPlaceholder" type="Polygon2D" parent="InvaderDummyB"]
+color = Color(0.372549, 0.411765, 0.439216, 1)
+polygon = PackedVector2Array(-10, 12, -12, -12, -2, -24, 11, -10, 10, 12)
+
+[node name="RedMark" type="Polygon2D" parent="InvaderDummyB"]
+color = Color(0.560784, 0.121569, 0.0901961, 1)
+polygon = PackedVector2Array(-8, -8, 10, -6, 9, 1, -9, -1)
+
+[node name="Collision" type="CollisionShape2D" parent="InvaderDummyB"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_enemy")
+
+[node name="InvaderDummyC" type="CharacterBody2D" parent="."]
+position = Vector2(430, 156)
+script = ExtResource("3_enemy")
+
+[node name="InvaderPlaceholder" type="Polygon2D" parent="InvaderDummyC"]
+color = Color(0.372549, 0.411765, 0.439216, 1)
+polygon = PackedVector2Array(-10, 12, -12, -12, -2, -24, 11, -10, 10, 12)
+
+[node name="RedMark" type="Polygon2D" parent="InvaderDummyC"]
+color = Color(0.560784, 0.121569, 0.0901961, 1)
+polygon = PackedVector2Array(-8, -8, 10, -6, 9, 1, -9, -1)
+
+[node name="Collision" type="CollisionShape2D" parent="InvaderDummyC"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_enemy")

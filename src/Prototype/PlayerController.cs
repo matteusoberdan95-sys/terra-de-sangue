@@ -1,8 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-namespace TerraSangrada.Prototype;
-
+[GlobalClass]
 public partial class PlayerController : CharacterBody2D
 {
     private const float Speed = 120f;
@@ -144,6 +143,15 @@ public partial class PlayerController : CharacterBody2D
 
     private void BuildVisuals()
     {
+        _body = GetNodeOrNull<Polygon2D>("WarriorPlaceholder");
+        _paint = GetNodeOrNull<Polygon2D>("Paint");
+        _attackSlash = GetNodeOrNull<Polygon2D>("AttackSlash");
+
+        if (_body is not null && _paint is not null && _attackSlash is not null)
+        {
+            return;
+        }
+
         _body = new Polygon2D
         {
             Name = "WarriorPlaceholder",
@@ -191,6 +199,11 @@ public partial class PlayerController : CharacterBody2D
 
     private void BuildCollision()
     {
+        if (GetNodeOrNull<CollisionShape2D>("Collision") is not null)
+        {
+            return;
+        }
+
         var shape = new CollisionShape2D
         {
             Name = "Collision",
@@ -206,6 +219,14 @@ public partial class PlayerController : CharacterBody2D
 
     private void BuildAttackHitbox()
     {
+        _attackHitbox = GetNodeOrNull<Area2D>("LightAttackHitbox");
+        _attackHitboxShape = _attackHitbox?.GetNodeOrNull<CollisionShape2D>("LightAttackShape");
+        if (_attackHitbox is not null && _attackHitboxShape is not null)
+        {
+            SetAttackHitboxEnabled(false);
+            return;
+        }
+
         _attackHitboxShape = new CollisionShape2D
         {
             Name = "LightAttackShape",
