@@ -49,7 +49,9 @@ public partial class CombatAudio : Node
         var stream = attackKind switch
         {
             PlayerAttackKind.Heavy => Load($"{SfxRoot}/combat/swing_heavy.wav", PlaceholderSfx.CreateHeavySwing),
+            PlayerAttackKind.RunHeavy => Load($"{SfxRoot}/combat/swing_run_heavy.wav", PlaceholderSfx.CreateRunHeavySwing),
             PlayerAttackKind.ComboFinisher => Load($"{SfxRoot}/combat/swing_combo.wav", PlaceholderSfx.CreateComboSwing),
+            PlayerAttackKind.RunLight => Load($"{SfxRoot}/combat/swing_run_light.wav", PlaceholderSfx.CreateRunLightSwing),
             _ => Load($"{SfxRoot}/combat/swing_light.wav", PlaceholderSfx.CreateLightSwing)
         };
         Play(_swingPlayer, stream, 0.94f + (float)GD.RandRange(0, 0.08));
@@ -60,7 +62,9 @@ public partial class CombatAudio : Node
         var stream = attackKind switch
         {
             PlayerAttackKind.Heavy => Load($"{SfxRoot}/combat/hit_heavy.wav", PlaceholderSfx.CreateHitHeavy),
+            PlayerAttackKind.RunHeavy => Load($"{SfxRoot}/combat/hit_heavy.wav", PlaceholderSfx.CreateHitHeavy),
             PlayerAttackKind.ComboFinisher => Load($"{SfxRoot}/combat/hit_combo.wav", PlaceholderSfx.CreateHitCombo),
+            PlayerAttackKind.RunLight => Load($"{SfxRoot}/combat/hit_combo.wav", PlaceholderSfx.CreateHitCombo),
             _ => Load($"{SfxRoot}/combat/hit_light.wav", PlaceholderSfx.CreateHitLight)
         };
         Play(_hitPlayer, stream, 0.92f + (float)GD.RandRange(0, 0.1));

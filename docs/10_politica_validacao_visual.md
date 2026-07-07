@@ -256,6 +256,12 @@ Registrar sempre:
 - Resultado: aprovado pelo usuario.
 - Conteudo validado: sprites pixel do bruto e Sargento do Ferro com animacoes walk/attack/hit.
 
+### 2026-07-07 - Sprint 23
+
+- Cena: `scenes/Main.tscn`
+- Resultado: aprovado pelo usuario.
+- Conteudo validado: golpes de corrida `J`/`K`, slide, SFX e animacoes dedicadas.
+
 ## Politica para Codex e Cursor
 
 Codex e Cursor podem implementar e compilar, mas nao devem declarar uma sprint como fechada sem registro de validacao visual no Godot.

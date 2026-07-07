@@ -12,28 +12,28 @@ Hoje existe `StartRunAttack()` apenas no `J` (golpe de entrada generico). Falta 
 
 ### Corrida + `J` — golpe de entrada
 
-- [ ] Animacao/sprite dedicada (soco chutado ou cotovelada enquanto desliza).
-- [ ] Mantem momentum parcial na direcao da corrida.
-- [ ] Knockback alto, dano leve+, recovery curto.
-- [ ] Nao consome combo chain normal.
+- [x] Animacao/sprite dedicada (`run_attack_light`).
+- [x] Mantem momentum parcial na direcao da corrida.
+- [x] Knockback alto, dano leve+, recovery curto.
+- [x] Nao consome combo chain normal.
 
 ### Corrida + `K` — golpe pesado de corrida
 
-- [ ] Variante pesada (joelhada, shoulder charge ou chute corrido).
-- [ ] Custo de stamina extra (~6).
-- [ ] Para a corrida ao conectar; recovery medio.
-- [ ] Pode aplicar stagger em brutos.
+- [x] Variante pesada (`run_attack_heavy`).
+- [x] Custo de stamina extra (6).
+- [x] Recovery medio; stagger extra em inimigos.
+- [x] 2 de dano no impacto.
 
 ### Game feel
 
-- [ ] SFX distintos (whoosh + impacto).
-- [ ] Hitstop levemente maior que golpe parado.
-- [ ] Cancel: corrida → golpe sem voltar a idle.
+- [x] SFX distintos (whoosh + impacto).
+- [x] Hitstop levemente maior que golpe parado.
+- [x] Cancel: corrida → golpe sem voltar a idle.
 
 ### HUD / UX
 
-- [ ] Flash sutil no sprite ao correr (opcional).
-- [ ] Documentar no `08_estado_atual.md`.
+- [x] Flash sutil no sprite ao correr.
+- [x] Documentar no `08_estado_atual.md`.
 
 ## Referencia de design
 
@@ -49,4 +49,4 @@ Hoje existe `StartRunAttack()` apenas no `J` (golpe de entrada generico). Falta 
 
 ## Registro de validacao visual
 
-Status atual: nao iniciada.
+Status atual: **validado** em 2026-07-07 pelo usuario.

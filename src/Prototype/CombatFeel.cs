@@ -12,10 +12,12 @@ public static class CombatFeel
         switch (attackKind)
         {
             case PlayerAttackKind.Heavy:
+            case PlayerAttackKind.RunHeavy:
                 arena.ApplyCombatImpact(7.5f, 0.07f, 0.055f);
                 break;
             case PlayerAttackKind.ComboFinisher:
-                arena.ApplyCombatImpact(5.8f, 0.055f, 0.065f);
+            case PlayerAttackKind.RunLight:
+                arena.ApplyCombatImpact(6.2f, 0.05f, 0.06f);
                 break;
             default:
                 arena.ApplyCombatImpact(4.2f, 0.038f, 0.09f);
@@ -45,7 +47,9 @@ public static class CombatFeel
         return attackKind switch
         {
             PlayerAttackKind.Heavy => 0.26f,
+            PlayerAttackKind.RunHeavy => 0.32f,
             PlayerAttackKind.ComboFinisher => 0.22f,
+            PlayerAttackKind.RunLight => 0.19f,
             _ => 0.17f
         };
     }
@@ -55,7 +59,9 @@ public static class CombatFeel
         return attackKind switch
         {
             PlayerAttackKind.Heavy => impulse * 1.25f,
+            PlayerAttackKind.RunHeavy => impulse * 1.35f,
             PlayerAttackKind.ComboFinisher => impulse * 1.1f,
+            PlayerAttackKind.RunLight => impulse * 1.2f,
             _ => impulse
         };
     }

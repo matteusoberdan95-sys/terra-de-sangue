@@ -62,6 +62,10 @@ public static class PlaceholderSfx
 
     public static AudioStreamWav CreateArtifactBreak() => CreateBurst(0.12f, 68f, 0.58f, 0.42f);
 
+    public static AudioStreamWav CreateRunLightSwing() => CreateSweep(0.08f, 220f, 110f, 0.38f);
+
+    public static AudioStreamWav CreateRunHeavySwing() => CreateBurst(0.11f, 58f, 0.64f, 0.34f);
+
     private static AudioStreamWav CreateBurst(float duration, float frequency, float volume, float noiseAmount)
     {
         var sampleCount = Mathf.Max(1, (int)(MixRate * duration));

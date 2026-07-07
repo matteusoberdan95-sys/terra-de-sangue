@@ -29,6 +29,16 @@ public static class AranduSpriteArt
         frames.AddFrame("attack_heavy", BuildFrame(0, 3, false));
         frames.AddFrame("attack_heavy", BuildFrame(0, 4, false));
 
+        frames.AddAnimation("run_attack_light");
+        frames.SetAnimationSpeed("run_attack_light", 14f);
+        frames.AddFrame("run_attack_light", BuildFrame(0, 5, false));
+        frames.AddFrame("run_attack_light", BuildFrame(0, 5, false));
+
+        frames.AddAnimation("run_attack_heavy");
+        frames.SetAnimationSpeed("run_attack_heavy", 11f);
+        frames.AddFrame("run_attack_heavy", BuildFrame(0, 6, false));
+        frames.AddFrame("run_attack_heavy", BuildFrame(0, 6, false));
+
         frames.AddAnimation("hit");
         frames.SetAnimationSpeed("hit", 1f);
         frames.AddFrame("hit", BuildFrame(0, 0, true));
@@ -79,9 +89,25 @@ public static class AranduSpriteArt
             PixelCanvas.FillRect(image, 30, 20, 12, 3, new Color("#b51f1f", 0.85f));
         }
 
-        if (pose >= 3)
+        if (pose >= 3 && pose < 5)
         {
             PixelCanvas.FillRect(image, 32, 12, 16, 6, PixelSpritePalette.Wood);
+        }
+
+        if (pose == 5)
+        {
+            PixelCanvas.FillRect(image, 14, 34, 10, 8, skinShadow);
+            PixelCanvas.FillRect(image, 32, 22, 14, 5, skin);
+            PixelCanvas.FillRect(image, 38, 20, 8, 8, skin);
+            PixelCanvas.FillRect(image, 42, 22, 6, 3, new Color("#b51f1f", 0.85f));
+        }
+
+        if (pose == 6)
+        {
+            PixelCanvas.FillRect(image, 16, 38, 12, 8, skinShadow);
+            PixelCanvas.FillRect(image, 30, 28, 12, 10, skin);
+            PixelCanvas.FillRect(image, 34, 18, 10, 12, skinShadow);
+            PixelCanvas.FillRect(image, 26, 14, 18, 6, PixelSpritePalette.Wood);
         }
 
         return PixelCanvas.ToTexture(image);

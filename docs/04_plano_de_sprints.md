@@ -263,4 +263,6 @@ Golpes exclusivos com `J` e `K` durante corrida — estilo beat 'em up classico.
 
 Ver `docs/sprints/sprint_23_golpes_de_corrida.md`.
 
+Status: validada em 2026-07-07.
+
 ## Sprint futura - SFX Custom

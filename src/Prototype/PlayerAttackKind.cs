@@ -3,6 +3,8 @@ public enum PlayerAttackKind
     Light,
     ComboFinisher,
     Heavy,
+    RunLight,
+    RunHeavy,
     Execute
 }
 

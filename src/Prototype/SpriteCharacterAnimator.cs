@@ -20,7 +20,7 @@ public partial class SpriteCharacterAnimator : AnimatedSprite2D
         FlipH = directionX < 0f;
     }
 
-    public void UpdatePresentation(bool moving, bool attacking, bool heavyAttack, bool hitFlash, bool dead)
+    public void UpdatePresentation(bool moving, bool attacking, bool heavyAttack, bool runLightAttack, bool runHeavyAttack, bool hitFlash, bool dead)
     {
         if (SpriteFrames is null)
         {
@@ -29,6 +29,8 @@ public partial class SpriteCharacterAnimator : AnimatedSprite2D
 
         var next = dead ? "idle"
             : hitFlash ? "hit"
+            : runHeavyAttack ? "run_attack_heavy"
+            : runLightAttack ? "run_attack_light"
             : attacking ? heavyAttack ? "attack_heavy" : "attack_light"
             : moving ? "walk"
             : "idle";

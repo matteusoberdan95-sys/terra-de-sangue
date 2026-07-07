@@ -32,6 +32,11 @@ public partial class PlayerController : CharacterBody2D
     private const float RunDrainPerSecond = 15f;
     private const float RunMinStamina = 8f;
     private const float DoubleTapWindowSeconds = 0.22f;
+    private const float RunHeavyStaminaCost = 6f;
+    private const float RunLightSlideSpeed = 148f;
+    private const float RunHeavySlideSpeed = 116f;
+    private const float RunLightAttackRecovery = 0.08f;
+    private const float RunHeavyAttackRecovery = 0.18f;
     private const float HeavyAttackStaminaCost = 8f;
     private const float JumpCost = 14f;
     private const float JumpDurationSeconds = 0.42f;
@@ -95,6 +100,8 @@ public partial class PlayerController : CharacterBody2D
     private int _comboStep;
     private bool _isHeavyAttack;
     private bool _isRunAttack;
+    private bool _isRunHeavyAttack;
+    private float _runAttackSlideSpeed;
     private bool _isComboHeavyFinisher;
     private bool _isArtifactAttack;
     private float _stamina = MaxStamina;
@@ -278,7 +285,14 @@ public partial class PlayerController : CharacterBody2D
         else if (_state == PlayerState.LightAttack || _state == PlayerState.HeavyAttack)
         {
             UpdateAttack(dt);
-            Velocity = Vector2.Zero;
+            if (_isRunAttack || _isRunHeavyAttack)
+            {
+                Velocity = new Vector2(_runDirectionX * _runAttackSlideSpeed, 0f);
+            }
+            else
+            {
+                Velocity = Vector2.Zero;
+            }
         }
         else if (_state == PlayerState.HitStun)
         {
@@ -345,7 +359,7 @@ public partial class PlayerController : CharacterBody2D
             }
             else if (_state == PlayerState.Run)
             {
-                StartRunAttack();
+                StartRunLightAttack();
             }
             else if (CanStartLightAttack())
             {
@@ -365,6 +379,10 @@ public partial class PlayerController : CharacterBody2D
             if (_artifactEquipped && _artifactCharges > 0 && _artifactKind == ArtifactKind.BrokenClub)
             {
                 StartArtifactHeavyAttack();
+            }
+            else if (_state == PlayerState.Run)
+            {
+                StartRunHeavyAttack();
             }
             else if (_state == PlayerState.Jump)
             {
@@ -475,6 +493,7 @@ public partial class PlayerController : CharacterBody2D
         SnapFacingForAttack(Input.GetVector("move_left", "move_right", "move_up", "move_down"));
         _isHeavyAttack = true;
         _isRunAttack = false;
+        _isRunHeavyAttack = false;
         _isArtifactAttack = true;
         _artifactEquipped = false;
         _comboStep = 0;
@@ -494,6 +513,7 @@ public partial class PlayerController : CharacterBody2D
         SnapFacingForAttack(Input.GetVector("move_left", "move_right", "move_up", "move_down"));
         _isHeavyAttack = false;
         _isRunAttack = false;
+        _isRunHeavyAttack = false;
         _isArtifactAttack = true;
         _artifactEquipped = false;
         _comboStep = 2;
@@ -508,20 +528,53 @@ public partial class PlayerController : CharacterBody2D
         SyncAttackHitboxPosition();
     }
 
-    private void StartRunAttack()
+    private void StartRunLightAttack()
     {
-        SnapFacingForAttack(Input.GetVector("move_left", "move_right", "move_up", "move_down"));
+        SetFacingX(_runDirectionX);
         _isHeavyAttack = false;
+        _isRunHeavyAttack = false;
+        _isArtifactAttack = false;
         _isRunAttack = true;
-        _runDirectionX = _facingX;
-        _comboStep = 2;
+        _comboStep = 0;
+        _comboWindow = 0f;
+        _nextComboHit = 1;
+        _runAttackSlideSpeed = RunLightSlideSpeed;
         _state = PlayerState.LightAttack;
-        _attackCooldown = 0.28f;
-        _attackTimer = 0.04f + AttackActiveSeconds + 0.1f;
-        _slashTimer = AttackActiveSeconds + 0.1f;
+        _attackCooldown = 0.22f;
+        _attackTimer = 0.02f + AttackActiveSeconds + RunLightAttackRecovery;
+        _slashTimer = AttackActiveSeconds + RunLightAttackRecovery;
         _hitEnemiesThisAttack.Clear();
         _visualAnimator?.PulseAttack();
-        PlaySwingSfx(false, true);
+        CombatAudio.Get(this)?.PlayPlayerSwing(PlayerAttackKind.RunLight);
+        SetAttackHitboxEnabled(false);
+        SyncAttackHitboxPosition();
+    }
+
+    private void StartRunHeavyAttack()
+    {
+        if (_stamina < RunHeavyStaminaCost)
+        {
+            _staminaBlockedFlash = 0.25f;
+            return;
+        }
+
+        SpendStamina(RunHeavyStaminaCost);
+        SetFacingX(_runDirectionX);
+        _isHeavyAttack = true;
+        _isRunAttack = false;
+        _isRunHeavyAttack = true;
+        _isArtifactAttack = false;
+        _comboStep = 0;
+        _comboWindow = 0f;
+        _nextComboHit = 1;
+        _runAttackSlideSpeed = RunHeavySlideSpeed;
+        _state = PlayerState.HeavyAttack;
+        _attackCooldown = 0.38f;
+        _attackTimer = 0.04f + HeavyAttackActiveSeconds + RunHeavyAttackRecovery;
+        _slashTimer = HeavyAttackActiveSeconds + RunHeavyAttackRecovery;
+        _hitEnemiesThisAttack.Clear();
+        _visualAnimator?.PulseAttack();
+        CombatAudio.Get(this)?.PlayPlayerSwing(PlayerAttackKind.RunHeavy);
         SetAttackHitboxEnabled(false);
         SyncAttackHitboxPosition();
     }
@@ -541,6 +594,7 @@ public partial class PlayerController : CharacterBody2D
         _isHeavyAttack = true;
         _isComboHeavyFinisher = true;
         _isRunAttack = false;
+        _isRunHeavyAttack = false;
         _comboStep = 3;
         _state = PlayerState.HeavyAttack;
         _attackCooldown = 0.48f;
@@ -566,6 +620,7 @@ public partial class PlayerController : CharacterBody2D
         _isHeavyAttack = true;
         _isComboHeavyFinisher = false;
         _isRunAttack = false;
+        _isRunHeavyAttack = false;
         _comboStep = 0;
         _state = PlayerState.HeavyAttack;
         _attackCooldown = HeavyAttackCooldownSeconds;
@@ -602,7 +657,10 @@ public partial class PlayerController : CharacterBody2D
     {
         _attackTimer = Mathf.Max(0f, _attackTimer - dt);
 
-        var recovery = _isHeavyAttack ? HeavyAttackRecoverySeconds : AttackRecoverySeconds;
+        var recovery = _isRunHeavyAttack ? RunHeavyAttackRecovery
+            : _isRunAttack ? RunLightAttackRecovery
+            : _isHeavyAttack ? HeavyAttackRecoverySeconds
+            : AttackRecoverySeconds;
         var active = _isHeavyAttack ? HeavyAttackActiveSeconds : AttackActiveSeconds;
         var activeStartsAt = recovery;
         var activeEndsAt = recovery + active;
@@ -624,9 +682,11 @@ public partial class PlayerController : CharacterBody2D
         if (_attackTimer <= 0f)
         {
             SetAttackHitboxEnabled(false);
-            var wasRunAttack = _isRunAttack;
+            var wasRunAttack = _isRunAttack || _isRunHeavyAttack;
             _state = PlayerState.Idle;
             _isRunAttack = false;
+            _isRunHeavyAttack = false;
+            _runAttackSlideSpeed = 0f;
             _isComboHeavyFinisher = false;
             _isArtifactAttack = false;
             if (wasRunAttack)
@@ -656,7 +716,9 @@ public partial class PlayerController : CharacterBody2D
             return;
         }
 
-        rectangle.Size = _isHeavyAttack
+        rectangle.Size = _isRunHeavyAttack ? new Vector2(58f, 30f)
+            : _isRunAttack ? new Vector2(54f, 22f)
+            : _isHeavyAttack
             ? new Vector2(_isComboHeavyFinisher ? 56f : 52f, 28f)
             : _comboStep == 3 ? new Vector2(50f, 26f) : new Vector2(44, 24);
         SyncAttackHitboxPosition();
@@ -670,15 +732,19 @@ public partial class PlayerController : CharacterBody2D
             }
 
             _hitEnemiesThisAttack.Add(enemy.GetInstanceId());
-            var baseImpulseX = _isHeavyAttack ? 128f : _comboStep == 3 ? 112f : 96f;
-            var impulse = new Vector2(_facingX * baseImpulseX, _isHeavyAttack ? -16f : _comboStep == 3 ? -14f : -10f);
-            var isComboFinisher = _comboStep >= 2 || _isRunAttack || _isComboHeavyFinisher;
-            var attackKind = _isHeavyAttack
-                ? PlayerAttackKind.Heavy
-                : isComboFinisher ? PlayerAttackKind.ComboFinisher : PlayerAttackKind.Light;
+            var baseImpulseX = _isRunHeavyAttack ? 142f
+                : _isRunAttack ? 118f
+                : _isHeavyAttack ? 128f
+                : _comboStep == 3 ? 112f
+                : 96f;
+            var impulse = new Vector2(_facingX * baseImpulseX, _isHeavyAttack || _isRunHeavyAttack ? -16f : _isRunAttack ? -12f : _comboStep == 3 ? -14f : -10f);
+            var attackKind = _isRunHeavyAttack ? PlayerAttackKind.RunHeavy
+                : _isRunAttack ? PlayerAttackKind.RunLight
+                : _isHeavyAttack ? PlayerAttackKind.Heavy
+                : _comboStep >= 2 || _isComboHeavyFinisher ? PlayerAttackKind.ComboFinisher
+                : PlayerAttackKind.Light;
             var impulseScale = _isComboHeavyFinisher ? 1.35f
                 : _comboStep == 3 ? 1.28f
-                : _isRunAttack ? 1.3f
                 : 1f;
             var hitDamage = ResolveHitDamage(attackKind);
             enemy.TakeHit(impulse * impulseScale, attackKind, hitDamage);
@@ -686,12 +752,12 @@ public partial class PlayerController : CharacterBody2D
             {
                 enemy.ApplyBleed(_artifactKind == ArtifactKind.BrokenClub ? BleedLevel.Hemorrhage : BleedLevel.Heavy);
             }
-            else if (_isHeavyAttack && WeaponProfile.HeavyAppliesBleed)
+            else if (_isHeavyAttack && !_isRunHeavyAttack && WeaponProfile.HeavyAppliesBleed)
             {
                 enemy.ApplyBleed(BleedLevel.Heavy);
             }
 
-            if (_comboStep == 2 || _comboStep == 3)
+            if (!_isRunAttack && !_isRunHeavyAttack && (_comboStep == 2 || _comboStep == 3))
             {
                 enemy.TakeHit(impulse * 0.5f, PlayerAttackKind.ComboFinisher, hitDamage > 1 ? 1 : hitDamage);
             }
@@ -792,6 +858,16 @@ public partial class PlayerController : CharacterBody2D
 
     private int ResolveHitDamage(PlayerAttackKind attackKind)
     {
+        if (attackKind == PlayerAttackKind.RunHeavy)
+        {
+            return 2;
+        }
+
+        if (attackKind == PlayerAttackKind.RunLight)
+        {
+            return 1 + WeaponProfile.LightDamageBonus;
+        }
+
         if (_isHeavyAttack || attackKind is PlayerAttackKind.Heavy or PlayerAttackKind.ComboFinisher)
         {
             return 1;
@@ -819,7 +895,12 @@ public partial class PlayerController : CharacterBody2D
             return;
         }
 
-        _attackHitbox.Position = new Vector2(_facingX * (_isHeavyAttack ? 40f : _comboStep == 3 ? 38f : 34f), -8f);
+        var reach = _isRunHeavyAttack ? 44f
+            : _isRunAttack ? 40f
+            : _isHeavyAttack ? 40f
+            : _comboStep == 3 ? 38f
+            : 34f;
+        _attackHitbox.Position = new Vector2(_facingX * reach, -8f);
     }
 
     private void BuildAimIndicator()
@@ -1506,15 +1587,19 @@ public partial class PlayerController : CharacterBody2D
         var dashFlash = _state == PlayerState.Dash && _dashInvulnTimer > 0f;
         var jumpFlash = _state == PlayerState.Jump;
         var slamReady = _state == PlayerState.Jump && _airAttackPending == AirAttackPending.Slam;
+        var runFlash = _state == PlayerState.Run;
         _pixelSprite?.SpeedScale = _state == PlayerState.Run ? 1.55f : 1f;
         _pixelSprite?.Modulate = dashFlash ? new Color(0.85f, 0.92f, 1f, 0.82f)
+            : runFlash ? new Color(1f, 0.94f, 0.86f)
             : slamReady ? new Color(1f, 0.88f, 0.78f)
             : jumpFlash ? new Color(0.96f, 0.98f, 1f)
             : Colors.White;
         _pixelSprite?.UpdatePresentation(
             (_state == PlayerState.Walk || _state == PlayerState.Run) && Velocity.LengthSquared() > 1f,
             _state is PlayerState.LightAttack or PlayerState.HeavyAttack,
-            _state == PlayerState.HeavyAttack,
+            _state == PlayerState.HeavyAttack && !_isRunHeavyAttack,
+            _isRunAttack,
+            _isRunHeavyAttack,
             _hitFlash > 0f || dashFlash || jumpFlash,
             _state == PlayerState.Dead);
     }
