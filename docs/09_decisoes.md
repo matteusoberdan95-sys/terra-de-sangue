@@ -8,6 +8,14 @@ Motivo: esse fluxo eliminou linhas de debug/emendas, evitou personagem andando n
 
 Regra: Cursor/Codex nao devem voltar a empilhar PNGs opacos, recortar faixas com `RegionRect` ou recriar fundo procedural em C#.
 
+## 2026-07-07 - Padrao visual aprovado do Arandu
+
+Decisao: Arandu usa sheets transparentes normalizados em `assets/art/sprites/player/`, com 8 frames horizontais e frame final 256x256 para idle, walk, ataque leve e ataque forte.
+
+Motivo: o usuario validou o personagem e a animacao inicial. Manter um contrato fixo evita frames com cor, escala, silhueta e proporcao diferentes entre acoes.
+
+Regra: novos sheets do Arandu devem usar os sheets aprovados como referencia direta. Se a IA entregar canvas irregular, normalizar por silhueta antes de integrar. Cursor/Codex/agentes nao devem mudar paleta, tamanho corporal, escala em `PlayerController` ou proporcao para "corrigir" um asset isolado.
+
 ## 2026-07-07 - Cenario Aldeia: cena Godot, nao codigo
 
 Decisao: fundo da Aldeia montado em `scenes/levels/AldeiaBackground.tscn`; C# apenas parallax horizontal.

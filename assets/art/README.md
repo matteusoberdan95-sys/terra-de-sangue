@@ -107,3 +107,8 @@ assets/art/
 - Filtro no Godot: Linear para pintura suave.
 
 Ver `docs/11_guia_krita_beat_em_up.md`.
+
+## Personagens
+
+O Arandu segue um contrato proprio em `assets/art/sprites/player/README.md`.
+Antes de integrar qualquer novo sheet de personagem, conferir esse arquivo e manter o padrao aprovado: 8 frames horizontais, frame final 256x256, fundo transparente e mesma paleta/proporcao entre animacoes.

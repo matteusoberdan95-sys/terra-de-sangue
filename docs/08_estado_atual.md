@@ -1,6 +1,6 @@
 # Estado Atual
 
-Ultima atualizacao: 2026-07-07 (Sprint 25 em andamento - Aldeia integrada, VFX leves e Arandu walk inicial validado).
+Ultima atualizacao: 2026-07-07 (Sprint 25 em andamento - Aldeia integrada, VFX leves e Arandu com idle/walk/ataques iniciais).
 
 ## Sprint atual
 
@@ -11,7 +11,7 @@ Ultima atualizacao: 2026-07-07 (Sprint 25 em andamento - Aldeia integrada, VFX l
 - Codigo: `AldeiaParallaxBackground.cs` (so parallax horizontal), `AldeiaEmCinzasArena.cs` (camera Y travada, faixa de andar Y=152-208).
 - Ajuste 2026-07-07: guias/faixas de debug removidas do runtime PNG; fogo, fumaca e brasas leves adicionados como overlay ambiental.
 - VFX 2026-07-07: spritesheets transparentes em `assets/art/vfx/` para fogo, brasas e fumaca; fallback procedural mantido.
-- Arandu 2026-07-07: `assets/art/sprites/player/arandu_walk_sheet.png` integrado como walk sheet inicial; usuario validou que o personagem ficou bom.
+- Arandu 2026-07-07: `arandu_idle_sheet.png`, `arandu_walk_sheet.png`, `arandu_attack_light_sheet.png` e `arandu_attack_heavy_sheet.png` integrados; usuario validou o walk inicial e os sheets de ataque seguem o mesmo padrao 8x256.
 - Padrao aprovado pelo usuario: poucos assets bem compostos (`aldeia_mid` mestre + `aldeia_fg` transparente + vida ambiente leve), sem remontar PNG opaco em codigo.
 - **Nao** usar fundo procedural em C# (`AldeiaBackgroundArt` foi removido e nao deve voltar).
 
@@ -34,6 +34,6 @@ Tentativas de empilhar/recortar 4 PNGs opacos no **codigo** geraram emendas feia
 ## Proximo passo (ordem sugerida)
 
 1. **Alinhar pes / composicao fina** - abrir `AldeiaBackground.tscn`, mover `AldeiaBackdrop` ate `WalkBandGuide` (F5 + editor).
-2. **Mercenario inimigo base** no mesmo pipeline visual, para testar combate sem bloquinhos.
-3. **Arandu ataques/run/hit** usando o walk aprovado como referencia de paleta e proporcao.
+2. **Arandu run/hit/dano** usando idle/walk/ataques aprovados como referencia de paleta e proporcao.
+3. **Mercenario inimigo base** no mesmo pipeline visual, para testar combate sem bloquinhos.
 4. (Opcional) Regerar `aldeia_sky` / `aldeia_ground` com **transparencia** para parallax real - ver `assets/art/README.md` Opcao B.

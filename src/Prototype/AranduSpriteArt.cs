@@ -2,9 +2,12 @@ using Godot;
 
 public static class AranduSpriteArt
 {
+    private const string IdleSheetPath = "res://assets/art/sprites/player/arandu_idle_sheet.png";
     private const string WalkSheetPath = "res://assets/art/sprites/player/arandu_walk_sheet.png";
-    private const int WalkSheetFrameCount = 8;
-    private const int WalkSheetFrameSize = 256;
+    private const string AttackLightSheetPath = "res://assets/art/sprites/player/arandu_attack_light_sheet.png";
+    private const string AttackHeavySheetPath = "res://assets/art/sprites/player/arandu_attack_heavy_sheet.png";
+    private const int ExternalSheetFrameCount = 8;
+    private const int ExternalSheetFrameSize = 256;
     private const int Width = 48;
     private const int Height = 56;
 
@@ -62,45 +65,62 @@ public static class AranduSpriteArt
     private static SpriteFrames BuildSpriteFramesFromWalkSheet()
     {
         var frames = new SpriteFrames();
-        var image = Image.LoadFromFile(WalkSheetPath);
-        var sheet = ImageTexture.CreateFromImage(image);
+        var walkSheet = LoadSheet(WalkSheetPath);
+        var idleSheet = FileAccess.FileExists(IdleSheetPath) ? LoadSheet(IdleSheetPath) : walkSheet;
+        var attackLightSheet = FileAccess.FileExists(AttackLightSheetPath) ? LoadSheet(AttackLightSheetPath) : walkSheet;
+        var attackHeavySheet = FileAccess.FileExists(AttackHeavySheetPath) ? LoadSheet(AttackHeavySheetPath) : attackLightSheet;
 
         frames.AddAnimation("idle");
-        frames.SetAnimationSpeed("idle", 1f);
-        frames.AddFrame("idle", BuildSheetFrame(sheet, 0));
+        frames.SetAnimationSpeed("idle", 6f);
+        for (var i = 0; i < ExternalSheetFrameCount; i++)
+        {
+            frames.AddFrame("idle", BuildSheetFrame(idleSheet, i));
+        }
 
         frames.AddAnimation("walk");
         frames.SetAnimationSpeed("walk", 10f);
-        for (var i = 0; i < WalkSheetFrameCount; i++)
+        for (var i = 0; i < ExternalSheetFrameCount; i++)
         {
-            frames.AddFrame("walk", BuildSheetFrame(sheet, i));
+            frames.AddFrame("walk", BuildSheetFrame(walkSheet, i));
         }
 
         frames.AddAnimation("attack_light");
-        frames.SetAnimationSpeed("attack_light", 12f);
-        frames.AddFrame("attack_light", BuildSheetFrame(sheet, 3));
-        frames.AddFrame("attack_light", BuildSheetFrame(sheet, 4));
+        frames.SetAnimationSpeed("attack_light", 14f);
+        for (var i = 0; i < ExternalSheetFrameCount; i++)
+        {
+            frames.AddFrame("attack_light", BuildSheetFrame(attackLightSheet, i));
+        }
 
         frames.AddAnimation("attack_heavy");
-        frames.SetAnimationSpeed("attack_heavy", 10f);
-        frames.AddFrame("attack_heavy", BuildSheetFrame(sheet, 4));
-        frames.AddFrame("attack_heavy", BuildSheetFrame(sheet, 5));
+        frames.SetAnimationSpeed("attack_heavy", 11f);
+        for (var i = 0; i < ExternalSheetFrameCount; i++)
+        {
+            frames.AddFrame("attack_heavy", BuildSheetFrame(attackHeavySheet, i));
+        }
 
         frames.AddAnimation("run_attack_light");
         frames.SetAnimationSpeed("run_attack_light", 14f);
-        frames.AddFrame("run_attack_light", BuildSheetFrame(sheet, 5));
-        frames.AddFrame("run_attack_light", BuildSheetFrame(sheet, 6));
+        frames.AddFrame("run_attack_light", BuildSheetFrame(attackLightSheet, 3));
+        frames.AddFrame("run_attack_light", BuildSheetFrame(attackLightSheet, 4));
+        frames.AddFrame("run_attack_light", BuildSheetFrame(attackLightSheet, 5));
 
         frames.AddAnimation("run_attack_heavy");
         frames.SetAnimationSpeed("run_attack_heavy", 11f);
-        frames.AddFrame("run_attack_heavy", BuildSheetFrame(sheet, 6));
-        frames.AddFrame("run_attack_heavy", BuildSheetFrame(sheet, 7));
+        frames.AddFrame("run_attack_heavy", BuildSheetFrame(attackHeavySheet, 2));
+        frames.AddFrame("run_attack_heavy", BuildSheetFrame(attackHeavySheet, 4));
+        frames.AddFrame("run_attack_heavy", BuildSheetFrame(attackHeavySheet, 5));
 
         frames.AddAnimation("hit");
         frames.SetAnimationSpeed("hit", 1f);
-        frames.AddFrame("hit", BuildSheetFrame(sheet, 2));
+        frames.AddFrame("hit", BuildSheetFrame(walkSheet, 2));
 
         return frames;
+    }
+
+    private static Texture2D LoadSheet(string path)
+    {
+        var image = Image.LoadFromFile(path);
+        return ImageTexture.CreateFromImage(image);
     }
 
     private static Texture2D BuildSheetFrame(Texture2D sheet, int frameIndex)
@@ -108,7 +128,7 @@ public static class AranduSpriteArt
         return new AtlasTexture
         {
             Atlas = sheet,
-            Region = new Rect2(frameIndex * WalkSheetFrameSize, 0, WalkSheetFrameSize, WalkSheetFrameSize)
+            Region = new Rect2(frameIndex * ExternalSheetFrameSize, 0, ExternalSheetFrameSize, ExternalSheetFrameSize)
         };
     }
 

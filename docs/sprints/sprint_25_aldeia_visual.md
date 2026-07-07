@@ -17,6 +17,7 @@ Trocar placeholders da Aldeia em Cinzas por arte 2D real (IA/Krita) sem quebrar 
 - [x] Vida ambiente inicial: fogo, fumaca e brasas leves sobre o PNG mestre
 - [x] Spritesheets VFX integrados: `aldeia_fire_sheet`, `aldeia_embers_sheet`, `aldeia_smoke_sheet`
 - [x] Arandu walk sheet inicial integrado e validado (`assets/art/sprites/player/arandu_walk_sheet.png`)
+- [x] Arandu idle vivo, ataque leve e ataque forte inicial integrados (`arandu_idle_sheet`, `arandu_attack_light_sheet`, `arandu_attack_heavy_sheet`)
 - [x] Remocao de placeholders quando PNG presente
 - [x] Documentacao de pipeline (`assets/art/README.md`, handoff Codex)
 
@@ -24,7 +25,7 @@ Trocar placeholders da Aldeia em Cinzas por arte 2D real (IA/Krita) sem quebrar 
 
 - [ ] Alinhamento final dos pes (usuario ajusta no editor - ver README)
 - [ ] Parallax 4 camadas (exige PNGs com transparencia real)
-- [ ] Sprite sheets Arandu restantes: run, ataques, hit/dano, morte
+- [ ] Sprite sheets Arandu restantes: run, hit/dano, morte
 - [ ] Capitao / Mata no mesmo estilo visual
 
 ## Receita aprovada pelo usuario
@@ -76,6 +77,9 @@ Por que funcionou rapido: o codigo deixou de tentar reconstruir uma pintura por 
 - **2026-07-07:** VFX spritesheets integrados e validados em `outputs/aldeia_vfx_validation_game_crop.png`: chamas, brasas e fumaca usam PNGs transparentes em `assets/art/vfx/`, sem fundo preto e sem cobrir o combate.
 - **2026-07-07:** VFX reancorados ao parallax do fundo apos feedback do usuario. Correcao: `AmbientLife` acompanha o mesmo deslocamento horizontal do `AldeiaBackdrop`, com escala/alpha reduzidos para evitar fogo e fumaca soltos no caminho.
 - **2026-07-07:** Arandu walk sheet integrado via `AranduSpriteArt` e validado pelo usuario: personagem apareceu bem no jogo e substitui o bloco no movimento principal.
+- **2026-07-07:** Arandu idle vivo e ataque leve integrados em `AranduSpriteArt`; ataque leve recebido com canvas irregular foi normalizado para 8 frames de 256x256 antes da integracao.
+- **2026-07-07:** Arandu ataque forte integrado em `AranduSpriteArt`; sheet irregular foi normalizado para 8 frames de 256x256 por silhueta para preservar tacape, bracos e proporcao.
+- **2026-07-07:** Validacao local apos ataque forte: `dotnet build TerraSangrada.csproj --no-restore` passou sem erros e Godot foi aberto no projeto/cena principal para checar runtime.
 - **Pendente:** confirmacao final apos ajuste fino no editor pelo usuario.
 
 ## Referencias

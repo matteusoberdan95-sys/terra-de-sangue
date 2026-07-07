@@ -18,7 +18,7 @@ Documento para continuar o projeto **sem perder contexto** ao alternar entre Cod
 | Combate / Fase 1 | Jogavel: Aldeia -> Capitao -> Mata |
 | Arte Aldeia | `aldeia_mid.png` + `aldeia_fg.png` integrados via `AldeiaBackground.tscn` |
 | Vida ambiente Aldeia | Fogo, fumaca, brasas e leve oscilacao de foreground em `AldeiaParallaxBackground.cs` |
-| Personagem | Placeholder poligono / pixel C# - **nao** arte final |
+| Personagem | Arandu com sheets iniciais: idle, walk, ataque leve e ataque forte |
 | Cenario Capitao/Mata | Ainda placeholders (poligonos) |
 
 ## Regra de ouro da Aldeia
@@ -93,6 +93,38 @@ So fazer depois que os assets forem exportados como camadas transparentes reais:
 
 Se a camada for opaca, ela nao e camada: e outro fundo inteiro. Nao usar no runtime junto com outros fundos inteiros.
 
+## Padrao Arandu / personagens
+
+O Arandu ja tem uma direcao aprovada. **Nao redesenhar, nao trocar paleta e nao mudar proporcao entre animacoes.**
+
+Arquivos atuais:
+
+```text
+assets/art/sprites/player/arandu_idle_sheet.png
+assets/art/sprites/player/arandu_walk_sheet.png
+assets/art/sprites/player/arandu_attack_light_sheet.png
+assets/art/sprites/player/arandu_attack_heavy_sheet.png
+src/Prototype/AranduSpriteArt.cs
+```
+
+Contrato tecnico:
+
+- cada sheet base tem 8 frames em linha horizontal;
+- cada frame integrado no jogo tem 256x256;
+- fundo transparente;
+- mesma pele, cabelo, tecido, arma, pintura corporal e silhueta;
+- `AranduSpriteArt.cs` carrega os PNGs externos e cria as animacoes `idle`, `walk`, `attack_light`, `attack_heavy`, `run_attack_light`, `run_attack_heavy` e `hit`;
+- `PlayerController.AttachAranduSprite()` controla offset/scale do sprite externo; nao mexer nisso para compensar um PNG torto.
+
+Sheets gerados por IA geralmente chegam com canvas irregular. Antes de integrar:
+
+1. Recortar por silhueta, nao por largura fixa.
+2. Normalizar para `2048x256` (`8 * 256`, altura `256`).
+3. Revisar visualmente se tacape, bracos, cabelo e pes nao foram cortados.
+4. So depois plugar no `AranduSpriteArt.cs`.
+
+Regra para todos os agentes: quando fizer nova animacao do Arandu, usar os sheets aprovados como referencia direta. Se a IA mudar a cor da pele, cabelo, tecido, arma ou tamanho corporal, o asset deve ser rejeitado ou corrigido antes de entrar no jogo.
+
 ## Arquivos-chave
 
 ```text
@@ -100,8 +132,10 @@ scenes/levels/AldeiaBackground.tscn   # EDITAR CENARIO AQUI
 scenes/levels/AldeiaEmCinzas.tscn     # arena + script
 src/Prototype/AldeiaParallaxBackground.cs
 src/Prototype/AldeiaEmCinzasArena.cs
+src/Prototype/AranduSpriteArt.cs
 assets/art/aldeia_mid.png
 assets/art/aldeia_fg.png
+assets/art/sprites/player/README.md
 assets/art/README.md
 docs/sprints/sprint_25_aldeia_visual.md
 ```
@@ -125,6 +159,7 @@ F5 em `scenes/Main.tscn` e conferir:
 - Cabanas atras do personagem, nao cortando o corpo.
 - Chamas/fumaca/brasas visiveis, mas sem poluir combate.
 - Camera nao sobe para mostrar ceu vazio.
+- Arandu toca o chao, nao muda de escala entre idle/walk/ataques e nao volta para boneco procedural.
 
 ## Ao finalizar tarefa
 
