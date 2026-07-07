@@ -87,6 +87,6 @@ Nunca iniciar uma nova sprint com a anterior apenas validada localmente, mas ain
 
 ## Sprint Atual
 
-Sprint 12 — Fase 1 Silhuetas e Identidade. Prioridade: polish da Aldeia em Cinzas antes de expandir.
+Sprint 12 — Fase 1 Silhuetas validada e fechada no GitHub (2026-07-07).
 
-Progressao: Aldeia em Cinzas -> Capitao do Ferro -> Mata Fechada.
+Prioridade: polish e game feel da Aldeia em Cinzas antes de expandir conteudo.

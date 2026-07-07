@@ -177,6 +177,6 @@ Entregas:
 - Cenario Aldeia em Cinzas com props e brasas pulsantes.
 - Memoria e banners mais legiveis.
 
-Status: implementada, aguardando validacao visual.
+Status: validada em 2026-07-07.
 
-## Sprint futura - Conteudo adicional
+## Sprint futura - Game Feel Fase 1

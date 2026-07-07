@@ -17,7 +17,6 @@ Tornar a Aldeia em Cinzas jogavel e legivel com silhuetas 2D definidas, animacao
 
 - Build C# sem erros.
 - Godot carrega `AldeiaEmCinzas` com novas silhuetas.
-- Validacao interativa pendente para o usuario.
 
 ## Agentes
 
@@ -28,7 +27,9 @@ Tornar a Aldeia em Cinzas jogavel e legivel com silhuetas 2D definidas, animacao
 
 ## Registro de validacao visual
 
-Status atual: pendente.
+Status atual: validado localmente no Godot em 2026-07-07. Aprovado pelo usuario.
+
+Resultado: aprovado pelo usuario em 2026-07-07.
 
 Cena para validar:
 
