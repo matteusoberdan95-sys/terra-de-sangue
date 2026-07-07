@@ -116,7 +116,6 @@ public partial class PlayerController : CharacterBody2D
     private bool _airHeavyUsed;
     private float _airApexAttackTimer;
     private AirAttackPending _airAttackPending = AirAttackPending.None;
-    private readonly WeaponProfile _weaponProfile = WeaponProfile.Default;
     private int _arrowCount;
     private bool _isAimingBow;
     private bool _bowHeld;
@@ -125,6 +124,11 @@ public partial class PlayerController : CharacterBody2D
     private Polygon2D? _aimIndicator;
     private int _artifactCharges;
     private bool _artifactEquipped;
+    private ArtifactKind _artifactKind = ArtifactKind.None;
+
+    private WeaponProfile WeaponProfile => WeaponProgression.CurrentProfile;
+
+    private float EffectiveComboWindow => ComboWindowSeconds + WeaponProfile.ComboWindowBonus;
 
     public Rect2 MovementBounds
     {
@@ -154,11 +158,18 @@ public partial class PlayerController : CharacterBody2D
 
     public int MaxArrowCount => MaxArrows;
 
-    public string WeaponDisplayName => _weaponProfile.DisplayName;
+    public string WeaponDisplayName => WeaponProfile.DisplayName;
 
     public int ArtifactCharges => _artifactCharges;
 
     public bool ArtifactEquipped => _artifactEquipped;
+
+    public string ArtifactDisplayName => _artifactKind switch
+    {
+        ArtifactKind.IronKnife => "Faca de Ferro",
+        ArtifactKind.BrokenClub => "Clava Quebrada",
+        _ => string.Empty
+    };
 
     public bool IsAimingBow => _isAimingBow;
 
@@ -167,8 +178,9 @@ public partial class PlayerController : CharacterBody2D
         _arrowCount = Mathf.Min(MaxArrows, _arrowCount + Mathf.Max(0, amount));
     }
 
-    public void GrantArtifact(int uses)
+    public void GrantArtifact(ArtifactKind kind, int uses)
     {
+        _artifactKind = uses > 0 ? kind : ArtifactKind.None;
         _artifactCharges = Mathf.Max(0, uses);
         _artifactEquipped = _artifactCharges > 0;
     }
@@ -337,7 +349,7 @@ public partial class PlayerController : CharacterBody2D
             }
             else if (CanStartLightAttack())
             {
-                if (_artifactEquipped && _artifactCharges > 0)
+                if (_artifactEquipped && _artifactCharges > 0 && _artifactKind == ArtifactKind.IronKnife)
                 {
                     StartArtifactAttack();
                 }
@@ -350,7 +362,11 @@ public partial class PlayerController : CharacterBody2D
 
         if (Input.IsActionJustPressed("attack_heavy") && _attackCooldown <= 0f)
         {
-            if (_state == PlayerState.Jump)
+            if (_artifactEquipped && _artifactCharges > 0 && _artifactKind == ArtifactKind.BrokenClub)
+            {
+                StartArtifactHeavyAttack();
+            }
+            else if (_state == PlayerState.Jump)
             {
                 TryAirHeavyAttack();
             }
@@ -450,6 +466,25 @@ public partial class PlayerController : CharacterBody2D
         _hitEnemiesThisAttack.Clear();
         _visualAnimator?.PulseAttack();
         PlaySwingSfx(false, _comboStep >= 2);
+        SetAttackHitboxEnabled(false);
+        SyncAttackHitboxPosition();
+    }
+
+    private void StartArtifactHeavyAttack()
+    {
+        SnapFacingForAttack(Input.GetVector("move_left", "move_right", "move_up", "move_down"));
+        _isHeavyAttack = true;
+        _isRunAttack = false;
+        _isArtifactAttack = true;
+        _artifactEquipped = false;
+        _comboStep = 0;
+        _state = PlayerState.HeavyAttack;
+        _attackCooldown = 0.62f;
+        _attackTimer = 0.06f + HeavyAttackActiveSeconds + 0.24f;
+        _slashTimer = HeavyAttackActiveSeconds + 0.24f;
+        _hitEnemiesThisAttack.Clear();
+        _visualAnimator?.PulseAttack();
+        PlaySwingSfx(true, true);
         SetAttackHitboxEnabled(false);
         SyncAttackHitboxPosition();
     }
@@ -602,7 +637,7 @@ public partial class PlayerController : CharacterBody2D
             }
             else if (!_isHeavyAttack && _comboStep is > 0 and < 3)
             {
-                _comboWindow = ComboWindowSeconds;
+                _comboWindow = EffectiveComboWindow;
                 _nextComboHit = _comboStep + 1;
             }
             else
@@ -645,15 +680,20 @@ public partial class PlayerController : CharacterBody2D
                 : _comboStep == 3 ? 1.28f
                 : _isRunAttack ? 1.3f
                 : 1f;
-            enemy.TakeHit(impulse * impulseScale, attackKind);
+            var hitDamage = ResolveHitDamage(attackKind);
+            enemy.TakeHit(impulse * impulseScale, attackKind, hitDamage);
             if (_isArtifactAttack)
+            {
+                enemy.ApplyBleed(_artifactKind == ArtifactKind.BrokenClub ? BleedLevel.Hemorrhage : BleedLevel.Heavy);
+            }
+            else if (_isHeavyAttack && WeaponProfile.HeavyAppliesBleed)
             {
                 enemy.ApplyBleed(BleedLevel.Heavy);
             }
 
             if (_comboStep == 2 || _comboStep == 3)
             {
-                enemy.TakeHit(impulse * 0.5f, PlayerAttackKind.ComboFinisher);
+                enemy.TakeHit(impulse * 0.5f, PlayerAttackKind.ComboFinisher, hitDamage > 1 ? 1 : hitDamage);
             }
 
             if (_isComboHeavyFinisher)
@@ -669,6 +709,7 @@ public partial class PlayerController : CharacterBody2D
             _artifactCharges = Mathf.Max(0, _artifactCharges - 1);
             if (_artifactCharges <= 0)
             {
+                _artifactKind = ArtifactKind.None;
                 CombatAudio.Get(this)?.PlayArtifactBreak();
             }
         }
@@ -749,11 +790,22 @@ public partial class PlayerController : CharacterBody2D
         _aimDepthOffset = 0f;
     }
 
+    private int ResolveHitDamage(PlayerAttackKind attackKind)
+    {
+        if (_isHeavyAttack || attackKind is PlayerAttackKind.Heavy or PlayerAttackKind.ComboFinisher)
+        {
+            return 1;
+        }
+
+        return 1 + WeaponProfile.LightDamageBonus;
+    }
+
     private void ToggleArtifact()
     {
         if (_artifactCharges <= 0)
         {
             _artifactEquipped = false;
+            _artifactKind = ArtifactKind.None;
             return;
         }
 

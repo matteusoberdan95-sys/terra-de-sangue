@@ -250,12 +250,13 @@ public partial class PrototypeArena : Node2D
         });
     }
 
-    public void SpawnArtifactPickup(Vector2 position, int uses = 3)
+    public void SpawnArtifactPickup(Vector2 position, ArtifactKind kind, int uses = 3)
     {
         AddChild(new ArtifactPickup
         {
-            Name = "IronKnifeArtifact",
+            Name = kind == ArtifactKind.BrokenClub ? "BrokenClubArtifact" : "IronKnifeArtifact",
             GlobalPosition = position,
+            Kind = kind,
             Uses = uses
         });
     }

@@ -4,7 +4,8 @@ public enum BleedLevel
 {
     None,
     Light,
-    Heavy
+    Heavy,
+    Hemorrhage
 }
 
 public static class BleedDefs
@@ -15,6 +16,7 @@ public static class BleedDefs
         {
             BleedLevel.Light => 0.5f,
             BleedLevel.Heavy => 1f,
+            BleedLevel.Hemorrhage => 1.5f,
             _ => 0f
         };
     }
@@ -25,8 +27,14 @@ public static class BleedDefs
         {
             BleedLevel.Light => 4f,
             BleedLevel.Heavy => 5f,
+            BleedLevel.Hemorrhage => 6f,
             _ => 0f
         };
+    }
+
+    public static float SpeedMultiplier(BleedLevel level)
+    {
+        return level == BleedLevel.Hemorrhage ? 0.9f : 1f;
     }
 }
 
@@ -45,12 +53,8 @@ public sealed class BleedStatus
             return;
         }
 
-        if (level > Level)
-        {
-            Level = level;
-        }
-
-        TimeRemaining = Mathf.Max(TimeRemaining, BleedDefs.Duration(level));
+        Level = StackLevel(Level, level);
+        TimeRemaining = Mathf.Max(TimeRemaining, BleedDefs.Duration(Level));
     }
 
     public int Tick(float dt)
@@ -83,6 +87,26 @@ public sealed class BleedStatus
         Level = BleedLevel.None;
         TimeRemaining = 0f;
         _damageAccumulator = 0f;
+    }
+
+    private static BleedLevel StackLevel(BleedLevel current, BleedLevel incoming)
+    {
+        if (incoming == BleedLevel.Hemorrhage)
+        {
+            return BleedLevel.Hemorrhage;
+        }
+
+        if (current == BleedLevel.Heavy && incoming == BleedLevel.Light)
+        {
+            return BleedLevel.Hemorrhage;
+        }
+
+        if (current == BleedLevel.Light && incoming == BleedLevel.Heavy)
+        {
+            return BleedLevel.Heavy;
+        }
+
+        return incoming > current ? incoming : current;
     }
 
     private float _damageAccumulator;

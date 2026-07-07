@@ -49,6 +49,7 @@ public abstract partial class EnemyBase : CharacterBody2D
     private bool _attackWindUpPulsed;
     private bool _telegraphSfxPlayed;
     private readonly BleedStatus _bleed = new();
+    private float _bleedTrailTimer;
 
     protected Vector2 FacingDirection => _facing;
     private bool _hitPlayerThisAttack;
@@ -114,7 +115,7 @@ public abstract partial class EnemyBase : CharacterBody2D
         UpdateVisualState();
     }
 
-    public void TakeHit(Vector2 impulse, PlayerAttackKind attackKind = PlayerAttackKind.Light)
+    public void TakeHit(Vector2 impulse, PlayerAttackKind attackKind = PlayerAttackKind.Light, int damage = 1)
     {
         if (_state == EnemyState.Dead)
         {
@@ -127,7 +128,7 @@ public abstract partial class EnemyBase : CharacterBody2D
             SetAttackHitboxEnabled(false);
         }
 
-        _health -= 1;
+        _health -= Mathf.Max(1, damage);
         _hitFlash = 0.1f;
         _hitStunTimer = CombatFeel.GetEnemyHitStun(attackKind);
         _state = _health <= 0 ? EnemyState.Dead : EnemyState.HitStun;
@@ -164,6 +165,16 @@ public abstract partial class EnemyBase : CharacterBody2D
         }
 
         var damage = _bleed.Tick(dt);
+        if (_bleed.Level == BleedLevel.Hemorrhage && _state == EnemyState.Approach && Velocity.LengthSquared() > 4f)
+        {
+            _bleedTrailTimer -= dt;
+            if (_bleedTrailTimer <= 0f)
+            {
+                _bleedTrailTimer = 0.18f;
+                ImpactFeedback.Get(this)?.OnBleedTick(GlobalPosition + new Vector2(0, 6));
+            }
+        }
+
         if (damage <= 0)
         {
             return;
@@ -303,10 +314,11 @@ public abstract partial class EnemyBase : CharacterBody2D
         }
 
         _state = EnemyState.Approach;
+        var moveSpeed = ApproachSpeed * BleedDefs.SpeedMultiplier(_bleed.Level);
         var desired = new Vector2(
             Mathf.Sign(toPlayer.X) * (Mathf.Abs(toPlayer.X) > AttackRange * 0.85f ? 1f : 0f),
             Mathf.Sign(toPlayer.Y) * (Mathf.Abs(toPlayer.Y) > DepthTolerance * 0.8f ? 1f : 0f));
-        Velocity = desired.Normalized() * ApproachSpeed;
+        Velocity = desired.Normalized() * moveSpeed;
     }
 
     private void StartAttack()
@@ -595,11 +607,15 @@ public abstract partial class EnemyBase : CharacterBody2D
         if (_bleedingWound is not null)
         {
             _bleedingWound.Visible = _state != EnemyState.Dead && (ratio <= 0.5f || _bleed.IsActive);
+            _bleedingWound.Modulate = _bleed.Level == BleedLevel.Hemorrhage
+                ? new Color("#ff4a4a")
+                : Colors.White;
         }
 
         if (_deepGash is not null)
         {
-            _deepGash.Visible = _state != EnemyState.Dead && (ratio <= 0.34f || _bleed.Level == BleedLevel.Heavy);
+            _deepGash.Visible = _state != EnemyState.Dead
+                && (ratio <= 0.34f || _bleed.Level is BleedLevel.Heavy or BleedLevel.Hemorrhage);
         }
 
         if (_arm is not null && _state != EnemyState.Dead && ratio <= 0.25f)

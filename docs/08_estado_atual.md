@@ -4,16 +4,16 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 20 validada. Proximo: Sprint 21 (tacape tier 1 + hemorragia).
+Sprint 21 validada. Proximo: conforme `docs/04_plano_de_sprints.md`.
 
 ## Direcao
 
-Arsenal e arquearia na Fase 1 concluidos. Movimento simplificado: um dash defensivo no Shift e corrida com dreno de stamina.
+Tacape tier 1, hemorragia e clava quebrada na Fase 1. Arsenal e movimento consolidados.
 
 ## Fechamento recente
 
-- Sprint 20: aljava, flechas, bleed, faca de ferro, HUD arsenal. Validada 2026-07-07.
-- Refino movimento: dash unico no Shift, corrida drena stamina, removidos Ctrl/esquiva e impulso ofensivo.
+- Sprint 21: tacape tier 1, hemorragia, clava quebrada. Validada 2026-07-07.
+- Sprint 20: aljava, flechas, bleed, faca de ferro. Validada 2026-07-07.
 
 ## Controles atuais
 
@@ -22,9 +22,9 @@ Arsenal e arquearia na Fase 1 concluidos. Movimento simplificado: um dash defens
 - `J`/`K` no ar: corte, slam, martelo
 - `Shift`: dash defensivo (22 stamina, i-frames)
 - `A`/`D` 2x: corrida (drena stamina)
-- `R`: arco | `U`: artefato
+- `R`: arco (segurar = mira, soltar = disparo) | `U`: artefato
 - `J J J` / `J J K`: combos no chao
 
 ## Proximo passo
 
-Sprint 21 — Tacape Tier 1 e hemorragia.
+Consultar backlog em `docs/04_plano_de_sprints.md` para proxima sprint.

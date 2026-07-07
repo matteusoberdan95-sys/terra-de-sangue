@@ -86,7 +86,7 @@ public partial class CombatHud : CanvasLayer
 
         if (player is not null && _weaponLabel is not null)
         {
-            _weaponLabel.Text = player.WeaponDisplayName;
+            _weaponLabel.Text = $"{player.WeaponDisplayName} (T{WeaponProgression.TacapeTier})";
         }
 
         if (player is not null && _artifactLabel is not null)
@@ -99,7 +99,7 @@ public partial class CombatHud : CanvasLayer
             {
                 _artifactLabel.Visible = true;
                 var status = player.ArtifactEquipped ? "equipada" : "guardada";
-                _artifactLabel.Text = $"Faca ({player.ArtifactCharges}) — {status}";
+                _artifactLabel.Text = $"{player.ArtifactDisplayName} ({player.ArtifactCharges}) — {status}";
                 _artifactLabel.Modulate = player.ArtifactEquipped
                     ? new Color("#e8c4a0")
                     : new Color("#9a8a72");

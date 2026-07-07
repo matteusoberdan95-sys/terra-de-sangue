@@ -244,6 +244,12 @@ Registrar sempre:
 - Resultado: aprovado pelo usuario.
 - Conteudo validado: aljava HUD, pickup flechas, arco `R`, bleed, Faca `U`+`J`, spawn na Aldeia; dash unico `Shift`, corrida com dreno de stamina.
 
+### 2026-07-07 - Sprint 21
+
+- Cena: `scenes/Main.tscn`
+- Resultado: aprovado pelo usuario.
+- Conteudo validado: Tacape de Osso (T1) via memoria, +1 dano leve, `K` com bleed, hemorragia, clava `U`+`K`.
+
 ## Politica para Codex e Cursor
 
 Codex e Cursor podem implementar e compilar, mas nao devem declarar uma sprint como fechada sem registro de validacao visual no Godot.

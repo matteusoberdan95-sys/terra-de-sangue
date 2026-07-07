@@ -111,6 +111,7 @@ public partial class PhaseDirector : Node
         ShowBanner(title, memoryText);
         UpdateStatus($"Memoria coletada: {memoryId}");
         MemoryRegistry.Collect(memoryId, title, memoryText);
+        WeaponProgression.OnMemoryCollected(memoryId);
     }
 
     private void UpdateCombatState(float dt)
@@ -163,7 +164,11 @@ public partial class PhaseDirector : Node
         }
         else if (encounterIndex == 1)
         {
-            _arena.SpawnArtifactPickup(new Vector2(200, 150));
+            _arena.SpawnArtifactPickup(new Vector2(200, 150), ArtifactKind.IronKnife);
+        }
+        else if (encounterIndex == 2)
+        {
+            _arena.SpawnArtifactPickup(new Vector2(220, 156), ArtifactKind.BrokenClub, 1);
         }
 
         if (encounterIndex >= 1)
