@@ -9,6 +9,7 @@ O projeto sera construido em sprints curtas. Cada sprint deve terminar com uma v
 - Combate pesado, legivel e brutal.
 - Arte 2D refinada, com leitura de arcade classico e acabamento moderno.
 - Brasil ficcional, dark, sangrento e melancolico.
+- Identidade 18+ com gore progressivo, sangue no ambiente e execucoes brutais.
 - Cultura indigena ficticia tratada com respeito, evitando caricaturas e misturas aleatorias.
 - Progresso por cenas pequenas, testaveis e polidas.
 
@@ -79,8 +80,10 @@ Fluxo obrigatorio:
 3. Registrar a validacao.
 4. Somente depois commitar e subir para o GitHub.
 
-## Proxima sprint
+## Sprint Atual
 
 Sprint 2: vertical slice visual.
 
-O objetivo agora e substituir os placeholders por uma primeira identidade visual real: protagonista, inimigo basico e atmosfera inicial da Aldeia em Cinzas, mantendo o combate validado na Sprint 1.
+Status: implementada localmente e aguardando validacao visual no Godot.
+
+O objetivo e substituir os placeholders por uma primeira identidade visual real: protagonista, inimigo basico e atmosfera inicial da Aldeia em Cinzas, mantendo o combate validado na Sprint 1.

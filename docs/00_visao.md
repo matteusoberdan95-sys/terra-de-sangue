@@ -13,7 +13,7 @@ Um guerreiro de uma cultura indigena ficticia atravessa uma terra brasileira pro
 ## Tom
 
 - Adulto, melancolico, sangrento e sombrio.
-- Violencia seca, pesada e ritualistica.
+- Violencia seca, pesada, ritualistica e explicitamente gore.
 - Pouco texto; imagens, som e animacao carregam a emocao.
 
 ## Referencias de sensacao
@@ -30,6 +30,12 @@ Um guerreiro de uma cultura indigena ficticia atravessa uma terra brasileira pro
 3. **Cultura ficticia respeitosa**: inspiracao brasileira, mas sem copiar rituais reais de forma rasa.
 4. **Arte de silhueta forte**: personagens reconheciveis mesmo pequenos.
 5. **Sprints fechadas**: nada entra na proxima sprint sem validacao visual no Godot.
+
+## Violencia e Gore
+
+Terra Sangrada deve assumir uma identidade 18+ muito sangrenta: sangue no chao e na mata, roupas rasgadas, feridas progressivas, mutilacoes, cabecas cortadas, barrigas abertas, visceras e desmembramentos dependendo da arma, da forca do golpe e do estado do inimigo.
+
+Detalhes em `docs/11_direcao_de_violencia_gore.md`.
 
 ## Nome de producao
 

@@ -92,6 +92,20 @@ Entregas:
 - Sangue temporario.
 - Sons placeholder.
 - Feedback de morte.
+- Primeiro sistema de feridas/roupa rasgada.
+- Primeiros decals de sangue no chao/cenario.
+
+## Sprint futura - Gore e Execucoes
+
+Objetivo: transformar a brutalidade em um diferencial real do jogo.
+
+Entregas:
+
+- Dano visual progressivo por inimigo.
+- Sangue persistente em chao, vegetacao e objetos.
+- Desmembramento por tipo de arma.
+- Execucoes brutais: cabeca, barriga, membros e corpo partido.
+- Regras de legibilidade para nao esconder o combate.
 
 ## Sprint 6 - Chefe 1
 

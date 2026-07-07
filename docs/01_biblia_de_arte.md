@@ -24,6 +24,7 @@ Terra Sangrada deve parecer um arcade 2D perdido dos anos 90 que foi restaurado 
 - Sangue deve contrastar com barro, cinza e verde.
 - Luz deve vir de fogo, lua, brasas, reflexo de rio ou energia espiritual.
 - Evitar visual limpo demais. Tudo deve carregar sujeira, cicatriz, cinza, lama ou desgaste.
+- Gore deve ser legivel: sangue, membros, roupa rasgada e feridas nao podem esconder a leitura do combate.
 
 ## Protagonista
 
@@ -49,6 +50,15 @@ Leitura visual:
 
 - Ferro, couro, tecido sujo e simbolos de poder quebrados.
 - Inimigos humanos devem parecer violentos e covardes, nao glamourosos.
+- Inimigos devem degradar visualmente durante a luta: roupa rasgada, cortes, sangue, feridas abertas e possiveis mutilacoes em finalizadores.
+
+## Sangue e mutilacao
+
+- Golpes comuns sujam e cortam.
+- Golpes fortes rasgam roupa, abrem feridas e jogam sangue no chao.
+- Execucoes podem cortar cabeca, abrir barriga, amputar membros ou partir o corpo dependendo da arma.
+- Sangue deve marcar ambiente: chao, madeira, vegetacao, cabanas e pedras.
+- A direcao e quantidade do sangue devem reforcar a forca do golpe sem transformar a tela em ruido.
 
 ## Entidades
 

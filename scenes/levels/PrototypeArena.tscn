@@ -17,6 +17,18 @@ script = ExtResource("1_arena")
 color = Color(0.0823529, 0.0666667, 0.0588235, 1)
 polygon = PackedVector2Array(-500, -300, 900, -300, 900, 130, -500, 130)
 
+[node name="BloodMoonGlow" type="Polygon2D" parent="."]
+color = Color(0.560784, 0.121569, 0.0901961, 0.28)
+polygon = PackedVector2Array(-238, -106, -210, -134, -172, -126, -156, -92, -178, -58, -218, -62)
+
+[node name="BloodMoonCore" type="Polygon2D" parent="."]
+color = Color(0.878431, 0.717647, 0.364706, 0.42)
+polygon = PackedVector2Array(-224, -100, -205, -118, -180, -112, -169, -90, -184, -68, -212, -72)
+
+[node name="DistantCanopyCuts" type="Polygon2D" parent="."]
+color = Color(0.0588235, 0.0980392, 0.0705882, 1)
+polygon = PackedVector2Array(-500, 42, -456, 18, -414, 52, -370, 8, -326, 60, -280, 34, -230, 70, -176, 22, -128, 66, -76, 30, -24, 76, 32, 18, 90, 70, 148, 34, 210, 78, 270, 30, 334, 66, 394, 22, 456, 70, 514, 34, 580, 82, 644, 36, 720, 76, 900, 38, 900, 130, -500, 130)
+
 [node name="BloodlitGround" type="Polygon2D" parent="."]
 color = Color(0.168627, 0.105882, 0.0862745, 1)
 polygon = PackedVector2Array(-500, 108, 900, 108, 900, 260, -500, 260)
@@ -25,6 +37,38 @@ polygon = PackedVector2Array(-500, 108, 900, 108, 900, 260, -500, 260)
 color = Color(0.117647, 0.164706, 0.12549, 1)
 polygon = PackedVector2Array(-420, 96, 440, 96, 440, 130, -420, 130)
 
+[node name="BurnedHutLeft" type="Polygon2D" parent="."]
+color = Color(0.117647, 0.0745098, 0.0627451, 1)
+polygon = PackedVector2Array(-356, 126, -318, 78, -260, 126)
+
+[node name="BurnedHutLeftBody" type="Polygon2D" parent="."]
+color = Color(0.168627, 0.105882, 0.0862745, 1)
+polygon = PackedVector2Array(-344, 126, -274, 126, -278, 166, -340, 166)
+
+[node name="BurnedHutRight" type="Polygon2D" parent="."]
+color = Color(0.117647, 0.0745098, 0.0627451, 1)
+polygon = PackedVector2Array(94, 124, 144, 70, 220, 124)
+
+[node name="BurnedHutRightBody" type="Polygon2D" parent="."]
+color = Color(0.168627, 0.105882, 0.0862745, 1)
+polygon = PackedVector2Array(108, 124, 208, 124, 202, 174, 112, 174)
+
+[node name="HutEmberLightLeft" type="Polygon2D" parent="."]
+color = Color(0.878431, 0.419608, 0.184314, 0.42)
+polygon = PackedVector2Array(-332, 132, -302, 120, -278, 136, -288, 154, -324, 154)
+
+[node name="HutEmberLightRight" type="Polygon2D" parent="."]
+color = Color(0.878431, 0.419608, 0.184314, 0.38)
+polygon = PackedVector2Array(134, 134, 168, 116, 196, 136, 184, 158, 146, 160)
+
+[node name="SmokeColumnLeft" type="Polygon2D" parent="."]
+color = Color(0.372549, 0.411765, 0.439216, 0.18)
+polygon = PackedVector2Array(-320, 118, -342, 82, -326, 44, -348, 8, -322, -34, -288, 4, -304, 42, -282, 82, -296, 118)
+
+[node name="SmokeColumnRight" type="Polygon2D" parent="."]
+color = Color(0.372549, 0.411765, 0.439216, 0.15)
+polygon = PackedVector2Array(156, 120, 132, 86, 152, 48, 128, 10, 158, -28, 196, 8, 176, 50, 204, 88, 186, 120)
+
 [node name="AshLine" type="Polygon2D" parent="."]
 color = Color(0.419608, 0.219608, 0.156863, 1)
 polygon = PackedVector2Array(-420, 132, 440, 132, 440, 142, -420, 142)
@@ -32,6 +76,50 @@ polygon = PackedVector2Array(-420, 132, 440, 132, 440, 142, -420, 142)
 [node name="WalkBand" type="Polygon2D" parent="."]
 color = Color(0.247059, 0.168627, 0.12549, 1)
 polygon = PackedVector2Array(-420, 184, 440, 184, 440, 220, -420, 220)
+
+[node name="BloodSmearA" type="Polygon2D" parent="."]
+color = Color(0.560784, 0.121569, 0.0901961, 0.46)
+polygon = PackedVector2Array(-112, 198, -74, 190, -28, 202, -54, 213, -104, 210)
+
+[node name="BloodSmearB" type="Polygon2D" parent="."]
+color = Color(0.709804, 0.121569, 0.121569, 0.35)
+polygon = PackedVector2Array(218, 184, 260, 178, 312, 190, 284, 202, 232, 198)
+
+[node name="ForegroundCharredTrunkLeft" type="Polygon2D" parent="."]
+color = Color(0.0588235, 0.0470588, 0.0431373, 1)
+polygon = PackedVector2Array(-458, 96, -438, 84, -424, 260, -468, 260)
+
+[node name="ForegroundCharredTrunkRight" type="Polygon2D" parent="."]
+color = Color(0.0588235, 0.0470588, 0.0431373, 1)
+polygon = PackedVector2Array(488, 88, 512, 104, 536, 260, 486, 260)
+
+[node name="EmberA" type="Polygon2D" parent="."]
+color = Color(0.878431, 0.717647, 0.364706, 0.85)
+polygon = PackedVector2Array(-244, 116, -238, 112, -232, 118, -238, 124)
+
+[node name="EmberB" type="Polygon2D" parent="."]
+color = Color(0.878431, 0.419608, 0.184314, 0.85)
+polygon = PackedVector2Array(-304, 146, -300, 140, -294, 148, -300, 154)
+
+[node name="EmberC" type="Polygon2D" parent="."]
+color = Color(0.878431, 0.717647, 0.364706, 0.75)
+polygon = PackedVector2Array(170, 122, 176, 116, 182, 124, 176, 130)
+
+[node name="EmberD" type="Polygon2D" parent="."]
+color = Color(0.878431, 0.419608, 0.184314, 0.72)
+polygon = PackedVector2Array(286, 158, 292, 152, 298, 160, 292, 166)
+
+[node name="AshFlakeA" type="Polygon2D" parent="."]
+color = Color(0.733333, 0.698039, 0.619608, 0.4)
+polygon = PackedVector2Array(-152, 78, -148, 76, -144, 80, -148, 82)
+
+[node name="AshFlakeB" type="Polygon2D" parent="."]
+color = Color(0.733333, 0.698039, 0.619608, 0.34)
+polygon = PackedVector2Array(42, 44, 46, 42, 50, 46, 46, 48)
+
+[node name="AshFlakeC" type="Polygon2D" parent="."]
+color = Color(0.733333, 0.698039, 0.619608, 0.3)
+polygon = PackedVector2Array(318, 92, 322, 90, 326, 94, 322, 96)
 
 [node name="BackDepthLimit" type="Polygon2D" parent="."]
 color = Color(0.27451, 0.2, 0.14902, 1)
@@ -45,18 +133,42 @@ polygon = PackedVector2Array(-380, 216, 380, 216, 380, 218, -380, 218)
 position = Vector2(120, 164)
 script = ExtResource("2_player")
 
+[node name="GroundShadow" type="Polygon2D" parent="Arandu"]
+color = Color(0.0392157, 0.0313726, 0.027451, 0.55)
+polygon = PackedVector2Array(-18, 14, 0, 8, 20, 14, 0, 20)
+
+[node name="Tacape" type="Polygon2D" parent="Arandu"]
+color = Color(0.117647, 0.0745098, 0.0627451, 1)
+polygon = PackedVector2Array(7, -18, 16, -22, 36, 8, 28, 13)
+
 [node name="WarriorPlaceholder" type="Polygon2D" parent="Arandu"]
 color = Color(0.768627, 0.435294, 0.207843, 1)
-polygon = PackedVector2Array(-10, 12, -7, -18, 0, -30, 10, -18, 12, 12)
+polygon = PackedVector2Array(-12, 12, -10, -12, -5, -25, 2, -34, 10, -24, 15, -8, 12, 12, 2, 16)
+
+[node name="HairSilhouette" type="Polygon2D" parent="Arandu"]
+color = Color(0.0470588, 0.0352941, 0.0313726, 1)
+polygon = PackedVector2Array(-4, -31, -16, -25, -13, -12, -3, -16, 6, -30)
+
+[node name="WarCloth" type="Polygon2D" parent="Arandu"]
+color = Color(0.560784, 0.121569, 0.0901961, 1)
+polygon = PackedVector2Array(-10, 4, 8, 2, 4, 18, -8, 16)
 
 [node name="Paint" type="Polygon2D" parent="Arandu"]
 color = Color(0.878431, 0.717647, 0.364706, 1)
 polygon = PackedVector2Array(-7, -10, 8, -14, 7, -9, -8, -5)
 
+[node name="PaintLeg" type="Polygon2D" parent="Arandu"]
+color = Color(0.878431, 0.717647, 0.364706, 1)
+polygon = PackedVector2Array(-8, 7, 8, 6, 8, 9, -8, 11)
+
+[node name="BoneTalisman" type="Polygon2D" parent="Arandu"]
+color = Color(0.878431, 0.717647, 0.364706, 0.9)
+polygon = PackedVector2Array(2, -10, 7, -6, 2, -2, -3, -6)
+
 [node name="AttackSlash" type="Polygon2D" parent="Arandu"]
 visible = false
 color = Color(0.709804, 0.121569, 0.121569, 1)
-polygon = PackedVector2Array(10, -16, 58, -5, 54, 8, 12, 3)
+polygon = PackedVector2Array(10, -18, 68, -7, 58, 12, 12, 4)
 
 [node name="Collision" type="CollisionShape2D" parent="Arandu"]
 position = Vector2(0, -4)
@@ -66,9 +178,21 @@ shape = SubResource("RectangleShape2D_player")
 position = Vector2(260, 148)
 script = ExtResource("3_enemy")
 
+[node name="GroundShadow" type="Polygon2D" parent="InvaderDummyA"]
+color = Color(0.0392157, 0.0313726, 0.027451, 0.48)
+polygon = PackedVector2Array(-18, 14, 0, 8, 18, 14, 0, 20)
+
+[node name="Machete" type="Polygon2D" parent="InvaderDummyA"]
+color = Color(0.733333, 0.698039, 0.619608, 1)
+polygon = PackedVector2Array(8, -10, 34, -16, 36, -9, 10, -5)
+
 [node name="InvaderPlaceholder" type="Polygon2D" parent="InvaderDummyA"]
 color = Color(0.372549, 0.411765, 0.439216, 1)
-polygon = PackedVector2Array(-10, 12, -12, -12, -2, -24, 11, -10, 10, 12)
+polygon = PackedVector2Array(-12, 12, -13, -8, -4, -26, 9, -18, 14, -4, 11, 12, 0, 16)
+
+[node name="IronScrap" type="Polygon2D" parent="InvaderDummyA"]
+color = Color(0.192157, 0.215686, 0.223529, 1)
+polygon = PackedVector2Array(-9, -9, 8, -13, 10, -4, -8, -1)
 
 [node name="RedMark" type="Polygon2D" parent="InvaderDummyA"]
 color = Color(0.560784, 0.121569, 0.0901961, 1)
@@ -82,9 +206,21 @@ shape = SubResource("RectangleShape2D_enemy")
 position = Vector2(340, 176)
 script = ExtResource("3_enemy")
 
+[node name="GroundShadow" type="Polygon2D" parent="InvaderDummyB"]
+color = Color(0.0392157, 0.0313726, 0.027451, 0.48)
+polygon = PackedVector2Array(-18, 14, 0, 8, 18, 14, 0, 20)
+
+[node name="Machete" type="Polygon2D" parent="InvaderDummyB"]
+color = Color(0.733333, 0.698039, 0.619608, 1)
+polygon = PackedVector2Array(8, -10, 34, -16, 36, -9, 10, -5)
+
 [node name="InvaderPlaceholder" type="Polygon2D" parent="InvaderDummyB"]
 color = Color(0.372549, 0.411765, 0.439216, 1)
-polygon = PackedVector2Array(-10, 12, -12, -12, -2, -24, 11, -10, 10, 12)
+polygon = PackedVector2Array(-12, 12, -13, -8, -4, -26, 9, -18, 14, -4, 11, 12, 0, 16)
+
+[node name="IronScrap" type="Polygon2D" parent="InvaderDummyB"]
+color = Color(0.192157, 0.215686, 0.223529, 1)
+polygon = PackedVector2Array(-9, -9, 8, -13, 10, -4, -8, -1)
 
 [node name="RedMark" type="Polygon2D" parent="InvaderDummyB"]
 color = Color(0.560784, 0.121569, 0.0901961, 1)
@@ -98,9 +234,21 @@ shape = SubResource("RectangleShape2D_enemy")
 position = Vector2(430, 156)
 script = ExtResource("3_enemy")
 
+[node name="GroundShadow" type="Polygon2D" parent="InvaderDummyC"]
+color = Color(0.0392157, 0.0313726, 0.027451, 0.48)
+polygon = PackedVector2Array(-18, 14, 0, 8, 18, 14, 0, 20)
+
+[node name="Machete" type="Polygon2D" parent="InvaderDummyC"]
+color = Color(0.733333, 0.698039, 0.619608, 1)
+polygon = PackedVector2Array(8, -10, 34, -16, 36, -9, 10, -5)
+
 [node name="InvaderPlaceholder" type="Polygon2D" parent="InvaderDummyC"]
 color = Color(0.372549, 0.411765, 0.439216, 1)
-polygon = PackedVector2Array(-10, 12, -12, -12, -2, -24, 11, -10, 10, 12)
+polygon = PackedVector2Array(-12, 12, -13, -8, -4, -26, 9, -18, 14, -4, 11, 12, 0, 16)
+
+[node name="IronScrap" type="Polygon2D" parent="InvaderDummyC"]
+color = Color(0.192157, 0.215686, 0.223529, 1)
+polygon = PackedVector2Array(-9, -9, 8, -13, 10, -4, -8, -1)
 
 [node name="RedMark" type="Polygon2D" parent="InvaderDummyC"]
 color = Color(0.560784, 0.121569, 0.0901961, 1)

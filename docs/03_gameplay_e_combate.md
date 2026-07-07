@@ -23,6 +23,8 @@ Controles futuros:
 - Ataques precisam ter antecipacao, impacto e recuperacao.
 - Inimigos devem te cercar, mas nao atacar todos ao mesmo tempo.
 - Dano deve ser muito legivel: flash, pausa curta, sangue, knockback e som.
+- O dano deve acumular consequencia visual: sangue, roupa rasgada, ferida aberta, membro comprometido e morte brutal.
+- O tipo de arma e o grau do golpe definem o nivel de mutilacao possivel.
 
 ## Kit inicial do protagonista
 
@@ -56,6 +58,21 @@ Enemy:
 - Knockdown
 - Dead
 
+Gore futuro:
+
+- Light wound
+- Heavy wound
+- Clothing torn
+- Bleeding
+- Dismembered
+- Executed
+
 ## Criterio de qualidade
 
 O combate so avanca para conteudo novo quando o prototipo basico ja parecer bom com placeholders. Se o jogo nao for divertido com formas simples, arte final nao vai salvar.
+
+## Direcao gore
+
+O jogo deve aceitar sistemas de gore progressivo: sangue no chao e na mata, cortes por arma, roupas rasgadas, cabeca cortada, barriga aberta, visceras, membros decepados e corpo partido em execucoes raras.
+
+Detalhes em `docs/11_direcao_de_violencia_gore.md`.

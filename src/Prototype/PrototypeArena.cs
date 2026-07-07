@@ -1,4 +1,5 @@
 using Godot;
+using System.Collections.Generic;
 
 [GlobalClass]
 public partial class PrototypeArena : Node2D
@@ -7,8 +8,28 @@ public partial class PrototypeArena : Node2D
 
     private Camera2D? _camera;
     private PlayerController? _player;
+    private readonly List<AmbientParticle> _ambientParticles = new();
     private float _shakeTimer;
     private float _shakeStrength;
+    private float _ambientTime;
+
+    private sealed class AmbientParticle
+    {
+        public AmbientParticle(Polygon2D node, Vector2 origin, float speed, float amplitude, float phase)
+        {
+            Node = node;
+            Origin = origin;
+            Speed = speed;
+            Amplitude = amplitude;
+            Phase = phase;
+        }
+
+        public Polygon2D Node { get; }
+        public Vector2 Origin { get; }
+        public float Speed { get; }
+        public float Amplitude { get; }
+        public float Phase { get; }
+    }
 
     public override void _Ready()
     {
@@ -17,22 +38,26 @@ public partial class PrototypeArena : Node2D
         BuildPlayAreaGuides();
         SpawnPlayer();
         SpawnDefaultEnemies();
+        CacheAmbientParticles();
         BuildCamera();
     }
 
     public override void _Process(double delta)
     {
+        var dt = (float)delta;
+        UpdateAmbientParticles(dt);
+
         if (_camera is null || _player is null)
         {
             return;
         }
 
         var target = _player.GlobalPosition + new Vector2(40, -18);
-        _camera.GlobalPosition = _camera.GlobalPosition.Lerp(target, 8f * (float)delta);
+        _camera.GlobalPosition = _camera.GlobalPosition.Lerp(target, 8f * dt);
 
         if (_shakeTimer > 0f)
         {
-            _shakeTimer = Mathf.Max(0f, _shakeTimer - (float)delta);
+            _shakeTimer = Mathf.Max(0f, _shakeTimer - dt);
             _camera.Offset = new Vector2(
                 (float)GD.RandRange(-_shakeStrength, _shakeStrength),
                 (float)GD.RandRange(-_shakeStrength, _shakeStrength));
@@ -40,6 +65,44 @@ public partial class PrototypeArena : Node2D
         else
         {
             _camera.Offset = Vector2.Zero;
+        }
+    }
+
+    private void CacheAmbientParticles()
+    {
+        _ambientParticles.Clear();
+
+        foreach (var child in GetChildren())
+        {
+            if (child is not Polygon2D polygon)
+            {
+                continue;
+            }
+
+            var name = polygon.Name.ToString();
+            if (!name.StartsWith("Ember") && !name.StartsWith("AshFlake"))
+            {
+                continue;
+            }
+
+            var seed = Mathf.Abs(name.Hash());
+            var speed = name.StartsWith("Ember") ? 18f + seed % 9 : 8f + seed % 5;
+            var amplitude = name.StartsWith("Ember") ? 4f + seed % 4 : 8f + seed % 6;
+            var phase = seed % 628 / 100f;
+            _ambientParticles.Add(new AmbientParticle(polygon, polygon.Position, speed, amplitude, phase));
+        }
+    }
+
+    private void UpdateAmbientParticles(float dt)
+    {
+        _ambientTime += dt;
+
+        foreach (var particle in _ambientParticles)
+        {
+            var rise = (_ambientTime * particle.Speed + particle.Phase * 10f) % 72f;
+            var sway = Mathf.Sin(_ambientTime * 2.2f + particle.Phase) * particle.Amplitude;
+            particle.Node.Position = particle.Origin + new Vector2(sway, -rise);
+            particle.Node.Modulate = new Color(1f, 1f, 1f, 1f - rise / 86f);
         }
     }
 

@@ -14,14 +14,15 @@ Construir Terra Sangrada por sprints, com Codex atuando como executor principal 
 
 ## Sprint atual
 
-Sprint 1 - Combate Prototipo foi validada localmente no Godot.
+Sprint 2 - Vertical Slice Visual foi validada localmente no Godot.
 
 Estado atual:
 
-- Build C# aprovado em .NET 10.
-- Godot console sem erro de assembly/script.
-- Validacao visual aprovada pelo usuario em 2026-07-07.
-- Proxima etapa: Sprint 2, vertical slice visual.
+- Sprint 1 validada visualmente pelo usuario em 2026-07-07.
+- Sprint 2 compila em .NET 10.
+- Sprint 2 com Godot console sem erro de assembly/script.
+- Sprint 2 aprovada visualmente pelo usuario em 2026-07-07.
+- Proxima etapa: commitar/subir Sprint 2 e iniciar Sprint 3.
 
 Godot local confirmado:
 
@@ -40,6 +41,7 @@ Regra obrigatoria: seguir `docs/10_politica_validacao_visual.md` apos qualquer m
 - Processo: sprints com validacao visual obrigatoria.
 - Agentes tem nomes inspirados em Dragon Ball Z para facilitar memoria operacional.
 - Sprint 1 mantem placeholders; arte final fica para sprint posterior.
+- Identidade gore 18+ registrada em `docs/11_direcao_de_violencia_gore.md`.
 
 ## Validacao tecnica ja feita
 
@@ -47,3 +49,5 @@ Regra obrigatoria: seguir `docs/10_politica_validacao_visual.md` apos qualquer m
 - `dotnet build TerraSangrada.csproj --no-restore`: sucesso com 0 erros e 0 avisos quando executado com permissao fora do sandbox.
 - Sprint 1 tambem compila com 0 erros e 0 avisos.
 - Sprint 1 validada visualmente no Godot local.
+- Sprint 2 compila com 0 erros e 0 avisos.
+- Sprint 2 validada visualmente no Godot local.

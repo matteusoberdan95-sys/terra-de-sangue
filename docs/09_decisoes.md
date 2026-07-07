@@ -29,3 +29,9 @@ Motivo: facilitar memoria operacional e dividir responsabilidades de qualidade.
 Decisao: provar combate com placeholders antes de produzir arte final.
 
 Motivo: se o combate nao for bom com formas simples, arte final nao resolve o problema central.
+
+## 2026-07-07 - Identidade gore adulta
+
+Decisao: Terra Sangrada sera explicitamente 18+, sangrento e brutal, com dano visual progressivo, sangue no ambiente, roupas rasgadas, mutilacoes, cabecas cortadas, barrigas abertas, visceras, membros decepados e execucoes contextuais por arma.
+
+Motivo: tornar o jogo unico dentro do beat 'em up 2D e reforcar o tom dark, violento e melancolico do projeto.

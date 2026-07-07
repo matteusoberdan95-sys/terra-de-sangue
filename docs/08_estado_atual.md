@@ -14,7 +14,7 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 1 - Combate Prototipo.
+Sprint 2 - Vertical Slice Visual.
 
 Status: validada localmente no Godot.
 
@@ -24,6 +24,15 @@ Sprint 1 fechada com:
 - Godot console sem erro de assembly/script.
 - Validacao visual aprovada pelo usuario.
 - Cena `scenes/Main.tscn` rodando localmente.
+
+Sprint 2 implementada localmente com:
+
+- Aldeia em Cinzas com camadas visuais.
+- Protagonista com silhueta mais forte.
+- Mercenario com machete e metal visiveis.
+- Brasas/cinzas animadas.
+- Paleta da biblia de arte aplicada.
+- Direcao gore 18+ registrada oficialmente.
 
 ## Implementado
 
@@ -40,6 +49,9 @@ Sprint 1 fechada com:
 - Camera seguindo o player.
 - Primeiro passe de hit pause e screen shake.
 - Limites de movimento no eixo Y.
+- Primeiro passe visual da Aldeia em Cinzas.
+- Silhuetas refinadas de Arandu e mercenarios.
+- Brasas e cinzas animadas na arena.
 - Documentos de producao e agentes.
 
 ## Validacao feita
@@ -49,6 +61,9 @@ Sprint 1 fechada com:
 - Godot encontrado e aberto em 2026-07-07 pelo caminho local informado pelo usuario.
 - Godot console validado sem erros de assembly/script apos corrigir `[dotnet] project/assembly_name="TerraSangrada"`.
 - Validacao visual aprovada pelo usuario em 2026-07-07.
+- Sprint 2: `dotnet build TerraSangrada.csproj --no-restore` sucesso, 0 erros e 0 avisos.
+- Sprint 2: Godot console sem erro de assembly/script.
+- Sprint 2: validacao visual aprovada pelo usuario em 2026-07-07.
 
 Godot local:
 
@@ -64,7 +79,7 @@ C:\Users\mober\OneDrive\Desktop\fauna-do-sangue
 
 ## Proximo passo
 
-Criar commit local da Sprint 1 validada e subir para o GitHub. Depois iniciar Sprint 2: vertical slice visual.
+Criar commit local da Sprint 2 validada e subir para o GitHub. Depois iniciar Sprint 3: sistema de inimigos.
 
 ## Riscos atuais
 
