@@ -28,6 +28,14 @@ Bloqueio atual para fechar:
 - Rodar `scenes/Main.tscn`.
 - Confirmar movimento, ataque, hitbox, knockback, camera shake e limites de arena.
 
+Godot local confirmado:
+
+```text
+C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe
+```
+
+Regra obrigatoria: seguir `docs/10_politica_validacao_visual.md` apos qualquer modificacao que afete gameplay, cena, camera, arte ou UI.
+
 ## Decisoes ja tomadas
 
 - Nome do jogo: Terra Sangrada.

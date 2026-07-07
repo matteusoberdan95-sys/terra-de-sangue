@@ -26,6 +26,10 @@ O projeto sera construido em sprints curtas. Cada sprint deve terminar com uma v
 3. Abra `project.godot`.
 4. Rode a cena principal `scenes/Main.tscn`.
 
+Godot local confirmado:
+
+`C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe`
+
 ## Organizacao
 
 - `AGENTS.md`: guia obrigatorio para Codex, Cursor e agentes.
@@ -60,6 +64,13 @@ Para continuar o projeto em outra ferramenta, leia nesta ordem:
 2. `docs/08_estado_atual.md`
 3. `docs/07_handoff_codex_cursor.md`
 4. `docs/04_plano_de_sprints.md`
+5. `docs/10_politica_validacao_visual.md`
+
+## Validacao Visual
+
+Depois de qualquer alteracao em gameplay, cena, camera, arte ou UI, e obrigatorio abrir o projeto no Godot e validar visualmente antes de considerar a sprint concluida.
+
+Detalhes em `docs/10_politica_validacao_visual.md`.
 
 ## Proxima sprint
 

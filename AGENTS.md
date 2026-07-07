@@ -17,7 +17,8 @@ Este arquivo e a primeira leitura obrigatoria para qualquer agente trabalhando n
 2. `docs/08_estado_atual.md`
 3. `docs/04_plano_de_sprints.md`
 4. `docs/06_agentes.md`
-5. Documento especifico da sprint em `docs/sprints/`
+5. `docs/10_politica_validacao_visual.md`
+6. Documento especifico da sprint em `docs/sprints/`
 
 Para arte e narrativa, ler tambem:
 
@@ -30,6 +31,7 @@ Para arte e narrativa, ler tambem:
 - Trabalhar por sprint.
 - Nao adicionar sistemas grandes fora do escopo da sprint atual.
 - Validar visualmente no Godot antes de fechar uma sprint.
+- Apos qualquer modificacao em gameplay, cena, camera, arte ou UI, registrar validacao visual conforme `docs/10_politica_validacao_visual.md`.
 - Manter documentacao atualizada quando uma decisao mudar.
 - Preservar a cultura indigena como ficticia e respeitosa ate haver pesquisa dedicada.
 - Nao tratar arte final como prioridade antes do combate basico parecer bom.

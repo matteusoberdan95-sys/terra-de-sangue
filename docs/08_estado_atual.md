@@ -44,7 +44,13 @@ Falta para fechar:
 
 - `dotnet restore TerraSangrada.csproj`: sucesso.
 - `dotnet build TerraSangrada.csproj --no-restore`: sucesso, 0 erros e 0 avisos, executado fora do sandbox por permissao.
-- Godot nao foi encontrado no PATH nem em caminhos comuns pelo terminal.
+- Godot encontrado e aberto em 2026-07-07 pelo caminho local informado pelo usuario.
+
+Godot local:
+
+```text
+C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe
+```
 
 ## Proximo passo
 
@@ -53,5 +59,5 @@ Validar visualmente a Sprint 1 no Godot. Se aprovado, iniciar Sprint 2: vertical
 ## Riscos atuais
 
 - Godot nao foi encontrado no PATH do ambiente atual.
-- Validacao visual ainda depende de abrir o editor Godot .NET localmente.
+- Godot abre por caminho absoluto local, mas a validacao visual da Sprint 1 ainda precisa de confirmacao humana dentro da janela.
 - Inimigos ainda nao atacam; isso fica para a sprint de sistema de inimigos.

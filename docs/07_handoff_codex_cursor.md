@@ -10,7 +10,8 @@ Ler nesta ordem:
 2. `docs/08_estado_atual.md`
 3. `docs/04_plano_de_sprints.md`
 4. `docs/sprints/sprint_01_combate_prototipo.md`
-5. `docs/checklists/validacao_visual.md`
+5. `docs/10_politica_validacao_visual.md`
+6. `docs/checklists/validacao_visual.md`
 
 ## O que ja existe
 
@@ -53,6 +54,12 @@ Depois, abrir no Godot .NET e rodar:
 res://scenes/Main.tscn
 ```
 
+Godot local confirmado:
+
+```text
+C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe
+```
+
 Validar especificamente:
 
 - `WASD` move o player.
@@ -69,6 +76,7 @@ Atualizar:
 - Checklist da sprint atual.
 - `docs/08_estado_atual.md`.
 - Qualquer decisao nova em `docs/09_decisoes.md`.
+- Registro de validacao visual quando a tarefa alterar gameplay, cena, camera, arte ou UI.
 
 Registrar no resumo final:
 

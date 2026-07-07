@@ -2,6 +2,14 @@
 
 Use este checklist no fim de cada sprint.
 
+Politica completa: `docs/10_politica_validacao_visual.md`.
+
+Godot local confirmado:
+
+```text
+C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe
+```
+
 ## Antes de abrir
 
 - [ ] `dotnet restore TerraSangrada.csproj` executado quando necessario.

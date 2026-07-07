@@ -13,6 +13,7 @@ Antes de editar codigo, leia:
 2. `docs/08_estado_atual.md`
 3. `docs/04_plano_de_sprints.md`
 4. O arquivo da sprint atual em `docs/sprints/`
+5. `docs/10_politica_validacao_visual.md`
 
 ## Processo
 
@@ -22,6 +23,13 @@ Antes de editar codigo, leia:
 - Use C# idiomatico para Godot.
 - Mantenha cenas, scripts e documentos sincronizados.
 - Valide com `dotnet build TerraSangrada.csproj --no-restore` apos restore quando alterar C#.
+- Depois de qualquer modificacao em gameplay, cena, camera, arte ou UI, abra o Godot e registre validacao visual conforme `docs/10_politica_validacao_visual.md`.
+
+Godot local confirmado:
+
+```text
+C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe
+```
 
 ## Sprint atual
 
