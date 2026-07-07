@@ -27,12 +27,12 @@ Sprint 5 fechada com:
 
 ## Proximo passo
 
-Commitar Sprint 5 validada, dar push para o GitHub e iniciar Sprint 6: Chefe 1 (Capitao do Ferro).
+Iniciar Sprint 6: Chefe 1 (Capitao do Ferro).
 
 ## Fechamento recente
 
 - Sprint 4: commit `04b0a78` no remoto.
-- Sprint 5: aguardando commit/push apos validacao.
+- Sprint 5: commit `b074e8d` enviado para `origin/main` em 2026-07-07.
 
 Godot local:
 
