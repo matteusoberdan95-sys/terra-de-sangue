@@ -87,8 +87,6 @@ Nunca iniciar uma nova sprint com a anterior apenas validada localmente, mas ain
 
 ## Sprint Atual
 
-Sprint 6: chefe 1 (Capitao do Ferro).
+Sprints 6-10 concluidas e no GitHub. Aguardando validacao visual do usuario.
 
-Status: proxima sprint.
-
-Sprint 5 validada localmente no Godot em 2026-07-07.
+Progressao: Aldeia em Cinzas -> Capitao do Ferro -> Mata Fechada.
