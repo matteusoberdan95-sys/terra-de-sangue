@@ -37,7 +37,7 @@ public partial class PrototypeArena : Node2D
         BuildBackground();
         BuildPlayAreaGuides();
         SpawnPlayer();
-        BuildWaveSpawner();
+        BuildPhaseDirector();
         CacheAmbientParticles();
         BuildCamera();
     }
@@ -211,23 +211,38 @@ public partial class PrototypeArena : Node2D
         EnemyBase enemy = kind switch
         {
             "brute" => new EnemyBrute(),
+            "miniboss" => new EnemyMiniBoss(),
             _ => new EnemyDummy()
         };
 
-        enemy.Name = kind == "brute" ? "Brute" : "Mercenary";
+        enemy.Name = kind switch
+        {
+            "brute" => "Brute",
+            "miniboss" => "MiniBoss",
+            _ => "Mercenary"
+        };
         enemy.GlobalPosition = position;
         enemy.MovementBounds = PlayArea;
         AddChild(enemy);
     }
 
-    private void BuildWaveSpawner()
+    public void SpawnMemoryPickup(Vector2 position)
     {
-        if (GetNodeOrNull<WaveSpawner>("WaveSpawner") is not null)
+        AddChild(new MemoryPickup
+        {
+            Name = "BrokenMaskMemory",
+            GlobalPosition = position
+        });
+    }
+
+    private void BuildPhaseDirector()
+    {
+        if (GetNodeOrNull<PhaseDirector>("PhaseDirector") is not null)
         {
             return;
         }
 
-        AddChild(new WaveSpawner { Name = "WaveSpawner" });
+        AddChild(new PhaseDirector { Name = "PhaseDirector" });
     }
 
     private void BuildCamera()

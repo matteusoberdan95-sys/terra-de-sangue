@@ -89,6 +89,6 @@ Nunca iniciar uma nova sprint com a anterior apenas validada localmente, mas ain
 
 Sprint 4: fase 1 jogavel.
 
-Status: proxima sprint.
+Status: implementada localmente e aguardando validacao visual no Godot.
 
-Sprint 3 validada localmente no Godot em 2026-07-07.
+Objetivo: montar a Aldeia em Cinzas do inicio ao fim com 3 encontros, mini-chefe e primeira memoria coletavel.

@@ -7,7 +7,7 @@ public partial class GameRoot : Node2D
     {
         Engine.MaxFps = 60;
 
-        var arenaScene = ResourceLoader.Load<PackedScene>("res://scenes/levels/PrototypeArena.tscn");
-        AddChild(arenaScene.Instantiate());
+        var levelScene = ResourceLoader.Load<PackedScene>("res://scenes/levels/AldeiaEmCinzas.tscn");
+        AddChild(levelScene.Instantiate());
     }
 }

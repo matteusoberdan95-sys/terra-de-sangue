@@ -14,13 +14,14 @@ Construir Terra Sangrada por sprints, com Codex atuando como executor principal 
 
 ## Sprint atual
 
-Sprint 3 - Sistema de Inimigos validada localmente no Godot.
+Sprint 4 - Fase 1 Jogavel implementada localmente.
 
 Estado atual:
 
-- Sprint 1, 2 e 3 validadas visualmente pelo usuario em 2026-07-07.
-- Proxima etapa: iniciar Sprint 4: Fase 1 Jogavel.
-- Sprint 3 commitada e enviada ao remoto em `7259c7a`.
+- Sprint 1, 2 e 3 validadas, commitadas e no remoto.
+- Sprint 4 compila e carrega no Godot sem erro de assembly/script.
+- Sprint 4 aguardando validacao visual humana.
+- Proxima etapa apos validacao: commit/push e Sprint 5.
 
 Godot local confirmado:
 

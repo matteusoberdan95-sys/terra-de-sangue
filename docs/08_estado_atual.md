@@ -14,47 +14,35 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 3 - Sistema de Inimigos.
+Sprint 4 - Fase 1 Jogavel.
 
-Status: validada localmente no Godot.
+Status: implementada localmente, aguardando validacao visual no Godot.
 
-Sprint 3 fechada com:
+Sprint 4 implementada localmente com:
 
-- `EnemyBase` com IA compartilhada de aproximacao e ataque.
-- Slot unico de ataque para evitar spam simultaneo.
-- `EnemyDummy` como mercenario leve.
-- `EnemyBrute` mais lento, resistente e pesado.
-- Player com hurtbox, vida, hit stun, invulnerabilidade pos-respawn e respawn.
-- `WaveSpawner` com 3 ondas progressivas e label de progresso.
-- Validacao visual aprovada pelo usuario em 2026-07-07.
+- `AldeiaEmCinzas.tscn` como cena da Fase 1.
+- `PhaseDirector` com intro, 3 encontros, mini-chefe, memoria e fim de fase.
+- `EnemyMiniBoss` (Sargento do Ferro).
+- `MemoryPickup` com primeira memoria: mascara quebrada.
+- `WaveSpawner` removido em favor do fluxo de fase.
 
 ## Implementado
 
-- Projeto Godot criado.
-- Projeto C# criado.
-- Cena principal `scenes/Main.tscn`.
-- Arena prototipo `scenes/levels/PrototypeArena.tscn`.
-- Player com movimento `WASD`, ataque leve em `J`, hurtbox e vida.
-- Estados de player: idle, walk, light attack, hit stun, dead.
-- Hitbox de ataque separada da colisao do player.
-- Inimigos com hurtbox, vida, hit flash, hit stun, knockback, morte e ataque.
-- Inimigos se aproximam e atacam com leitura de profundidade.
-- Camera seguindo o player.
-- Hit pause e screen shake.
-- Limites de movimento no eixo Y.
-- Primeiro passe visual da Aldeia em Cinzas.
-- Silhuetas refinadas de Arandu e mercenarios.
-- Brasas e cinzas animadas na arena.
-- Sistema de ondas com mercenarios e brutos.
+- Projeto Godot e C#.
+- Cena principal `scenes/Main.tscn` carregando `AldeiaEmCinzas.tscn`.
+- Arena visual da Aldeia em Cinzas.
+- Player com movimento, ataque, dano e respawn.
+- Inimigos mercenario, bruto e mini-chefe.
+- Sistema de fase com encontros escalonados.
+- Primeira memoria coletavel.
 - Documentos de producao e agentes.
 
 ## Validacao feita
 
-- `dotnet restore TerraSangrada.csproj`: sucesso.
 - `dotnet build TerraSangrada.csproj --no-restore`: sucesso, 0 erros e 0 avisos.
-- Sprint 3: Godot aberto via `Start-Process` documentado em 2026-07-07.
-- Sprint 3: `res://scenes/Main.tscn` executada sem erro de assembly/script.
-- Sprint 3: validacao visual aprovada pelo usuario em 2026-07-07.
+- Sprint 4: Godot aberto via `Start-Process` documentado em 2026-07-07.
+- Sprint 4: `res://scenes/Main.tscn` executada por 15s com `--verbose`, sem erro de assembly/script.
+- Sprint 4: validacao visual interativa pendente de confirmacao humana.
 
 Godot local:
 
@@ -62,7 +50,7 @@ Godot local:
 C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe
 ```
 
-Repositorio local principal para desenvolvimento e validacao:
+Repositorio local principal:
 
 ```text
 C:\Users\mober\OneDrive\Desktop\fauna-do-sangue
@@ -70,15 +58,14 @@ C:\Users\mober\OneDrive\Desktop\fauna-do-sangue
 
 ## Proximo passo
 
-Iniciar Sprint 4: Fase 1 Jogavel.
+Validar Sprint 4 visualmente no Godot local. Depois commitar, dar push e iniciar Sprint 5: Polimento de Impacto.
 
 ## Fechamento da Sprint 3
 
-- Commit: `7259c7a` — Implement sprint 3 enemy system and document mandatory commit/push gate.
-- Push: enviado para `origin/main` em 2026-07-07.
+- Commit: `7259c7a` / `6f2ad4c` — enviado para `origin/main`.
 
 ## Riscos atuais
 
 - Godot nao esta no PATH; abre por caminho absoluto local.
-- Inimigos spawnados em runtime ainda usam silhueta procedural simples.
-- Player ainda nao tem HUD de vida; feedback e por flash/stun/respawn.
+- Memoria ainda nao desbloqueia habilidade jogavel.
+- Fase termina em banner, sem transicao para a proxima area.
