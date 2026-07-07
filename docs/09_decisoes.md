@@ -1,5 +1,13 @@
 # Registro de Decisoes
 
+## 2026-07-07 - Padrao visual aprovado da Aldeia
+
+Decisao: o padrao da Aldeia em Cinzas e usar poucos assets bem compostos: `aldeia_mid.png` como imagem-mestra opaca, `aldeia_fg.png` como primeiro plano transparente, alinhamento em `AldeiaBackground.tscn` e vida ambiente leve em `AldeiaParallaxBackground.cs`.
+
+Motivo: esse fluxo eliminou linhas de debug/emendas, evitou personagem andando no ceu e manteve a qualidade da pintura original. O usuario aprovou explicitamente esse resultado como o padrao a seguir.
+
+Regra: Cursor/Codex nao devem voltar a empilhar PNGs opacos, recortar faixas com `RegionRect` ou recriar fundo procedural em C#.
+
 ## 2026-07-07 - Cenario Aldeia: cena Godot, nao codigo
 
 Decisao: fundo da Aldeia montado em `scenes/levels/AldeiaBackground.tscn`; C# apenas parallax horizontal.

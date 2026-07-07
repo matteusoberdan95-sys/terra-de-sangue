@@ -20,7 +20,7 @@ public partial class AldeiaEmCinzasArena : PrototypeArena
     private AldeiaParallaxBackground? _parallax;
     private float _ambientTime;
 
-    protected override bool ShouldBuildPlayAreaGuides => HasPngBackgroundAssets();
+    protected override bool ShouldBuildPlayAreaGuides => !HasPngBackgroundAssets();
 
     protected override bool ShouldBuildGenericBackground => !HasPngBackgroundAssets();
 

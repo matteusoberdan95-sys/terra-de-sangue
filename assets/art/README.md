@@ -1,50 +1,91 @@
-# Arte — Terra Sangrada
+# Arte - Terra Sangrada
 
-## Ajuste visual no Godot (sem codigo)
+Este README define o padrao visual da Aldeia em Cinzas. Siga isto ao trocar entre Codex, Cursor e editor Godot.
+
+## Padrao que funcionou
+
+O cenario ficou bom com poucos assets porque usamos a pintura como ela foi gerada:
+
+1. **`aldeia_mid.png`** = imagem-mestra opaca da fase inteira.
+2. **`aldeia_fg.png`** = primeiro plano com transparencia no centro.
+3. **`AldeiaBackground.tscn`** = onde posicionar e escalar os sprites.
+4. **`AldeiaParallaxBackground.cs`** = apenas parallax horizontal e vida ambiente leve.
+5. **`AldeiaEmCinzasArena.cs`** = gameplay: camera, faixa de andar, spawn do player.
+
+Essa combinacao evita emendas, evita personagem andando no ceu e evita o fundo virar uma colagem quebrada.
+
+## Ajuste visual no Godot
 
 1. Abra **`scenes/levels/AldeiaBackground.tscn`** no editor.
-2. Rode o jogo (F5) e volte ao editor, ou abra **`AldeiaEmCinzas.tscn`** em paralelo.
-3. Mova **`AldeiaBackdrop`** (cenario) ate a linha laranja **WalkBandGuide** coincidir com os pes do Arandu.
-4. Linha azul **HorizonGuide** = base das cabanas (personagem fica abaixo dela).
-5. Ajuste **`AldeiaForeground`** se precisar. Salve a cena (Ctrl+S).
+2. Rode o jogo com F5 em `scenes/Main.tscn` e compare com a cena aberta.
+3. Mova **`AldeiaBackdrop`** ate os pes do Arandu coincidirem com a faixa de chao.
+4. Use **`WalkBandGuide`** como guia dos pes no editor.
+5. Use **`HorizonGuide`** como guia da base das cabanas.
+6. Ajuste **`AldeiaForeground`** se precisar.
+7. Salve a cena.
 
-O codigo so aplica parallax horizontal — posicao e escala ficam na cena.
+As guias sao para edicao. Elas nao devem aparecer no jogo rodando.
 
-## Abordagem correta (importante)
+## Como a vida ambiente foi feita
 
-**Nao** empilhar no codigo varios PNGs opacos da mesma cena (sky + mid + ground).
-Cada arquivo opaco cobre o anterior ou exige recortes — isso gera emendas feias e bugs
-que corrigem um lado e quebram o outro.
+Arquivo: `src/Prototype/AldeiaParallaxBackground.cs`
 
-### Opcao A — Recomendada agora (Sprint 25)
+O script cria overlays pequenos por cima do PNG mestre:
 
-1. **`aldeia_mid.png`** — imagem-mestra da fase (ceu + cabanas + chao num unico PNG).
-2. **`aldeia_fg.png`** — opcional, vinhas/troncos nas laterais com **centro transparente**.
+- chamas em janelas/ruinas;
+- fumaca transparente;
+- brasas subindo;
+- oscilacao sutil do foreground;
+- parallax horizontal suave.
 
-O jogo usa so isso. O resultado fica igual ao PNG bonito que voce exportou.
+Isso da movimento sem destruir a composicao da arte. Nao transformar isso em fundo procedural completo.
 
-### Opcao B — Parallax com 4 camadas (depois)
+## O que NAO fazer
 
-So funciona se **cada camada tiver transparencia** onde nao ha pixel daquele plano:
+**Nao empilhar no codigo varios PNGs opacos da mesma cena** (`sky` + `mid` + `ground`).
+
+Motivo: cada PNG opaco cobre o anterior ou exige recortes. Recorte gera linha, emenda, chao errado e personagem flutuando.
+
+Tambem nao fazer:
+
+- `RegionRect` automatico para montar cenario;
+- fundo procedural C# substituindo a arte;
+- constantes magicas de posicao no chat;
+- `BackDepthLimit` / `FrontDepthLimit` visiveis quando PNG estiver ativo;
+- usar `aldeia_ground.png` atual como chao lateral, porque ele esta em vista de cima.
+
+## Opcao A - Recomendada agora
+
+Use somente:
+
+```text
+assets/art/aldeia_mid.png
+assets/art/aldeia_fg.png
+```
+
+O resultado deve parecer uma cena unica, pintada, com movimento leve por cima.
+
+## Opcao B - Parallax real depois
+
+So funciona se cada arquivo tiver transparencia real onde nao existe pixel daquele plano:
 
 | Arquivo | Conteudo | Resto do PNG |
 |---------|----------|--------------|
-| `aldeia_sky.png` | Ceu, lua, fumaça distante | Transparente |
-| `aldeia_mid.png` | Cabanas, arvores, fogo | Transparente em cima e embaixo |
-| `aldeia_ground.png` | Chao **vista lateral** da faixa de andar | Transparente |
+| `aldeia_sky.png` | Ceu, nuvens, fumaca distante | Transparente |
+| `aldeia_mid.png` | Cabanas, arvores, fogo | Transparente fora do plano |
+| `aldeia_ground.png` | Chao lateral da faixa de andar | Transparente |
 | `aldeia_fg.png` | Primeiro plano nas bordas | Centro transparente |
 
-`aldeia_ground` atual e vista de cima — nao combina com beat 'em up lateral.
-Regerar em vista lateral ou usar o chao que ja vem no `aldeia_mid`.
+Regra simples: se o arquivo e opaco, ele e um fundo inteiro, nao uma camada.
 
 ## Onde colocar arquivos
 
 ```text
 assets/art/
-  aldeia_mid.png      # imagem-mestra (obrigatorio)
-  aldeia_fg.png       # primeiro plano (opcional)
-  aldeia_sky.png      # reservado para Opcao B
-  aldeia_ground.png   # reservado para Opcao B
+  aldeia_mid.png      # imagem-mestra obrigatoria
+  aldeia_fg.png       # foreground transparente opcional
+  aldeia_sky.png      # reservado para parallax real futuro
+  aldeia_ground.png   # reservado para parallax real futuro
   concept/
   sprites/player/
   sprites/enemies/
@@ -52,11 +93,11 @@ assets/art/
 
 ## Exportacao
 
-- Formato: **PNG**
-- Personagens: fundo **transparente**
-- Fundo mestre: pode ser opaco (um arquivo so)
-- Camadas parallax: **obrigatorio** transparencia entre planos
-- Largura: **960px+** (ideal ~2172 para scroll)
-- Filtro no Godot: **Linear** para pintura suave
+- Formato: PNG.
+- Personagens: fundo transparente.
+- Fundo mestre: pode ser opaco.
+- Camadas parallax: transparencia obrigatoria entre planos.
+- Largura: 960px+; ideal perto de 2172px para scroll.
+- Filtro no Godot: Linear para pintura suave.
 
 Ver `docs/11_guia_krita_beat_em_up.md`.
