@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [GlobalClass]
 public partial class PrototypeArena : Node2D
 {
-    private static readonly Rect2 PlayArea = new(new Vector2(-380, 124), new Vector2(760, 92));
+    private static readonly Rect2 DefaultPlayArea = new(new Vector2(-380, 124), new Vector2(760, 92));
 
     private Camera2D? _camera;
     private PlayerController? _player;
@@ -35,7 +35,7 @@ public partial class PrototypeArena : Node2D
     {
         AddToGroup("arena_feedback");
         BuildBackground();
-        BuildPlayAreaGuides();
+        BuildPlayAreaGuidesIfNeeded();
         SpawnPlayer();
         if (_player is not null)
         {
@@ -59,7 +59,8 @@ public partial class PrototypeArena : Node2D
         }
 
         var target = _player.GlobalPosition + new Vector2(40, -18);
-        _camera.GlobalPosition = _camera.GlobalPosition.Lerp(target, 8f * dt);
+        var targetY = LockCameraY ? LockedCameraY : target.Y;
+        _camera.GlobalPosition = _camera.GlobalPosition.Lerp(new Vector2(target.X, targetY), 8f * dt);
 
         if (_shakeTimer > 0f)
         {
@@ -107,6 +108,11 @@ public partial class PrototypeArena : Node2D
 
         foreach (var particle in _ambientParticles)
         {
+            if (!GodotObject.IsInstanceValid(particle.Node))
+            {
+                continue;
+            }
+
             var rise = (_ambientTime * particle.Speed + particle.Phase * 10f) % 72f;
             var sway = Mathf.Sin(_ambientTime * 2.2f + particle.Phase) * particle.Amplitude;
             particle.Node.Position = particle.Origin + new Vector2(sway, -rise);
@@ -129,8 +135,23 @@ public partial class PrototypeArena : Node2D
         Engine.TimeScale = 1.0f;
     }
 
+    protected virtual Rect2 GetPlayArea() => DefaultPlayArea;
+
+    protected virtual bool ShouldBuildGenericBackground => true;
+
+    protected virtual bool ShouldBuildPlayAreaGuides => true;
+
+    protected virtual bool LockCameraY => false;
+
+    protected virtual float LockedCameraY => 146f;
+
     private void BuildBackground()
     {
+        if (!ShouldBuildGenericBackground)
+        {
+            return;
+        }
+
         if (HasNode("NightCanopy") || HasNode("BloodlitGround"))
         {
             return;
@@ -167,10 +188,20 @@ public partial class PrototypeArena : Node2D
         AddLayer("WalkBand", new Color("#3f2b20"), 184, -420, 860, 36);
     }
 
+    private void BuildPlayAreaGuidesIfNeeded()
+    {
+        if (!ShouldBuildPlayAreaGuides)
+        {
+            return;
+        }
+
+        BuildPlayAreaGuides();
+    }
+
     private void BuildPlayAreaGuides()
     {
-        AddLayer("BackDepthLimit", new Color("#463326"), PlayArea.Position.Y, PlayArea.Position.X, PlayArea.Size.X, 2);
-        AddLayer("FrontDepthLimit", new Color("#78503a"), PlayArea.End.Y, PlayArea.Position.X, PlayArea.Size.X, 2);
+        AddLayer("BackDepthLimit", new Color("#463326"), GetPlayArea().Position.Y, GetPlayArea().Position.X, GetPlayArea().Size.X, 2);
+        AddLayer("FrontDepthLimit", new Color("#78503a"), GetPlayArea().End.Y, GetPlayArea().Position.X, GetPlayArea().Size.X, 2);
     }
 
     private void AddLayer(string name, Color color, float y, float x, float width, float height)
@@ -200,7 +231,7 @@ public partial class PrototypeArena : Node2D
         if (existingPlayer is not null)
         {
             _player = existingPlayer;
-            _player.MovementBounds = PlayArea;
+            _player.MovementBounds = GetPlayArea();
             return;
         }
 
@@ -208,7 +239,7 @@ public partial class PrototypeArena : Node2D
         {
             Name = "Arandu",
             GlobalPosition = new Vector2(120, 164),
-            MovementBounds = PlayArea
+            MovementBounds = GetPlayArea()
         };
         AddChild(_player);
     }
@@ -235,7 +266,7 @@ public partial class PrototypeArena : Node2D
             _ => "Mercenary"
         };
         enemy.GlobalPosition = position;
-        enemy.MovementBounds = PlayArea;
+        enemy.MovementBounds = GetPlayArea();
         AddChild(enemy);
     }
 
@@ -326,12 +357,12 @@ public partial class PrototypeArena : Node2D
         {
             Name = "PrototypeCamera",
             Zoom = new Vector2(2f, 2f),
-            PositionSmoothingEnabled = true,
-            PositionSmoothingSpeed = 8f,
+            PositionSmoothingEnabled = false,
             Enabled = true,
             GlobalPosition = _player?.GlobalPosition ?? Vector2.Zero
         };
 
         AddChild(_camera);
+        _camera.MakeCurrent();
     }
 }

@@ -271,4 +271,12 @@ Arco Aldeia → Capitao → Mata Fechada com progressao, sprite do chefe e arsen
 
 Ver `docs/sprints/sprint_24_fase_1_vertical_slice.md`.
 
+## Sprint 25 - Aldeia Visual (Krita / IA)
+
+Arte da Aldeia + integracao no Godot. Ver `docs/sprints/sprint_25_aldeia_visual.md`, `assets/art/README.md`.
+
+**Status:** em andamento (2026-07-07) — `aldeia_mid` + `aldeia_fg` na cena `AldeiaBackground.tscn`; alinhamento fino no editor.
+
+**Nao repetir:** fundo procedural C#, empilhar PNGs opacos no codigo.
+
 ## Sprint futura - SFX Custom

@@ -1,5 +1,17 @@
 # Registro de Decisoes
 
+## 2026-07-07 - Cenario Aldeia: cena Godot, nao codigo
+
+Decisao: fundo da Aldeia montado em `scenes/levels/AldeiaBackground.tscn`; C# apenas parallax horizontal.
+
+Motivo: PNGs opacos da IA nao funcionam empilhados/recortados em codigo; ajustes visuais devem ser feitos no editor pelo usuario, nao via constantes no agente.
+
+## 2026-07-07 - Imagem-mestra + FG
+
+Decisao: usar `aldeia_mid.png` como cenario completo e `aldeia_fg.png` como primeiro plano opcional ate existirem camadas com transparencia real.
+
+Motivo: qualidade visual estavel sem emendas; `aldeia_ground` atual e vista de cima e foi afastado do runtime.
+
 ## 2026-07-07 - Commit e push antes da proxima sprint
 
 Decisao: toda sprint validada precisa ser commitada e enviada ao GitHub antes de iniciar a proxima sprint.

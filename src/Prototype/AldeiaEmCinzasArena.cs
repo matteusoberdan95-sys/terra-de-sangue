@@ -3,23 +3,130 @@ using Godot;
 [GlobalClass]
 public partial class AldeiaEmCinzasArena : PrototypeArena
 {
+    private static readonly string[] PlaceholderNodes =
+    [
+        "NightCanopy", "BloodMoonGlow", "BloodMoonCore", "DistantCanopyCuts", "BloodlitGround",
+        "DistantTrees", "BurnedHutLeft", "BurnedHutLeftBody", "BurnedHutRight", "BurnedHutRightBody",
+        "HutEmberLightLeft", "HutEmberLightRight", "SmokeColumnLeft", "SmokeColumnRight",
+        "AshLine", "WalkBand", "BloodSmearA", "BloodSmearB", "ForegroundCharredTrunkLeft",
+        "ForegroundCharredTrunkRight", "EmberA", "EmberB", "EmberC", "EmberD", "AshFlakeA",
+        "AshFlakeB", "AshFlakeC", "BackDepthLimit", "FrontDepthLimit",
+        "BrokenFence", "AshMound", "FallenPost", "CorpseSilhouette", "BrokenPot"
+    ];
+
+    private static readonly Rect2 AldeiaWalkArea = new(new Vector2(-380, 152), new Vector2(760, 56));
+
     private readonly System.Collections.Generic.List<Polygon2D> _emberLights = new();
+    private AldeiaParallaxBackground? _parallax;
     private float _ambientTime;
+
+    protected override bool ShouldBuildPlayAreaGuides => HasPngBackgroundAssets();
+
+    protected override bool ShouldBuildGenericBackground => !HasPngBackgroundAssets();
+
+    protected override bool LockCameraY => HasPngBackgroundAssets();
+
+    protected override Rect2 GetPlayArea() => HasPngBackgroundAssets() ? AldeiaWalkArea : base.GetPlayArea();
 
     public override void _Ready()
     {
+        if (HasPngBackgroundAssets())
+        {
+            RemovePlaceholderArt(immediate: true);
+        }
+
         base._Ready();
-        BuildForegroundProps();
-        CacheEmberLights();
+
+        if (TryBuildPngBackground())
+        {
+            GD.Print("AldeiaEmCinzasArena: fundos PNG carregados.");
+        }
+        else
+        {
+            BuildForegroundProps();
+            CacheEmberLights();
+        }
+
         GetNodeOrNull<PhaseDirector>("PhaseDirector")?.QueueFree();
         AddChild(new PhaseDirector { Name = "PhaseDirector" });
+        CallDeferred(nameof(CaptureParallaxCameraOrigin));
     }
 
     public override void _Process(double delta)
     {
         base._Process(delta);
         _ambientTime += (float)delta;
-        PulseEmberLights();
+        if (_parallax is null)
+        {
+            PulseEmberLights();
+        }
+    }
+
+    protected override void ConfigurePlayerLoadout(PlayerController player)
+    {
+        if (!HasPngBackgroundAssets())
+        {
+            return;
+        }
+
+        player.GlobalPosition = new Vector2(player.GlobalPosition.X, 180f);
+        player.MovementBounds = GetPlayArea();
+    }
+
+    private static bool HasPngBackgroundAssets()
+    {
+        return ResourceLoader.Exists("res://assets/art/aldeia_mid.png");
+    }
+
+    private bool TryBuildPngBackground()
+    {
+        if (!ResourceLoader.Exists("res://scenes/levels/AldeiaBackground.tscn"))
+        {
+            return false;
+        }
+
+        var scene = GD.Load<PackedScene>("res://scenes/levels/AldeiaBackground.tscn");
+        _parallax = scene.Instantiate<AldeiaParallaxBackground>();
+        if (_parallax.GetNodeOrNull<Sprite2D>("AldeiaBackdrop") is null)
+        {
+            _parallax.QueueFree();
+            _parallax = null;
+            return false;
+        }
+
+        AddChild(_parallax);
+        MoveChild(_parallax, 0);
+        return true;
+    }
+
+    private void RemovePlaceholderArt(bool immediate)
+    {
+        foreach (var nodeName in PlaceholderNodes)
+        {
+            var node = GetNodeOrNull<Node>(nodeName);
+            if (node is null)
+            {
+                continue;
+            }
+
+            if (immediate)
+            {
+                node.Free();
+            }
+            else
+            {
+                node.QueueFree();
+            }
+        }
+    }
+
+    private void CaptureParallaxCameraOrigin()
+    {
+        var camera = GetNodeOrNull<Camera2D>("PrototypeCamera");
+        if (camera is not null && _parallax is not null)
+        {
+            _parallax.SetCameraOrigin(camera.GlobalPosition.X);
+        }
     }
 
     private void BuildForegroundProps()

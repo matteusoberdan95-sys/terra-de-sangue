@@ -7,7 +7,8 @@ Este arquivo e a primeira leitura obrigatoria para qualquer agente trabalhando n
 - Projeto: `Terra Sangrada`.
 - Engine: Godot .NET 4.7.
 - Linguagem: C# / .NET 10.
-- Proximo foco: Sprint 20 arsenal e arquearia (`docs/13_sistema_de_arsenal_e_arquearia.md`).
+- **Sprint atual:** 25 — arte Aldeia (`docs/sprints/sprint_25_aldeia_visual.md`).
+- **Handoff Codex:** `docs/07_handoff_codex_cursor.md` (dores do usuario + onde estamos).
 
 ## Ordem de leitura
 
