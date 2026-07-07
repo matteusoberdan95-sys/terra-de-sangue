@@ -99,19 +99,72 @@ Entregas:
 - Primeiro sistema de feridas/roupa rasgada.
 - Primeiros decals de sangue no chao/cenario.
 
-## Sprint futura - Gore e Execucoes
+## Sprint 6 - Chefe 1
 
-Objetivo: transformar a brutalidade em um diferencial real do jogo.
+Objetivo: criar o primeiro chefe memoravel.
 
 Entregas:
 
-- Dano visual progressivo por inimigo.
-- Sangue persistente em chao, vegetacao e objetos.
-- Desmembramento por tipo de arma.
-- Execucoes brutais: cabeca, barriga, membros e corpo partido.
-- Regras de legibilidade para nao esconder o combate.
+- Capitao do Ferro.
+- 3 padroes de ataque.
+- Intro visual curta.
+- Arena propria.
+- Recompensa narrativa.
 
-## Sprint 6 - Chefe 1
+## Sprint 7 - Gore e Execucoes
+
+Objetivo: transformar a brutalidade em diferencial jogavel inicial.
+
+Entregas:
+
+- Sangue persistente no chao.
+- Janela de execucao em inimigos quase mortos.
+- Feedback de execucao brutal.
+- Gore progressivo reforcado na morte.
+
+## Sprint 8 - Kit do Jogador
+
+Objetivo: expandir o combate do protagonista.
+
+Entregas:
+
+- Ataque pesado.
+- Combo de 2 golpes no ataque leve.
+- Feedback visual diferenciado por tipo de golpe.
+
+## Sprint 9 - Fase 2 Mata Fechada
+
+Objetivo: segunda fase jogavel curta com clima proprio.
+
+Entregas:
+
+- Cena `MataFechada.tscn`.
+- Encontros em ambiente de mata escura.
+- Transicao apos o chefe 1.
+
+## Sprint 10 - HUD e Progressao
+
+Objetivo: dar leitura de vida, chefe e memorias ao jogador.
+
+Entregas:
+
+- Barra de vida do player.
+- Barra de vida do chefe.
+- Contador de memorias coletadas.
+- Integracao com `MemoryRegistry`.
+
+## Sprint futura - Gore Avancado
+
+Objetivo: desmembramento, execucoes por arma e sangue em vegetacao.
+
+Entregas:
+
+- Dano visual progressivo avancado.
+- Desmembramento por tipo de arma.
+- Execucoes contextuais completas.
+- Regras de legibilidade reforçadas.
+
+## Sprint 6 - Chefe 1 (legado)
 
 Objetivo: criar o primeiro chefe memoravel.
 

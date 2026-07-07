@@ -213,6 +213,7 @@ public partial class PrototypeArena : Node2D
         {
             "brute" => new EnemyBrute(),
             "miniboss" => new EnemyMiniBoss(),
+            "capitao" => new BossIronCaptain(),
             _ => new EnemyDummy()
         };
 
@@ -220,6 +221,7 @@ public partial class PrototypeArena : Node2D
         {
             "brute" => "Brute",
             "miniboss" => "MiniBoss",
+            "capitao" => "IronCaptain",
             _ => "Mercenary"
         };
         enemy.GlobalPosition = position;

@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/Prototype/IronCaptainArena.cs" id="1_arena"]
+[ext_resource type="PackedScene" path="res://scenes/levels/PrototypeArena.tscn" id="2_base"]
+
+[node name="IronCaptainArena" instance=ExtResource("2_base")]
+script = ExtResource("1_arena")

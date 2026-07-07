@@ -89,8 +89,9 @@ public partial class PhaseDirector : Node
                 if (_timer <= 0f)
                 {
                     _state = PhaseState.Complete;
-                    ShowBanner("Fase concluida", "Aldeia em Cinzas foi atravessada. A jornada continua.");
+                    ShowBanner("Fase concluida", "Aldeia em Cinzas foi atravessada. O Capitao do Ferro espera adiante.");
                     UpdateStatus("Fase 1 — concluida");
+                    GetTree().CallGroup("game_flow", nameof(GameRoot.OnAldeiaPhaseComplete));
                 }
 
                 break;
@@ -108,6 +109,7 @@ public partial class PhaseDirector : Node
         _timer = OutroSeconds;
         ShowBanner(title, memoryText);
         UpdateStatus($"Memoria coletada: {memoryId}");
+        MemoryRegistry.Collect(memoryId, title, memoryText);
     }
 
     private void UpdateCombatState(float dt)

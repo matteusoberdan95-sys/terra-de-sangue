@@ -39,6 +39,8 @@ public abstract partial class EnemyBase : CharacterBody2D
     private float _attackCooldown;
     private float _attackTimer;
     private Vector2 _facing = Vector2.Left;
+
+    protected Vector2 FacingDirection => _facing;
     private bool _hitPlayerThisAttack;
 
     public Rect2 MovementBounds
@@ -49,6 +51,10 @@ public abstract partial class EnemyBase : CharacterBody2D
 
     public bool IsAlive => _state != EnemyState.Dead;
 
+    public int HealthRemaining => _health;
+
+    public bool CanBeExecuted => IsAlive && _health == 1;
+
     protected abstract int MaxHealth { get; }
     protected abstract float ApproachSpeed { get; }
     protected abstract float AttackRange { get; }
@@ -57,6 +63,15 @@ public abstract partial class EnemyBase : CharacterBody2D
     protected abstract Color BodyColor { get; }
     protected abstract Color ApproachColor { get; }
     protected abstract Color AttackColor { get; }
+
+    protected virtual float GetAttackStartup() => AttackStartupSeconds;
+    protected virtual float GetAttackActive() => AttackActiveSeconds;
+    protected virtual float GetAttackRecovery() => AttackRecoverySeconds;
+    protected virtual int GetAttackDamageAmount() => AttackDamage;
+    protected virtual Vector2 GetAttackHitboxSize() => new(36, 22);
+    protected virtual float GetAttackReach() => 30f;
+    protected virtual void OnAttackPatternStarted() { }
+    protected virtual void OnAttackActiveFrame(float dt) { }
 
     public override void _Ready()
     {
@@ -183,7 +198,8 @@ public abstract partial class EnemyBase : CharacterBody2D
     {
         _state = EnemyState.Attack;
         _attackCooldown = AttackCooldownSeconds;
-        _attackTimer = AttackStartupSeconds + AttackActiveSeconds + AttackRecoverySeconds;
+        OnAttackPatternStarted();
+        _attackTimer = GetAttackStartup() + GetAttackActive() + GetAttackRecovery();
         _hitPlayerThisAttack = false;
         SetAttackHitboxEnabled(false);
     }
@@ -192,13 +208,16 @@ public abstract partial class EnemyBase : CharacterBody2D
     {
         _attackTimer = Mathf.Max(0f, _attackTimer - dt);
 
-        var activeStartsAt = AttackRecoverySeconds;
-        var activeEndsAt = AttackRecoverySeconds + AttackActiveSeconds;
+        var recovery = GetAttackRecovery();
+        var active = GetAttackActive();
+        var activeStartsAt = recovery;
+        var activeEndsAt = recovery + active;
         var isActive = _attackTimer > activeStartsAt && _attackTimer <= activeEndsAt;
 
         SetAttackHitboxEnabled(isActive);
         if (isActive)
         {
+            OnAttackActiveFrame(dt);
             ResolveAttackHitbox();
         }
 
@@ -212,12 +231,14 @@ public abstract partial class EnemyBase : CharacterBody2D
 
     private void ResolveAttackHitbox()
     {
-        if (_attackHitbox is null)
+        if (_attackHitbox is null || _attackHitboxShape?.Shape is not RectangleShape2D rectangle)
         {
             return;
         }
 
-        _attackHitbox.Position = new Vector2(_facing.X * 30f, -6f);
+        var size = GetAttackHitboxSize();
+        rectangle.Size = size;
+        _attackHitbox.Position = new Vector2(_facing.X * GetAttackReach(), -6f);
         _attackHitbox.ForceUpdateTransform();
 
         if (_hitPlayerThisAttack)
@@ -233,7 +254,7 @@ public abstract partial class EnemyBase : CharacterBody2D
             }
 
             _hitPlayerThisAttack = true;
-            player.TakeHit(new Vector2(_facing.X * 72f, -6f), AttackDamage);
+            player.TakeHit(new Vector2(_facing.X * 72f, -6f), GetAttackDamageAmount());
             GetParent<PrototypeArena>()?.ApplyCombatImpact(3f, 0.03f);
             break;
         }
