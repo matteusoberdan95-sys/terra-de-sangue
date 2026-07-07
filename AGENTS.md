@@ -7,9 +7,9 @@ Este arquivo e a primeira leitura obrigatoria para qualquer agente trabalhando n
 - Projeto: `Terra Sangrada`.
 - Engine: Godot .NET 4.7.
 - Linguagem: C# / .NET 10.
-- Sprint atual: Sprint 4 implementada localmente, aguardando validacao visual.
+- Sprint atual: Sprint 5 validada localmente no Godot.
 - Cena principal: `res://scenes/Main.tscn`.
-- Proximo foco: validar Sprint 4 no Godot, depois commit/push.
+- Proximo foco: commit/push Sprint 5 e iniciar Sprint 6: Chefe 1.
 
 ## Ordem de leitura
 

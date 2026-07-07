@@ -74,6 +74,7 @@ public partial class PlayerController : CharacterBody2D
         _hitFlash = 0.12f;
         _hitStunTimer = HitStunSeconds;
         Velocity = impulse;
+        ImpactFeedback.Get(this)?.OnPlayerHit(GlobalPosition + new Vector2(0, -4));
 
         if (_health <= 0)
         {

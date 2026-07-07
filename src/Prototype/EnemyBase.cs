@@ -26,6 +26,8 @@ public abstract partial class EnemyBase : CharacterBody2D
 
     private Polygon2D? _body;
     private Polygon2D? _mark;
+    private Polygon2D? _tornCloth;
+    private Polygon2D? _bleedingWound;
     private Polygon2D? _attackSwing;
     private Area2D? _attackHitbox;
     private CollisionShape2D? _attackHitboxShape;
@@ -98,12 +100,23 @@ public abstract partial class EnemyBase : CharacterBody2D
         _state = _health <= 0 ? EnemyState.Dead : EnemyState.HitStun;
         Velocity = impulse;
 
+        ImpactFeedback.Get(this)?.OnEnemyHit(GlobalPosition + new Vector2(0, -4), impulse, _health <= 0);
+        UpdateWoundVisuals();
+
         if (_health <= 0)
         {
             ReleaseAttackSlot();
+            ApplyDeathFeedback();
             ZIndex += 1;
-            GetTree().CreateTimer(0.22).Timeout += QueueFree;
+            GetTree().CreateTimer(0.38).Timeout += QueueFree;
         }
+    }
+
+    private void ApplyDeathFeedback()
+    {
+        Modulate = new Color("#8a4a4a");
+        Rotation = _facing.X < 0f ? 0.28f : -0.28f;
+        Scale *= new Vector2(1.04f, 0.82f);
     }
 
     private void UpdateState(float dt)
@@ -304,6 +317,57 @@ public abstract partial class EnemyBase : CharacterBody2D
             };
             AddChild(_attackSwing);
         }
+
+        if (_tornCloth is null)
+        {
+            _tornCloth = new Polygon2D
+            {
+                Name = "TornCloth",
+                Visible = false,
+                Color = new Color("#560f0b", 0.72f),
+                Polygon = new[]
+                {
+                    new Vector2(-9, 0),
+                    new Vector2(7, -4),
+                    new Vector2(11, 6),
+                    new Vector2(-6, 9)
+                }
+            };
+            AddChild(_tornCloth);
+        }
+
+        if (_bleedingWound is null)
+        {
+            _bleedingWound = new Polygon2D
+            {
+                Name = "BleedingWound",
+                Visible = false,
+                Color = new Color("#8f1f17", 0.88f),
+                Polygon = new[]
+                {
+                    new Vector2(-5, -6),
+                    new Vector2(6, -8),
+                    new Vector2(4, 2),
+                    new Vector2(-7, 0)
+                }
+            };
+            AddChild(_bleedingWound);
+        }
+    }
+
+    private void UpdateWoundVisuals()
+    {
+        var ratio = _health / (float)MaxHealth;
+
+        if (_tornCloth is not null)
+        {
+            _tornCloth.Visible = _state != EnemyState.Dead && ratio < 0.75f;
+        }
+
+        if (_bleedingWound is not null)
+        {
+            _bleedingWound.Visible = _state != EnemyState.Dead && ratio <= 0.4f;
+        }
     }
 
     private void BuildCollision()
@@ -411,13 +475,14 @@ public abstract partial class EnemyBase : CharacterBody2D
     {
         if (_body is not null)
         {
+            var woundedBody = BodyColor.Lerp(new Color("#6a3a34"), 1f - _health / (float)MaxHealth);
             _body.Color = _state switch
             {
                 EnemyState.Dead => new Color("#332424"),
                 _ when _hitFlash > 0f => new Color("#f0d7aa"),
                 EnemyState.Attack => AttackColor,
                 EnemyState.Approach => ApproachColor,
-                _ => BodyColor
+                _ => woundedBody
             };
         }
 
@@ -425,5 +490,7 @@ public abstract partial class EnemyBase : CharacterBody2D
         {
             _mark.Visible = _state != EnemyState.Dead;
         }
+
+        UpdateWoundVisuals();
     }
 }

@@ -87,8 +87,8 @@ Nunca iniciar uma nova sprint com a anterior apenas validada localmente, mas ain
 
 ## Sprint Atual
 
-Sprint 4: fase 1 jogavel.
+Sprint 6: chefe 1 (Capitao do Ferro).
 
-Status: implementada localmente e aguardando validacao visual no Godot.
+Status: proxima sprint.
 
-Objetivo: montar a Aldeia em Cinzas do inicio ao fim com 3 encontros, mini-chefe e primeira memoria coletavel.
+Sprint 5 validada localmente no Godot em 2026-07-07.

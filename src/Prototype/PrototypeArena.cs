@@ -38,6 +38,7 @@ public partial class PrototypeArena : Node2D
         BuildPlayAreaGuides();
         SpawnPlayer();
         BuildPhaseDirector();
+        BuildImpactFeedback();
         CacheAmbientParticles();
         BuildCamera();
     }
@@ -233,6 +234,16 @@ public partial class PrototypeArena : Node2D
             Name = "BrokenMaskMemory",
             GlobalPosition = position
         });
+    }
+
+    private void BuildImpactFeedback()
+    {
+        if (GetNodeOrNull<ImpactFeedback>("ImpactFeedback") is not null)
+        {
+            return;
+        }
+
+        AddChild(new ImpactFeedback { Name = "ImpactFeedback" });
     }
 
     private void BuildPhaseDirector()

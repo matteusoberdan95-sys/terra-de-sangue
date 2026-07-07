@@ -14,35 +14,25 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 4 - Fase 1 Jogavel.
+Sprint 5 - Polimento de Impacto.
 
-Status: implementada localmente, aguardando validacao visual no Godot.
+Status: validada localmente no Godot.
 
-Sprint 4 implementada localmente com:
+Sprint 5 fechada com:
 
-- `AldeiaEmCinzas.tscn` como cena da Fase 1.
-- `PhaseDirector` com intro, 3 encontros, mini-chefe, memoria e fim de fase.
-- `EnemyMiniBoss` (Sargento do Ferro).
-- `MemoryPickup` com primeira memoria: mascara quebrada.
-- `WaveSpawner` removido em favor do fluxo de fase.
+- `ImpactFeedback` centralizando sangue, decals e sons placeholder.
+- `BloodSplatter` temporario e `BloodDecal` no chao com fade.
+- Feridas progressivas e feedback de morte nos inimigos.
+- Validacao visual aprovada pelo usuario em 2026-07-07.
 
-## Implementado
+## Proximo passo
 
-- Projeto Godot e C#.
-- Cena principal `scenes/Main.tscn` carregando `AldeiaEmCinzas.tscn`.
-- Arena visual da Aldeia em Cinzas.
-- Player com movimento, ataque, dano e respawn.
-- Inimigos mercenario, bruto e mini-chefe.
-- Sistema de fase com encontros escalonados.
-- Primeira memoria coletavel.
-- Documentos de producao e agentes.
+Commitar Sprint 5 validada, dar push para o GitHub e iniciar Sprint 6: Chefe 1 (Capitao do Ferro).
 
-## Validacao feita
+## Fechamento recente
 
-- `dotnet build TerraSangrada.csproj --no-restore`: sucesso, 0 erros e 0 avisos.
-- Sprint 4: Godot aberto via `Start-Process` documentado em 2026-07-07.
-- Sprint 4: `res://scenes/Main.tscn` executada por 15s com `--verbose`, sem erro de assembly/script.
-- Sprint 4: validacao visual interativa pendente de confirmacao humana.
+- Sprint 4: commit `04b0a78` no remoto.
+- Sprint 5: aguardando commit/push apos validacao.
 
 Godot local:
 
@@ -50,22 +40,14 @@ Godot local:
 C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe
 ```
 
-Repositorio local principal:
+Repositorio local:
 
 ```text
 C:\Users\mober\OneDrive\Desktop\fauna-do-sangue
 ```
 
-## Proximo passo
-
-Validar Sprint 4 visualmente no Godot local. Depois commitar, dar push e iniciar Sprint 5: Polimento de Impacto.
-
-## Fechamento da Sprint 3
-
-- Commit: `7259c7a` / `6f2ad4c` — enviado para `origin/main`.
-
 ## Riscos atuais
 
-- Godot nao esta no PATH; abre por caminho absoluto local.
-- Memoria ainda nao desbloqueia habilidade jogavel.
-- Fase termina em banner, sem transicao para a proxima area.
+- Sons ainda sao placeholders procedurais.
+- Sangue e temporario; persistencia fica para sprint de gore.
+- Capitao do Ferro ainda nao implementado.

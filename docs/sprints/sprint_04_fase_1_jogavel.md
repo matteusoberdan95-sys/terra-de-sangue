@@ -46,7 +46,7 @@ Nao entra:
 
 ## Registro de validacao visual
 
-Status atual: validacao tecnica aprovada no Godot local em 2026-07-07. Gameplay interativo pendente de confirmacao humana.
+Status atual: validado localmente no Godot em 2026-07-07. Aprovado pelo usuario.
 
 Comando usado para abrir o editor:
 
