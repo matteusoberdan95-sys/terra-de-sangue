@@ -9,7 +9,7 @@ Este arquivo e a primeira leitura obrigatoria para qualquer agente trabalhando n
 - Linguagem: C# / .NET 10.
 - Sprint atual: Sprint 3 validada localmente no Godot.
 - Cena principal: `res://scenes/Main.tscn`.
-- Proximo foco: commitar Sprint 3 e iniciar Sprint 4: Fase 1 Jogavel.
+- Proximo foco: iniciar Sprint 4: Fase 1 Jogavel.
 
 ## Ordem de leitura
 

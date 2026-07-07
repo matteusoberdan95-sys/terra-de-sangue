@@ -70,7 +70,12 @@ C:\Users\mober\OneDrive\Desktop\fauna-do-sangue
 
 ## Proximo passo
 
-Commitar Sprint 3 validada, dar push para o GitHub e somente depois iniciar Sprint 4: Fase 1 Jogavel.
+Iniciar Sprint 4: Fase 1 Jogavel.
+
+## Fechamento da Sprint 3
+
+- Commit: `7259c7a` — Implement sprint 3 enemy system and document mandatory commit/push gate.
+- Push: enviado para `origin/main` em 2026-07-07.
 
 ## Riscos atuais
 

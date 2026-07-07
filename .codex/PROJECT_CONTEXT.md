@@ -19,7 +19,8 @@ Sprint 3 - Sistema de Inimigos validada localmente no Godot.
 Estado atual:
 
 - Sprint 1, 2 e 3 validadas visualmente pelo usuario em 2026-07-07.
-- Proxima etapa: commitar Sprint 3 e iniciar Sprint 4: Fase 1 Jogavel.
+- Proxima etapa: iniciar Sprint 4: Fase 1 Jogavel.
+- Sprint 3 commitada e enviada ao remoto em `7259c7a`.
 
 Godot local confirmado:
 
