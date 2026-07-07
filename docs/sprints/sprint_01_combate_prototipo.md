@@ -26,15 +26,15 @@ Nao entra:
 
 ## Checklist tecnico
 
-- [ ] Player com estado de idle.
-- [ ] Player com estado de walk.
-- [ ] Player com estado de ataque leve.
-- [ ] Hitbox separada de hurtbox.
-- [ ] Inimigo recebe dano.
-- [ ] Inimigo morre.
-- [ ] Knockback respeita direcao.
-- [ ] Eixo Y limita area jogavel.
-- [ ] Camera acompanha sem enjoo.
+- [x] Player com estado de idle.
+- [x] Player com estado de walk.
+- [x] Player com estado de ataque leve.
+- [x] Hitbox separada de hurtbox.
+- [x] Inimigo recebe dano.
+- [x] Inimigo morre.
+- [x] Knockback respeita direcao.
+- [x] Eixo Y limita area jogavel.
+- [x] Camera acompanha sem enjoo.
 
 ## Checklist de sensacao
 
@@ -43,6 +43,8 @@ Nao entra:
 - [ ] Leitura de profundidade esta clara.
 - [ ] Cena tem clima, mesmo com placeholder.
 
+Observacao: itens de sensacao dependem de validacao visual no Godot. O build tecnico passou.
+
 ## Validacao
 
 Rodar `scenes/Main.tscn` no Godot e gravar decisoes:
@@ -50,6 +52,8 @@ Rodar `scenes/Main.tscn` no Godot e gravar decisoes:
 - Aprovado.
 - Ajustar.
 - Cortar.
+
+Status atual: implementado tecnicamente, aguardando validacao visual no Godot.
 
 ## Agentes envolvidos
 

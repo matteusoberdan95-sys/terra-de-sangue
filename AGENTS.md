@@ -7,9 +7,9 @@ Este arquivo e a primeira leitura obrigatoria para qualquer agente trabalhando n
 - Projeto: `Terra Sangrada`.
 - Engine: Godot .NET 4.x.
 - Linguagem: C#.
-- Sprint atual: Sprint 0, aguardando validacao visual no Godot.
+- Sprint atual: Sprint 1, implementada tecnicamente e aguardando validacao visual no Godot.
 - Cena principal: `res://scenes/Main.tscn`.
-- Proximo foco: Sprint 1, combate prototipo.
+- Proximo foco: validar visualmente Sprint 1 no Godot .NET.
 
 ## Ordem de leitura
 

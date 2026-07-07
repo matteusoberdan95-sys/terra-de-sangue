@@ -14,13 +14,19 @@ Construir Terra Sangrada por sprints, com Codex atuando como executor principal 
 
 ## Sprint atual
 
-Sprint 0 - Fundacao.
+Sprint 1 - Combate Prototipo.
+
+Estado atual:
+
+- Implementacao tecnica concluida.
+- Build C# aprovado.
+- Validacao visual no Godot ainda pendente.
 
 Bloqueio atual para fechar:
 
 - Abrir o projeto no Godot .NET.
 - Rodar `scenes/Main.tscn`.
-- Confirmar visualmente que a arena, player e inimigos aparecem.
+- Confirmar movimento, ataque, hitbox, knockback, camera shake e limites de arena.
 
 ## Decisoes ja tomadas
 
@@ -30,8 +36,10 @@ Bloqueio atual para fechar:
 - Cultura do jogo: ficticia, inspirada no Brasil, evitando representacao rasa de povos reais.
 - Processo: sprints com validacao visual obrigatoria.
 - Agentes tem nomes inspirados em Dragon Ball Z para facilitar memoria operacional.
+- Sprint 1 mantem placeholders; arte final fica para sprint posterior.
 
 ## Validacao tecnica ja feita
 
 - `dotnet restore TerraSangrada.csproj`: sucesso.
 - `dotnet build TerraSangrada.csproj --no-restore`: sucesso com 0 erros e 0 avisos quando executado com permissao fora do sandbox.
+- Sprint 1 tambem compila com 0 erros e 0 avisos.

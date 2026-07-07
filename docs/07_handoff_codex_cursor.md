@@ -9,8 +9,8 @@ Ler nesta ordem:
 1. `AGENTS.md`
 2. `docs/08_estado_atual.md`
 3. `docs/04_plano_de_sprints.md`
-4. `docs/sprints/sprint_00_fundacao.md`
-5. `docs/sprints/sprint_01_combate_prototipo.md`
+4. `docs/sprints/sprint_01_combate_prototipo.md`
+5. `docs/checklists/validacao_visual.md`
 
 ## O que ja existe
 
@@ -18,7 +18,11 @@ Ler nesta ordem:
 - Base C# compilando.
 - Cena principal que instancia uma arena prototipo.
 - Player placeholder com movimento e ataque leve.
-- Inimigos placeholder com vida, hit flash, knockback e morte.
+- Ataque leve com hitbox separada da colisao do player.
+- Inimigos placeholder com hurtbox, vida, hit flash, knockback, hit stun e morte.
+- Camera com primeiro passe de shake.
+- Hit pause inicial em golpes conectados.
+- Area jogavel limitada no eixo Y.
 - Documentos de visao, arte, narrativa, gameplay, sprints e agentes.
 
 ## Onde mexer
@@ -48,6 +52,15 @@ Depois, abrir no Godot .NET e rodar:
 ```text
 res://scenes/Main.tscn
 ```
+
+Validar especificamente:
+
+- `WASD` move o player.
+- `J` executa ataque leve.
+- Ataque acerta apenas pela hitbox ativa.
+- Inimigos recebem dano, recuam e morrem.
+- Camera treme sem perder enquadramento.
+- Player e inimigos nao saem da faixa jogavel.
 
 ## Ao finalizar uma tarefa
 

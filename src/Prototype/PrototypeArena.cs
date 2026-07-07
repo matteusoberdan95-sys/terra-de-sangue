@@ -4,15 +4,22 @@ namespace TerraSangrada.Prototype;
 
 public partial class PrototypeArena : Node2D
 {
+    private static readonly Rect2 PlayArea = new(new Vector2(-380, 124), new Vector2(760, 92));
+
     private Camera2D? _camera;
     private PlayerController? _player;
+    private float _shakeTimer;
+    private float _shakeStrength;
 
     public override void _Ready()
     {
+        AddToGroup("arena_feedback");
         BuildBackground();
+        BuildPlayAreaGuides();
         SpawnPlayer();
         SpawnEnemy(new Vector2(260, 148));
         SpawnEnemy(new Vector2(340, 176));
+        SpawnEnemy(new Vector2(430, 156));
         BuildCamera();
     }
 
@@ -25,6 +32,34 @@ public partial class PrototypeArena : Node2D
 
         var target = _player.GlobalPosition + new Vector2(40, -18);
         _camera.GlobalPosition = _camera.GlobalPosition.Lerp(target, 8f * (float)delta);
+
+        if (_shakeTimer > 0f)
+        {
+            _shakeTimer = Mathf.Max(0f, _shakeTimer - (float)delta);
+            _camera.Offset = new Vector2(
+                (float)GD.RandRange(-_shakeStrength, _shakeStrength),
+                (float)GD.RandRange(-_shakeStrength, _shakeStrength));
+        }
+        else
+        {
+            _camera.Offset = Vector2.Zero;
+        }
+    }
+
+    public async void ApplyCombatImpact(float shakeStrength, float hitPauseSeconds)
+    {
+        _shakeTimer = 0.14f;
+        _shakeStrength = Mathf.Max(_shakeStrength, shakeStrength);
+
+        if (Engine.TimeScale < 1f)
+        {
+            return;
+        }
+
+        Engine.TimeScale = 0.08;
+        await ToSignal(GetTree().CreateTimer(hitPauseSeconds, true, false, true), SceneTreeTimer.SignalName.Timeout);
+        Engine.TimeScale = 1.0;
+        _shakeStrength = 0f;
     }
 
     private void BuildBackground()
@@ -60,6 +95,12 @@ public partial class PrototypeArena : Node2D
         AddLayer("WalkBand", new Color("#3f2b20"), 184, -420, 860, 36);
     }
 
+    private void BuildPlayAreaGuides()
+    {
+        AddLayer("BackDepthLimit", new Color("#463326"), PlayArea.Position.Y, PlayArea.Position.X, PlayArea.Size.X, 2);
+        AddLayer("FrontDepthLimit", new Color("#78503a"), PlayArea.End.Y, PlayArea.Position.X, PlayArea.Size.X, 2);
+    }
+
     private void AddLayer(string name, Color color, float y, float x, float width, float height)
     {
         AddChild(new Polygon2D
@@ -81,7 +122,8 @@ public partial class PrototypeArena : Node2D
         _player = new PlayerController
         {
             Name = "Arandu",
-            GlobalPosition = new Vector2(120, 164)
+            GlobalPosition = new Vector2(120, 164),
+            MovementBounds = PlayArea
         };
         AddChild(_player);
     }
@@ -91,7 +133,8 @@ public partial class PrototypeArena : Node2D
         var enemy = new EnemyDummy
         {
             Name = "InvaderDummy",
-            GlobalPosition = position
+            GlobalPosition = position,
+            MovementBounds = PlayArea
         };
         AddChild(enemy);
     }

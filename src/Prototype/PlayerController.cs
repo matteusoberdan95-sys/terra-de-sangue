@@ -1,18 +1,42 @@
 using Godot;
+using System.Collections.Generic;
 
 namespace TerraSangrada.Prototype;
 
 public partial class PlayerController : CharacterBody2D
 {
     private const float Speed = 120f;
-    private const float AttackRange = 46f;
-    private const float AttackCooldownSeconds = 0.28f;
+    private const float AttackCooldownSeconds = 0.34f;
+    private const float AttackStartupSeconds = 0.06f;
+    private const float AttackActiveSeconds = 0.09f;
+    private const float AttackRecoverySeconds = 0.16f;
+    private static readonly Rect2 DefaultMovementBounds = new(new Vector2(-380, 124), new Vector2(760, 92));
+
+    private enum PlayerState
+    {
+        Idle,
+        Walk,
+        LightAttack
+    }
 
     private Polygon2D? _body;
+    private Polygon2D? _paint;
     private Polygon2D? _attackSlash;
+    private Area2D? _attackHitbox;
+    private CollisionShape2D? _attackHitboxShape;
+    private readonly HashSet<ulong> _hitEnemiesThisAttack = new();
+    private PlayerState _state = PlayerState.Idle;
     private Vector2 _facing = Vector2.Right;
+    private Rect2 _movementBounds = DefaultMovementBounds;
     private float _attackCooldown;
     private float _slashTimer;
+    private float _attackTimer;
+
+    public Rect2 MovementBounds
+    {
+        get => _movementBounds;
+        set => _movementBounds = value;
+    }
 
     public override void _Ready()
     {
@@ -20,6 +44,7 @@ public partial class PlayerController : CharacterBody2D
         EnsureInputMap();
         BuildVisuals();
         BuildCollision();
+        BuildAttackHitbox();
     }
 
     public override void _PhysicsProcess(double delta)
@@ -29,18 +54,29 @@ public partial class PlayerController : CharacterBody2D
         _slashTimer = Mathf.Max(0f, _slashTimer - dt);
 
         var input = Input.GetVector("move_left", "move_right", "move_up", "move_down");
-        if (input.LengthSquared() > 0.01f)
+        if (_state != PlayerState.LightAttack && input.LengthSquared() > 0.01f)
         {
             _facing = input.X < -0.1f ? Vector2.Left : input.X > 0.1f ? Vector2.Right : _facing;
         }
 
-        Velocity = input.Normalized() * Speed;
+        if (_state == PlayerState.LightAttack)
+        {
+            UpdateAttack(dt);
+            Velocity = Vector2.Zero;
+        }
+        else
+        {
+            Velocity = input.Normalized() * Speed;
+            _state = input.LengthSquared() > 0.01f ? PlayerState.Walk : PlayerState.Idle;
+        }
+
         MoveAndSlide();
+        ClampToMovementBounds();
         ZIndex = Mathf.RoundToInt(GlobalPosition.Y);
 
         if (Input.IsActionJustPressed("attack_light") && _attackCooldown <= 0f)
         {
-            Attack();
+            StartLightAttack();
         }
 
         if (_attackSlash is not null)
@@ -48,28 +84,61 @@ public partial class PlayerController : CharacterBody2D
             _attackSlash.Visible = _slashTimer > 0f;
             _attackSlash.Scale = new Vector2(_facing.X, 1f);
         }
+
+        UpdateVisualState();
     }
 
-    private void Attack()
+    private void StartLightAttack()
     {
+        _state = PlayerState.LightAttack;
         _attackCooldown = AttackCooldownSeconds;
-        _slashTimer = 0.12f;
+        _attackTimer = AttackStartupSeconds + AttackActiveSeconds + AttackRecoverySeconds;
+        _slashTimer = AttackActiveSeconds + AttackRecoverySeconds;
+        _hitEnemiesThisAttack.Clear();
+        SetAttackHitboxEnabled(false);
+    }
 
-        foreach (var node in GetTree().GetNodesInGroup("enemy"))
+    private void UpdateAttack(float dt)
+    {
+        _attackTimer = Mathf.Max(0f, _attackTimer - dt);
+
+        var activeStartsAt = AttackRecoverySeconds;
+        var activeEndsAt = AttackRecoverySeconds + AttackActiveSeconds;
+        var isActive = _attackTimer > activeStartsAt && _attackTimer <= activeEndsAt;
+
+        SetAttackHitboxEnabled(isActive);
+        if (isActive)
         {
-            if (node is not EnemyDummy enemy)
+            ResolveActiveHitbox();
+        }
+
+        if (_attackTimer <= 0f)
+        {
+            SetAttackHitboxEnabled(false);
+            _state = PlayerState.Idle;
+        }
+    }
+
+    private void ResolveActiveHitbox()
+    {
+        if (_attackHitbox is null)
+        {
+            return;
+        }
+
+        _attackHitbox.Position = new Vector2(_facing.X * 34f, -8f);
+        _attackHitbox.ForceUpdateTransform();
+
+        foreach (var area in _attackHitbox.GetOverlappingAreas())
+        {
+            if (area.GetParent() is not EnemyDummy enemy || _hitEnemiesThisAttack.Contains(enemy.GetInstanceId()))
             {
                 continue;
             }
 
-            var toEnemy = enemy.GlobalPosition - GlobalPosition;
-            var inFront = Mathf.Sign(toEnemy.X == 0 ? _facing.X : toEnemy.X) == Mathf.Sign(_facing.X);
-            var closeEnough = Mathf.Abs(toEnemy.X) <= AttackRange && Mathf.Abs(toEnemy.Y) <= 24f;
-
-            if (inFront && closeEnough)
-            {
-                enemy.TakeHit(_facing * 42f);
-            }
+            _hitEnemiesThisAttack.Add(enemy.GetInstanceId());
+            enemy.TakeHit(new Vector2(_facing.X * 96f, -10f));
+            GetParent<PrototypeArena>()?.ApplyCombatImpact(4.5f, 0.04f);
         }
     }
 
@@ -90,7 +159,7 @@ public partial class PlayerController : CharacterBody2D
         };
         AddChild(_body);
 
-        AddChild(new Polygon2D
+        _paint = new Polygon2D
         {
             Name = "Paint",
             Color = new Color("#e0b75d"),
@@ -101,7 +170,8 @@ public partial class PlayerController : CharacterBody2D
                 new Vector2(7, -9),
                 new Vector2(-8, -5)
             }
-        });
+        };
+        AddChild(_paint);
 
         _attackSlash = new Polygon2D
         {
@@ -132,6 +202,64 @@ public partial class PlayerController : CharacterBody2D
         };
 
         AddChild(shape);
+    }
+
+    private void BuildAttackHitbox()
+    {
+        _attackHitboxShape = new CollisionShape2D
+        {
+            Name = "LightAttackShape",
+            Disabled = true,
+            Shape = new RectangleShape2D
+            {
+                Size = new Vector2(44, 24)
+            }
+        };
+
+        _attackHitbox = new Area2D
+        {
+            Name = "LightAttackHitbox",
+            Monitoring = true,
+            Monitorable = false,
+            CollisionLayer = 0,
+            CollisionMask = EnemyDummy.HurtboxCollisionLayer,
+            Position = new Vector2(34, -8)
+        };
+        _attackHitbox.AddChild(_attackHitboxShape);
+        AddChild(_attackHitbox);
+    }
+
+    private void SetAttackHitboxEnabled(bool enabled)
+    {
+        if (_attackHitboxShape is not null)
+        {
+            _attackHitboxShape.Disabled = !enabled;
+        }
+    }
+
+    private void ClampToMovementBounds()
+    {
+        GlobalPosition = new Vector2(
+            Mathf.Clamp(GlobalPosition.X, _movementBounds.Position.X, _movementBounds.End.X),
+            Mathf.Clamp(GlobalPosition.Y, _movementBounds.Position.Y, _movementBounds.End.Y));
+    }
+
+    private void UpdateVisualState()
+    {
+        if (_body is not null)
+        {
+            _body.Color = _state switch
+            {
+                PlayerState.LightAttack => new Color("#d4843e"),
+                PlayerState.Walk => new Color("#c46f35"),
+                _ => new Color("#a85f34")
+            };
+        }
+
+        if (_paint is not null)
+        {
+            _paint.Color = _state == PlayerState.LightAttack ? new Color("#f0d06a") : new Color("#e0b75d");
+        }
     }
 
     private static void EnsureInputMap()

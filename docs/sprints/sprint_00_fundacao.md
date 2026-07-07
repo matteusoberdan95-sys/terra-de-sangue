@@ -23,7 +23,7 @@ Criar a base limpa do projeto Terra Sangrada para que a Sprint 1 comece com dire
 
 ## Decisao ao fim da sprint
 
-A Sprint 0 so fecha depois da validacao visual no Godot.
+A Sprint 0 foi ultrapassada operacionalmente para iniciar a Sprint 1, mas a validacao visual no Godot continua pendente e deve ser feita junto da validacao da Sprint 1.
 
 ## Agentes envolvidos
 

@@ -25,7 +25,7 @@ Antes de editar codigo, leia:
 
 ## Sprint atual
 
-Sprint 0 ainda precisa de validacao visual no Godot. A proxima sprint e Sprint 1: combate prototipo.
+Sprint 1 esta implementada tecnicamente e precisa de validacao visual no Godot. A proxima etapa e rodar `scenes/Main.tscn` e confirmar movimento, ataque, knockback, hit pause, camera shake e limites de arena.
 
 ## Agentes
 
