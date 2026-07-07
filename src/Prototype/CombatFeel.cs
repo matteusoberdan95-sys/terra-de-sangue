@@ -23,6 +23,11 @@ public static class CombatFeel
         }
     }
 
+    public static void ApplyAirSlamImpact(PrototypeArena? arena)
+    {
+        arena?.ApplyCombatImpact(6.2f, 0.052f, 0.07f);
+    }
+
     public static void ApplyExecuteImpact(PrototypeArena? arena)
     {
         arena?.ApplyCombatImpact(8.5f, 0.085f, 0.05f);

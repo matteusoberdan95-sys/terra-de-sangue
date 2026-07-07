@@ -7,7 +7,7 @@ Este arquivo e a primeira leitura obrigatoria para qualquer agente trabalhando n
 - Projeto: `Terra Sangrada`.
 - Engine: Godot .NET 4.7.
 - Linguagem: C# / .NET 10.
-- Proximo foco: Sprint 19 golpes aereos (`docs/14_golpes_aereos.md`).
+- Proximo foco: Sprint 20 arsenal e arquearia (`docs/13_sistema_de_arsenal_e_arquearia.md`).
 
 ## Ordem de leitura
 

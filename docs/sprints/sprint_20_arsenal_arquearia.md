@@ -109,7 +109,7 @@ src/Prototype/
 
 ---
 
-## Proxima sprint (20)
+## Proxima sprint (21)
 
 - Tacape Tier 1 (memoria ou pickup narrativo).
 - Segundo artefato (Gancho ou Clava 1 uso).

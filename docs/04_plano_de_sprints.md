@@ -235,6 +235,8 @@ Slam, martelo aereo, corte no apice, investida apos pulo frontal.
 
 Ver `docs/14_golpes_aereos.md`.
 
+Status: validada em 2026-07-07.
+
 ## Sprint 20 - Arsenal, Arquearia e Bleed
 
 Aljava, flechas no chao, disparo com `R`, sangramento, 1 artefato consumivel, base de upgrade do tacape.

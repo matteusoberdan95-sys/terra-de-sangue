@@ -232,6 +232,12 @@ Registrar sempre:
 - Resultado: aprovado pelo usuario.
 - Conteudo validado: pulo frontal, combo J-J-J, finisher J-J-K, janela combo 0.30s.
 
+### 2026-07-07 - Sprint 19
+
+- Cena: `scenes/Main.tscn`
+- Resultado: aprovado pelo usuario.
+- Conteudo validado: corte no apice, slam descendente, martelo aereo, investida apos pulo frontal.
+
 ## Politica para Codex e Cursor
 
 Codex e Cursor podem implementar e compilar, mas nao devem declarar uma sprint como fechada sem registro de validacao visual no Godot.

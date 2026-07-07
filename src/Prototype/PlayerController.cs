@@ -45,7 +45,20 @@ public partial class PlayerController : CharacterBody2D
     private const float JumpVisualLift = 10f;
     private const float FrontJumpHorizontalArc = 72f;
     private const float FrontJumpLandingRecoverySeconds = 0.12f;
+    private const float AirSlamStaminaCost = 6f;
+    private const float AirHammerStaminaCost = 12f;
+    private const float AirSlamLandingRecoverySeconds = 0.14f;
+    private const float AirHammerLandingRecoverySeconds = 0.22f;
+    private const float AirSlamRadius = 28f;
+    private const float AirDiveSlamRadius = 34f;
     private static readonly Rect2 DefaultMovementBounds = new(new Vector2(-380, 124), new Vector2(760, 92));
+
+    private enum AirAttackPending
+    {
+        None,
+        Slam,
+        Hammer
+    }
 
     private enum PlayerState
     {
@@ -109,6 +122,10 @@ public partial class PlayerController : CharacterBody2D
     private bool _isFrontJump;
     private float _jumpLandingRecovery;
     private int _nextComboHit = 1;
+    private bool _airLightUsed;
+    private bool _airHeavyUsed;
+    private float _airApexAttackTimer;
+    private AirAttackPending _airAttackPending = AirAttackPending.None;
 
     public Rect2 MovementBounds
     {
@@ -292,7 +309,11 @@ public partial class PlayerController : CharacterBody2D
 
         if (Input.IsActionJustPressed("attack_light") && _attackCooldown <= 0f)
         {
-            if (_state == PlayerState.Run)
+            if (_state == PlayerState.Jump)
+            {
+                TryAirLightAttack();
+            }
+            else if (_state == PlayerState.Run)
             {
                 StartRunAttack();
             }
@@ -304,7 +325,11 @@ public partial class PlayerController : CharacterBody2D
 
         if (Input.IsActionJustPressed("attack_heavy") && _attackCooldown <= 0f)
         {
-            if (CanComboHeavyFinisher())
+            if (_state == PlayerState.Jump)
+            {
+                TryAirHeavyAttack();
+            }
+            else if (CanComboHeavyFinisher())
             {
                 StartComboHeavyFinisher();
             }
@@ -340,6 +365,10 @@ public partial class PlayerController : CharacterBody2D
         _jumpTimer = 0f;
         _jumpLandingRecovery = 0f;
         _nextComboHit = 1;
+        _airLightUsed = false;
+        _airHeavyUsed = false;
+        _airApexAttackTimer = 0f;
+        _airAttackPending = AirAttackPending.None;
         _facingX = 1f;
         _invulnerabilityTimer = 0.8f;
         GlobalPosition = _spawnPosition;
@@ -348,17 +377,18 @@ public partial class PlayerController : CharacterBody2D
 
     private bool CanStartLightAttack()
     {
-        return _state is PlayerState.Idle or PlayerState.Walk || _dashAttackWindow > 0f || _comboWindow > 0f;
+        return _jumpLandingRecovery <= 0f
+            && (_state is PlayerState.Idle or PlayerState.Walk || _dashAttackWindow > 0f || _comboWindow > 0f);
     }
 
     private bool CanStartHeavyAttack()
     {
-        return _state is PlayerState.Idle or PlayerState.Walk;
+        return _jumpLandingRecovery <= 0f && _state is PlayerState.Idle or PlayerState.Walk;
     }
 
     private bool CanComboHeavyFinisher()
     {
-        return _comboWindow > 0f && _nextComboHit == 3 && _state is PlayerState.Idle or PlayerState.Walk;
+        return _jumpLandingRecovery <= 0f && _comboWindow > 0f && _nextComboHit == 3 && _state is PlayerState.Idle or PlayerState.Walk;
     }
 
     private int ResolveComboStep()
@@ -697,7 +727,79 @@ public partial class PlayerController : CharacterBody2D
         _jumpStartDepthY = GlobalPosition.Y;
         _jumpStartX = GlobalPosition.X;
         _runTimer = 0f;
+        _airLightUsed = false;
+        _airHeavyUsed = false;
+        _airApexAttackTimer = 0f;
+        _airAttackPending = AirAttackPending.None;
         CombatAudio.Get(this)?.PlayJump();
+        return true;
+    }
+
+    private float JumpProgress => 1f - (_jumpTimer / JumpDurationSeconds);
+
+    private bool TryAirLightAttack()
+    {
+        if (_state != PlayerState.Jump || _airHeavyUsed)
+        {
+            return false;
+        }
+
+        SnapFacingForAttack(Input.GetVector("move_left", "move_right", "move_up", "move_down"));
+        var progress = JumpProgress;
+
+        if (progress < 0.5f && !_airLightUsed)
+        {
+            _airLightUsed = true;
+            _airApexAttackTimer = 0.1f;
+            _hitEnemiesThisAttack.Clear();
+            PlaySwingSfx(false, false);
+            return true;
+        }
+
+        if (progress is >= 0.5f and < 0.95f && _airAttackPending == AirAttackPending.None && !_airLightUsed)
+        {
+            if (_stamina < AirSlamStaminaCost)
+            {
+                _staminaBlockedFlash = 0.25f;
+                return false;
+            }
+
+            SpendStamina(AirSlamStaminaCost);
+            _airHeavyUsed = true;
+            _airAttackPending = AirAttackPending.Slam;
+            _slashTimer = 0.2f;
+            PlaySwingSfx(false, true);
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryAirHeavyAttack()
+    {
+        if (_state != PlayerState.Jump || _airHeavyUsed || _airLightUsed)
+        {
+            return false;
+        }
+
+        var progress = JumpProgress;
+        if (progress is < 0.45f or >= 0.9f)
+        {
+            return false;
+        }
+
+        if (_stamina < AirHammerStaminaCost)
+        {
+            _staminaBlockedFlash = 0.25f;
+            return false;
+        }
+
+        SnapFacingForAttack(Input.GetVector("move_left", "move_right", "move_up", "move_down"));
+        SpendStamina(AirHammerStaminaCost);
+        _airHeavyUsed = true;
+        _airAttackPending = AirAttackPending.Hammer;
+        _slashTimer = 0.24f;
+        PlaySwingSfx(true, false);
         return true;
     }
 
@@ -719,10 +821,66 @@ public partial class PlayerController : CharacterBody2D
             _visualRig.Position = new Vector2(0f, -arc * JumpVisualLift);
         }
 
+        UpdateAirApexAttack(dt);
+
         if (_jumpTimer > 0f)
         {
             return;
         }
+
+        LandFromJump();
+    }
+
+    private void UpdateAirApexAttack(float dt)
+    {
+        if (_airApexAttackTimer <= 0f)
+        {
+            return;
+        }
+
+        _airApexAttackTimer = Mathf.Max(0f, _airApexAttackTimer - dt);
+        if (_attackHitbox is null || _attackHitboxShape?.Shape is not RectangleShape2D rectangle)
+        {
+            return;
+        }
+
+        rectangle.Size = new Vector2(40f, 20f);
+        _attackHitbox.Position = new Vector2(_facingX * 28f, -22f);
+        _attackHitbox.ForceUpdateTransform();
+        SetAttackHitboxEnabled(true);
+        ResolveAirApexHits();
+
+        if (_airApexAttackTimer <= 0f)
+        {
+            SetAttackHitboxEnabled(false);
+        }
+    }
+
+    private void ResolveAirApexHits()
+    {
+        if (_attackHitbox is null)
+        {
+            return;
+        }
+
+        foreach (var area in _attackHitbox.GetOverlappingAreas())
+        {
+            if (area.GetParent() is not EnemyBase enemy || _hitEnemiesThisAttack.Contains(enemy.GetInstanceId()))
+            {
+                continue;
+            }
+
+            _hitEnemiesThisAttack.Add(enemy.GetInstanceId());
+            var impulse = new Vector2(_facingX * 72f, -6f);
+            enemy.TakeHit(impulse, PlayerAttackKind.Light);
+            CombatFeel.ApplyPlayerAttackImpact(GetParent<PrototypeArena>(), PlayerAttackKind.Light);
+        }
+    }
+
+    private void LandFromJump()
+    {
+        var wasFrontJump = _isFrontJump;
+        var pending = _airAttackPending;
 
         GlobalPosition = new Vector2(GlobalPosition.X, _jumpStartDepthY);
         if (_visualRig is not null)
@@ -731,9 +889,75 @@ public partial class PlayerController : CharacterBody2D
         }
 
         Velocity = Vector2.Zero;
-        _jumpLandingRecovery = _isFrontJump ? FrontJumpLandingRecoverySeconds : 0f;
+        if (pending != AirAttackPending.None)
+        {
+            ResolveAirLandingAttack(pending, wasFrontJump);
+            _attackCooldown = 0.22f;
+        }
+
+        _jumpLandingRecovery = pending switch
+        {
+            AirAttackPending.Hammer => AirHammerLandingRecoverySeconds,
+            AirAttackPending.Slam => AirSlamLandingRecoverySeconds,
+            _ => wasFrontJump ? FrontJumpLandingRecoverySeconds : 0f
+        };
+
+        _airAttackPending = AirAttackPending.None;
         _isFrontJump = false;
         _state = PlayerState.Idle;
+    }
+
+    private void ResolveAirLandingAttack(AirAttackPending kind, bool diving)
+    {
+        var radius = kind == AirAttackPending.Slam && diving ? AirDiveSlamRadius : AirSlamRadius;
+        var attackKind = kind == AirAttackPending.Hammer ? PlayerAttackKind.Heavy : PlayerAttackKind.ComboFinisher;
+        var impulseX = kind == AirAttackPending.Hammer ? 140f : diving ? 118f : 104f;
+        var impulseY = kind == AirAttackPending.Hammer ? -20f : -16f;
+        var impulseScale = kind == AirAttackPending.Hammer ? 1.35f : diving ? 1.28f : 1.15f;
+        var impulse = new Vector2(_facingX * impulseX, impulseY) * impulseScale;
+        var hitAny = false;
+
+        foreach (var node in GetTree().GetNodesInGroup("enemy"))
+        {
+            if (node is not EnemyBase enemy || !enemy.IsAlive)
+            {
+                continue;
+            }
+
+            if (GlobalPosition.DistanceTo(enemy.GlobalPosition) > radius + 12f)
+            {
+                continue;
+            }
+
+            enemy.TakeHit(impulse, attackKind);
+            if (kind == AirAttackPending.Hammer)
+            {
+                enemy.TakeHit(impulse * 0.35f, PlayerAttackKind.Heavy);
+            }
+            else if (diving)
+            {
+                enemy.TakeHit(impulse * 0.45f, PlayerAttackKind.ComboFinisher);
+            }
+
+            hitAny = true;
+        }
+
+        if (kind == AirAttackPending.Hammer)
+        {
+            CombatFeel.ApplyPlayerAttackImpact(GetParent<PrototypeArena>(), PlayerAttackKind.Heavy);
+        }
+        else
+        {
+            CombatFeel.ApplyAirSlamImpact(GetParent<PrototypeArena>());
+        }
+
+        if (hitAny)
+        {
+            CombatAudio.Get(this)?.PlayAirSlam(kind == AirAttackPending.Hammer);
+        }
+
+        _slashTimer = 0.12f;
+        _visualAnimator?.PulseAttack();
     }
 
     private void TryDoubleTapRun(float directionX)
@@ -1121,9 +1345,11 @@ public partial class PlayerController : CharacterBody2D
         var dodgeFlash = _state == PlayerState.Dodge && _dodgeInvulnTimer > 0f;
         var dashFlash = _state == PlayerState.Dash && _dashInvulnTimer > 0f;
         var jumpFlash = _state == PlayerState.Jump;
+        var slamReady = _state == PlayerState.Jump && _airAttackPending == AirAttackPending.Slam;
         _pixelSprite?.SpeedScale = _state == PlayerState.Run ? 1.55f : 1f;
         _pixelSprite?.Modulate = dodgeFlash ? new Color(0.85f, 0.92f, 1f, 0.82f)
             : dashFlash ? new Color(1f, 0.94f, 0.82f, 0.88f)
+            : slamReady ? new Color(1f, 0.88f, 0.78f)
             : jumpFlash ? new Color(0.96f, 0.98f, 1f)
             : Colors.White;
         _pixelSprite?.UpdatePresentation(

@@ -136,6 +136,14 @@ public partial class CombatAudio : Node
         Play(_swingPlayer, Load($"{SfxRoot}/combat/jump.wav", PlaceholderSfx.CreateJumpHop), 1f);
     }
 
+    public void PlayAirSlam(bool heavy)
+    {
+        var stream = heavy
+            ? Load($"{SfxRoot}/combat/air_hammer_land.wav", PlaceholderSfx.CreateAirSlamLand)
+            : Load($"{SfxRoot}/combat/air_slam_land.wav", PlaceholderSfx.CreateAirSlamLand);
+        Play(_hitPlayer, stream, heavy ? 0.96f : 1.04f);
+    }
+
     private static AudioStream Load(string path, System.Func<AudioStream> fallback)
     {
         return AudioLibrary.Resolve(path, fallback);
