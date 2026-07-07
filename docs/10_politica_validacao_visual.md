@@ -14,12 +14,21 @@ E obrigatorio abrir o projeto no Godot e validar visualmente.
 C:\Users\mober\OneDrive\Desktop\fauna-do-sangue
 ```
 
-2. Compilar localmente.
-3. Abrir no Godot local.
-4. Validar visualmente a cena afetada.
+2. Compilar localmente (`dotnet build`).
+3. **Abrir o editor Godot** — obrigatorio, nao basta build nem execucao headless.
+4. Validar visualmente a cena afetada (F5 em `Main.tscn` ou cena da sprint).
 5. Registrar o resultado nos documentos da sprint.
 6. Somente depois criar commit e subir para o GitHub.
 7. Somente depois iniciar a proxima sprint.
+
+### Regra do editor Godot (nao negociavel)
+
+Toda sprint concluida ou ajuste de gameplay/cena/transicao de fase exige **abrir o programa Godot** no caminho local documentado abaixo.
+
+- **Nao** considerar tarefa fechada so com `dotnet build`.
+- **Nao** substituir o editor por `--headless` quando o assunto for fluxo de fase, combate ou UI.
+- O agente (Codex/Cursor) deve executar `Start-Process` para abrir o editor **antes** de pedir validacao ao usuario.
+- Ajustes como transicao Aldeia -> Capitao -> Mata precisam de teste no editor, nao apenas compilacao.
 
 Nunca subir para o repositorio remoto antes da validacao visual quando a alteracao afetar gameplay, cena, camera, arte ou UI.
 

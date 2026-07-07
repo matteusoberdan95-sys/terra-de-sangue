@@ -4,7 +4,8 @@ public enum EnemyVisualArchetype
 {
     Mercenary,
     Brute,
-    MiniBoss
+    MiniBoss,
+    IronCaptain
 }
 
 public sealed class CharacterSilhouetteParts
@@ -24,6 +25,7 @@ public static class SilhouetteArt
         {
             EnemyVisualArchetype.Brute => BuildBrute(parent, bodyTone),
             EnemyVisualArchetype.MiniBoss => BuildMiniBoss(parent, bodyTone),
+            EnemyVisualArchetype.IronCaptain => BuildMiniBoss(parent, bodyTone),
             _ => BuildMercenary(parent, bodyTone)
         };
     }

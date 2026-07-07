@@ -15,7 +15,7 @@ public partial class PhaseDirector : Node
     private const float IntroSeconds = 2.8f;
     private const float InterEncounterDelaySeconds = 1.3f;
     private const float OutroSeconds = 4f;
-    private static readonly Vector2 MemorySpawnPosition = new(480, 164);
+    private static readonly Vector2 MemorySpawnPosition = new(280, 164);
     private static readonly Vector2 MiniBossSpawnPosition = new(320, 160);
 
     private enum PhaseState
@@ -39,6 +39,7 @@ public partial class PhaseDirector : Node
     private int _activeEncounterNumber;
     private bool _encounterActive;
     private bool _betweenEncounters;
+    private bool _phaseTransitionTriggered;
     private float _timer;
 
     public override void _Ready()
@@ -83,16 +84,18 @@ public partial class PhaseDirector : Node
                 break;
 
             case PhaseState.AwaitingMemory:
-                UpdateStatus("Uma memoria pulsa entre as ruinas.");
+                UpdateStatus("Memoria a direita — aproxime-se e encoste");
                 break;
 
             case PhaseState.Outro:
-                if (_timer <= 0f)
+                UpdateStatus($"Capitao do Ferro em {Mathf.CeilToInt(Mathf.Max(0f, _timer))}s");
+                if (!_phaseTransitionTriggered && _timer <= 0f)
                 {
+                    _phaseTransitionTriggered = true;
                     _state = PhaseState.Complete;
                     ShowBanner("Fase concluida", "Aldeia em Cinzas foi atravessada. O Capitao do Ferro espera adiante.");
-                    UpdateStatus("Fase 1 — concluida");
-                    GetTree().CallGroup("game_flow", nameof(GameRoot.OnAldeiaPhaseComplete));
+                    UpdateStatus("Entrando na arena do Capitao...");
+                    GameFlow.RequestAldeiaComplete(this);
                 }
 
                 break;

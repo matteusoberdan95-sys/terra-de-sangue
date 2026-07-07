@@ -265,4 +265,10 @@ Ver `docs/sprints/sprint_23_golpes_de_corrida.md`.
 
 Status: validada em 2026-07-07.
 
+## Sprint 24 - Fase 1 Vertical Slice
+
+Arco Aldeia → Capitao → Mata Fechada com progressao, sprite do chefe e arsenal entre fases.
+
+Ver `docs/sprints/sprint_24_fase_1_vertical_slice.md`.
+
 ## Sprint futura - SFX Custom

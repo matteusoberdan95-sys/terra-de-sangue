@@ -4,17 +4,18 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprint 23 validada. Proximo: SFX custom ou expansao de conteudo (ver `docs/04_plano_de_sprints.md`).
+Sprint 24 **validada** — aguardando commit e push.
 
-## Fechamento recente
+## Arco jogavel
 
-- Sprint 23: golpes de corrida `J`/`K` estilo Final Fight. Validada 2026-07-07.
-- Sprint 22: sprites bruto e Sargento. Validada 2026-07-07.
+1. **Aldeia em Cinzas** — 3 encontros + Sargento + memoria (Tacape T1)
+2. **Capitao do Ferro** — chefe com sprite proprio + flechas
+3. **Mata Fechada** — 3 encontros + memoria final + tela de conclusao (`R` rejoga)
 
-## Controles atuais
+## Controles
 
-- `WASD`, `J`, `K`, `E`
-- `Space` / `W`+`A`/`D`+`Space`: pulo / pulo frontal
-- `Shift`: dash defensivo | `A`/`D` 2x: corrida (drena stamina)
-- **Corrida + `J`**: soco corrido | **Corrida + `K`**: golpe pesado (6 stamina)
-- `R`: arco | `U`: artefato
+Ver sprints 20–23 (`J`/`K` corrida, `R` arco, `Shift` dash, etc.).
+
+## Proximo passo
+
+Commit + push da Sprint 24. Depois, planejar proxima regiao do prototipo.

@@ -3,13 +3,19 @@ using Godot;
 [GlobalClass]
 public partial class MataFechadaArena : PrototypeArena
 {
+    protected override bool ShouldSpawnPhaseDirector => false;
+
     public override void _Ready()
     {
         base._Ready();
         ApplyForestPalette();
         BuildVegetation();
-        GetNodeOrNull<PhaseDirector>("PhaseDirector")?.QueueFree();
         AddChild(new MataFechadaDirector { Name = "MataFechadaDirector" });
+    }
+
+    protected override void ConfigurePlayerLoadout(PlayerController player)
+    {
+        player.AddArrows(2);
     }
 
     private void ApplyForestPalette()

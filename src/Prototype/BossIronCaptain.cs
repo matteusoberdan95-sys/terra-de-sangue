@@ -13,49 +13,35 @@ public partial class BossIronCaptain : EnemyBase
     private AttackPattern _currentPattern = AttackPattern.ChainSwing;
     private AttackPattern _nextPattern = AttackPattern.IronCrush;
 
-    protected override int MaxHealthValue => 18;
-    protected override float ApproachSpeed => 30f;
+    protected override int MaxHealthValue => 20;
+    protected override float ApproachSpeed => 28f;
     protected override float AttackRange => 44f;
-    protected override float AttackCooldownSeconds => 1.15f;
+    protected override float AttackCooldownSeconds => 1.2f;
     protected override int AttackDamage => 2;
     protected override Color BodyColor => new("#2e2a30");
     protected override Color ApproachColor => new("#3d3840");
     protected override Color AttackColor => new("#b51f1f");
-    protected override EnemyVisualArchetype VisualArchetype => EnemyVisualArchetype.MiniBoss;
+    protected override EnemyVisualArchetype VisualArchetype => EnemyVisualArchetype.IronCaptain;
+
+    protected override bool UsePixelSprite => true;
 
     public override void _Ready()
     {
         base._Ready();
         AddToGroup("boss");
-        Scale = new Vector2(1.42f, 1.42f);
+        Scale = new Vector2(1.38f, 1.38f);
+    }
 
-        var rig = GetNode<Node2D>("VisualRig");
-        rig.AddChild(new Polygon2D
+    protected override void OnDefeated()
+    {
+        foreach (var node in GetTree().GetNodesInGroup("boss_director"))
         {
-            Name = "IronChain",
-            ZIndex = 15,
-            Color = new Color("#5f6970"),
-            Polygon = new[]
+            if (node is BossDirector director)
             {
-                new Vector2(-18, -6),
-                new Vector2(18, -10),
-                new Vector2(16, -2),
-                new Vector2(-16, 2)
+                director.OnBossDefeated();
+                return;
             }
-        });
-        rig.AddChild(new Polygon2D
-        {
-            Name = "CaptainCape",
-            ZIndex = 1,
-            Color = new Color("#560f0b", 0.8f),
-            Polygon = new[]
-            {
-                new Vector2(-10, 4),
-                new Vector2(10, 2),
-                new Vector2(14, 18),
-                new Vector2(-12, 16)
-            }
-        });
+        }
     }
 
     protected override void OnAttackPatternStarted()
@@ -71,9 +57,9 @@ public partial class BossIronCaptain : EnemyBase
 
     protected override float GetAttackStartup() => _currentPattern switch
     {
-        AttackPattern.IronCrush => 0.42f,
-        AttackPattern.ChargeLunge => 0.14f,
-        _ => 0.24f
+        AttackPattern.IronCrush => 0.48f,
+        AttackPattern.ChargeLunge => 0.16f,
+        _ => 0.26f
     };
 
     protected override float GetAttackActive() => _currentPattern switch
@@ -115,7 +101,7 @@ public partial class BossIronCaptain : EnemyBase
     {
         if (_currentPattern == AttackPattern.ChargeLunge)
         {
-            Velocity = new Vector2(FacingDirection.X * 110f, 0f);
+            Velocity = new Vector2(FacingDirection.X * 96f, 0f);
         }
     }
 }

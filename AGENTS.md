@@ -29,6 +29,7 @@ Para arte e narrativa, ler tambem:
 - Trabalhar por sprint.
 - Fazer alteracoes primeiro na copia local `C:\Users\mober\OneDrive\Desktop\fauna-do-sangue`.
 - Nao adicionar sistemas grandes fora do escopo da sprint atual.
+- **Abrir o editor Godot** apos build em qualquer alteracao de gameplay, cena, transicao de fase ou UI — ver `docs/10_politica_validacao_visual.md` (regra do editor, nao negociavel).
 - Validar visualmente no Godot antes de fechar uma sprint.
 - Apos qualquer modificacao em gameplay, cena, camera, arte ou UI, registrar validacao visual conforme `docs/10_politica_validacao_visual.md`.
 - So fazer commit/push depois da validacao visual local quando a alteracao afetar gameplay, cena, camera, arte ou UI.
@@ -44,6 +45,14 @@ Para arte e narrativa, ler tambem:
 dotnet restore TerraSangrada.csproj
 dotnet build TerraSangrada.csproj --no-restore
 ```
+
+Abrir o editor Godot (obrigatorio apos alteracoes de gameplay/cena):
+
+```powershell
+Start-Process -FilePath 'C:\Users\mober\OneDrive\Desktop\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64\Godot_v4.7-stable_mono_win64.exe' -ArgumentList '--path','C:\Users\mober\OneDrive\Desktop\fauna-do-sangue'
+```
+
+Depois pressionar **F5** em `scenes/Main.tscn` para validar.
 
 Observacao: no ambiente Codex, o build pode precisar de permissao para ler a configuracao NuGet do usuario.
 

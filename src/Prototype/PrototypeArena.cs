@@ -37,7 +37,11 @@ public partial class PrototypeArena : Node2D
         BuildBackground();
         BuildPlayAreaGuides();
         SpawnPlayer();
-        BuildPhaseDirector();
+        if (_player is not null)
+        {
+            ConfigurePlayerLoadout(_player);
+        }
+        BuildPhaseDirectorIfNeeded();
         BuildImpactFeedback();
         BuildCombatAudio();
         CacheAmbientParticles();
@@ -209,6 +213,10 @@ public partial class PrototypeArena : Node2D
         AddChild(_player);
     }
 
+    protected virtual void ConfigurePlayerLoadout(PlayerController player)
+    {
+    }
+
     public void SpawnEnemy(string kind, Vector2 position)
     {
         EnemyBase enemy = kind switch
@@ -233,10 +241,19 @@ public partial class PrototypeArena : Node2D
 
     public void SpawnMemoryPickup(Vector2 position)
     {
+        SpawnMemoryPickup(position, "mascara_quebrada", "Memoria: Mascara quebrada",
+            "Fragmento da aldeia. Ainda guarda o rosto de alguem que nao voltou.");
+    }
+
+    public void SpawnMemoryPickup(Vector2 position, string memoryId, string title, string memoryText)
+    {
         AddChild(new MemoryPickup
         {
-            Name = "BrokenMaskMemory",
-            GlobalPosition = position
+            Name = "MemoryPickup",
+            GlobalPosition = position,
+            MemoryId = memoryId,
+            MemoryTitle = title,
+            MemoryText = memoryText
         });
     }
 
@@ -279,6 +296,18 @@ public partial class PrototypeArena : Node2D
         }
 
         AddChild(new CombatAudio { Name = "CombatAudio" });
+    }
+
+    protected virtual bool ShouldSpawnPhaseDirector => true;
+
+    protected virtual void BuildPhaseDirectorIfNeeded()
+    {
+        if (!ShouldSpawnPhaseDirector)
+        {
+            return;
+        }
+
+        BuildPhaseDirector();
     }
 
     private void BuildPhaseDirector()

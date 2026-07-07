@@ -48,6 +48,7 @@ public abstract partial class EnemyBase : CharacterBody2D
     private Vector2 _facing = Vector2.Left;
     private bool _attackWindUpPulsed;
     private bool _telegraphSfxPlayed;
+    private bool _defeatNotified;
     private readonly BleedStatus _bleed = new();
     private float _bleedTrailTimer;
 
@@ -87,6 +88,21 @@ public abstract partial class EnemyBase : CharacterBody2D
     protected virtual float GetAttackReach() => 30f;
     protected virtual void OnAttackPatternStarted() { }
     protected virtual void OnAttackActiveFrame(float dt) { }
+
+    protected virtual void OnDefeated()
+    {
+    }
+
+    private void NotifyDefeated()
+    {
+        if (_defeatNotified)
+        {
+            return;
+        }
+
+        _defeatNotified = true;
+        OnDefeated();
+    }
 
     public override void _Ready()
     {
@@ -142,6 +158,7 @@ public abstract partial class EnemyBase : CharacterBody2D
             ReleaseAttackSlot();
             ApplyDeathFeedback(attackKind);
             ZIndex += 1;
+            NotifyDefeated();
             GetTree().CreateTimer(0.38).Timeout += QueueFree;
         }
     }
@@ -154,6 +171,10 @@ public abstract partial class EnemyBase : CharacterBody2D
         }
 
         _bleed.Apply(level);
+        if (IsInGroup("boss"))
+        {
+            _bleed.ScaleDuration(0.5f);
+        }
         UpdateWoundVisuals();
     }
 
@@ -197,6 +218,7 @@ public abstract partial class EnemyBase : CharacterBody2D
                 ReleaseAttackSlot();
                 ApplyDeathFeedback(PlayerAttackKind.Light);
                 ZIndex += 1;
+                NotifyDefeated();
                 GetTree().CreateTimer(0.38).Timeout += QueueFree;
                 return;
             }
@@ -226,6 +248,7 @@ public abstract partial class EnemyBase : CharacterBody2D
         ApplyDeathFeedback(PlayerAttackKind.Execute, style);
         Modulate = new Color("#5a2020");
         ZIndex += 1;
+        NotifyDefeated();
         GetTree().CreateTimer(0.5).Timeout += QueueFree;
     }
 
@@ -546,6 +569,7 @@ public abstract partial class EnemyBase : CharacterBody2D
             EnemyVisualArchetype.Mercenary => MercenarySpriteArt.BuildSpriteFrames(),
             EnemyVisualArchetype.Brute => BruteSpriteArt.BuildSpriteFrames(),
             EnemyVisualArchetype.MiniBoss => MiniBossSpriteArt.BuildSpriteFrames(),
+            EnemyVisualArchetype.IronCaptain => IronCaptainSpriteArt.BuildSpriteFrames(),
             _ => null
         };
         if (frames is null)
@@ -559,6 +583,7 @@ public abstract partial class EnemyBase : CharacterBody2D
         {
             EnemyVisualArchetype.Brute => new Vector2(0, -6),
             EnemyVisualArchetype.MiniBoss => new Vector2(0, -8),
+            EnemyVisualArchetype.IronCaptain => new Vector2(0, -10),
             _ => new Vector2(0, -4)
         });
 

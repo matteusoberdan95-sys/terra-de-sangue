@@ -89,6 +89,11 @@ public sealed class BleedStatus
         _damageAccumulator = 0f;
     }
 
+    public void ScaleDuration(float factor)
+    {
+        TimeRemaining *= Mathf.Clamp(factor, 0f, 1f);
+    }
+
     private static BleedLevel StackLevel(BleedLevel current, BleedLevel incoming)
     {
         if (incoming == BleedLevel.Hemorrhage)

@@ -63,8 +63,17 @@ public partial class MemoryPickup : Area2D
         CombatAudio.Get(this)?.PlayMemoryCollect();
         Visible = false;
 
-        var director = GetTree().GetFirstNodeInGroup("phase_director") as PhaseDirector;
-        director?.OnMemoryCollected(MemoryId, MemoryTitle, MemoryText);
+        var phaseDirector = GetTree().GetFirstNodeInGroup("phase_director") as PhaseDirector;
+        phaseDirector?.OnMemoryCollected(MemoryId, MemoryTitle, MemoryText);
+
+        foreach (var node in GetTree().GetNodesInGroup("mata_director"))
+        {
+            if (node is MataFechadaDirector mataDirector)
+            {
+                mataDirector.OnMemoryCollected(MemoryId, MemoryTitle, MemoryText);
+            }
+        }
+
         QueueFree();
     }
 

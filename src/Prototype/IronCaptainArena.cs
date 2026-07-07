@@ -3,11 +3,22 @@ using Godot;
 [GlobalClass]
 public partial class IronCaptainArena : PrototypeArena
 {
+    protected override bool ShouldSpawnPhaseDirector => false;
+
     public override void _Ready()
     {
         base._Ready();
         BuildIronDecor();
         BuildBossDirector();
+        SpawnArrowPickup(new Vector2(160, 158), 2);
+    }
+
+    protected override void ConfigurePlayerLoadout(PlayerController player)
+    {
+        if (WeaponProgression.TacapeTier >= 1)
+        {
+            player.AddArrows(2);
+        }
     }
 
     private void BuildIronDecor()
@@ -57,8 +68,6 @@ public partial class IronCaptainArena : PrototypeArena
             return;
         }
 
-        var phase = GetNodeOrNull<PhaseDirector>("PhaseDirector");
-        phase?.QueueFree();
         AddChild(new BossDirector { Name = "BossDirector" });
     }
 }
