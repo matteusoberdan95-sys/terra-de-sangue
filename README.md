@@ -87,6 +87,8 @@ Nunca iniciar uma nova sprint com a anterior apenas validada localmente, mas ain
 
 ## Sprint Atual
 
-Sprints 6-10 concluidas e no GitHub. Aguardando validacao visual do usuario.
+Sprints 6-10 validadas e fechadas no GitHub (2026-07-07).
 
 Progressao: Aldeia em Cinzas -> Capitao do Ferro -> Mata Fechada.
+
+Proximo foco: gore avancado ou balanceamento fino.

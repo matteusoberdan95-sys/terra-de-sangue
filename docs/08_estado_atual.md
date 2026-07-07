@@ -4,12 +4,15 @@ Ultima atualizacao: 2026-07-07.
 
 ## Sprint atual
 
-Sprints 6-10 implementadas localmente no loop autonomo.
+Sprints 6-10 validadas visualmente e fechadas no remoto.
 
 ## Fechamento recente
 
-- Sprint 6: `a880c97` — Capitao do Ferro.
-- Sprints 7-10: implementadas, aguardando validacao visual do usuario.
+- Sprint 6: `a880c97` — Capitao do Ferro. Validada 2026-07-07.
+- Sprint 7: `5724cf1` — Gore e execucoes. Validada 2026-07-07.
+- Sprint 8: `5724cf1` — Kit do jogador. Validada 2026-07-07.
+- Sprint 9: `c4e08da` — Mata Fechada. Validada 2026-07-07.
+- Sprint 10: `c31f43b` — HUD e progressao. Validada 2026-07-07.
 
 ## Progressao do prototipo
 
@@ -26,4 +29,4 @@ Sprints 6-10 implementadas localmente no loop autonomo.
 
 ## Proximo passo
 
-Validar visualmente no Godot e ajustar balanceamento do chefe e execucoes.
+Iniciar sprint futura de gore avancado ou balanceamento fino do chefe e execucoes.

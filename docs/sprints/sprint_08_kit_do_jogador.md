@@ -10,3 +10,21 @@
 
 - `J`: ataque leve / segundo golpe do combo.
 - `K`: ataque pesado.
+
+## Registro de validacao visual
+
+Status atual: validado localmente no Godot em 2026-07-07. Aprovado pelo usuario.
+
+Resultado: aprovado pelo usuario em 2026-07-07.
+
+Cena para validar:
+
+```text
+scenes/Main.tscn
+```
+
+Checklist de teste interativo:
+
+- `J` ataque leve conecta.
+- `J`+`J` combo de 2 golpes na janela.
+- `K` ataque pesado com feedback diferenciado.

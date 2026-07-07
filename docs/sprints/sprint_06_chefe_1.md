@@ -16,7 +16,25 @@ Criar o Capitao do Ferro como primeiro chefe memoravel com arena propria e recom
 
 - Build C# sem erros.
 - Godot carrega `IronCaptainArena` e `BossIronCaptain`.
-- Validacao tecnica automatica; interativa pendente para o usuario.
+
+## Registro de validacao visual
+
+Status atual: validado localmente no Godot em 2026-07-07. Aprovado pelo usuario.
+
+Resultado: aprovado pelo usuario em 2026-07-07.
+
+Cena para validar:
+
+```text
+scenes/Main.tscn
+```
+
+Checklist de teste interativo:
+
+- Transicao Aldeia -> arena do chefe.
+- Intro do Capitao do Ferro.
+- Padroes corrente, esmagamento e investida legiveis.
+- Vitoria desbloqueia memoria e proxima fase.
 
 ## Agentes
 
