@@ -3,7 +3,7 @@ using Godot;
 [GlobalClass]
 public partial class EnemyMiniBoss : EnemyBase
 {
-    protected override int MaxHealth => 10;
+    protected override int MaxHealthValue => 10;
     protected override float ApproachSpeed => 34f;
     protected override float AttackRange => 40f;
     protected override float AttackCooldownSeconds => 0.95f;

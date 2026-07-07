@@ -3,7 +3,7 @@ using Godot;
 [GlobalClass]
 public partial class EnemyBrute : EnemyBase
 {
-    protected override int MaxHealth => 6;
+    protected override int MaxHealthValue => 6;
     protected override float ApproachSpeed => 28f;
     protected override float AttackRange => 38f;
     protected override float AttackCooldownSeconds => 1.5f;

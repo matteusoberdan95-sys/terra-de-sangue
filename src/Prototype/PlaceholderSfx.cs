@@ -4,6 +4,11 @@ public static class PlaceholderSfx
 {
     private const int MixRate = 22050;
 
+    public static AudioStreamWav CreateExecutionCrunch()
+    {
+        return CreateBurst(0.2f, 48f, 0.75f, 0.5f);
+    }
+
     public static AudioStreamWav CreateHitThud()
     {
         return CreateBurst(0.08f, 92f, 0.55f, 0.25f);

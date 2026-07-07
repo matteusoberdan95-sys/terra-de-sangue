@@ -55,7 +55,9 @@ public abstract partial class EnemyBase : CharacterBody2D
 
     public bool CanBeExecuted => IsAlive && _health == 1;
 
-    protected abstract int MaxHealth { get; }
+    public int MaxHealth => MaxHealthValue;
+
+    protected abstract int MaxHealthValue { get; }
     protected abstract float ApproachSpeed { get; }
     protected abstract float AttackRange { get; }
     protected abstract float AttackCooldownSeconds { get; }
@@ -76,7 +78,7 @@ public abstract partial class EnemyBase : CharacterBody2D
     public override void _Ready()
     {
         AddToGroup("enemy");
-        _health = MaxHealth;
+        _health = MaxHealthValue;
         BuildVisuals();
         BuildCollision();
         BuildHurtbox();
@@ -125,6 +127,30 @@ public abstract partial class EnemyBase : CharacterBody2D
             ZIndex += 1;
             GetTree().CreateTimer(0.38).Timeout += QueueFree;
         }
+    }
+
+    public void Execute(Vector2 impulse)
+    {
+        if (!CanBeExecuted)
+        {
+            return;
+        }
+
+        if (_state == EnemyState.Attack)
+        {
+            ReleaseAttackSlot();
+            SetAttackHitboxEnabled(false);
+        }
+
+        _health = 0;
+        _state = EnemyState.Dead;
+        Velocity = impulse;
+        ImpactFeedback.Get(this)?.OnExecution(GlobalPosition + new Vector2(0, -4), impulse);
+        ReleaseAttackSlot();
+        ApplyDeathFeedback();
+        Modulate = new Color("#5a2020");
+        ZIndex += 1;
+        GetTree().CreateTimer(0.5).Timeout += QueueFree;
     }
 
     private void ApplyDeathFeedback()
@@ -378,7 +404,7 @@ public abstract partial class EnemyBase : CharacterBody2D
 
     private void UpdateWoundVisuals()
     {
-        var ratio = _health / (float)MaxHealth;
+        var ratio = _health / (float)MaxHealthValue;
 
         if (_tornCloth is not null)
         {
@@ -496,7 +522,7 @@ public abstract partial class EnemyBase : CharacterBody2D
     {
         if (_body is not null)
         {
-            var woundedBody = BodyColor.Lerp(new Color("#6a3a34"), 1f - _health / (float)MaxHealth);
+            var woundedBody = BodyColor.Lerp(new Color("#6a3a34"), 1f - _health / (float)MaxHealthValue);
             _body.Color = _state switch
             {
                 EnemyState.Dead => new Color("#332424"),

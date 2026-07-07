@@ -3,7 +3,7 @@ using Godot;
 [GlobalClass]
 public partial class EnemyDummy : EnemyBase
 {
-    protected override int MaxHealth => 3;
+    protected override int MaxHealthValue => 3;
     protected override float ApproachSpeed => 42f;
     protected override float AttackRange => 34f;
     protected override float AttackCooldownSeconds => 1.1f;

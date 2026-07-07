@@ -13,7 +13,7 @@ public partial class BossIronCaptain : EnemyBase
     private AttackPattern _currentPattern = AttackPattern.ChainSwing;
     private AttackPattern _nextPattern = AttackPattern.IronCrush;
 
-    protected override int MaxHealth => 18;
+    protected override int MaxHealthValue => 18;
     protected override float ApproachSpeed => 30f;
     protected override float AttackRange => 44f;
     protected override float AttackCooldownSeconds => 1.15f;

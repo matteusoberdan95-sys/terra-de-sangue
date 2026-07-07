@@ -14,6 +14,12 @@ public partial class PlayerController : CharacterBody2D
     private const float AttackStartupSeconds = 0.06f;
     private const float AttackActiveSeconds = 0.09f;
     private const float AttackRecoverySeconds = 0.16f;
+    private const float HeavyAttackCooldownSeconds = 0.62f;
+    private const float HeavyAttackStartupSeconds = 0.14f;
+    private const float HeavyAttackActiveSeconds = 0.12f;
+    private const float HeavyAttackRecoverySeconds = 0.28f;
+    private const float ComboWindowSeconds = 0.22f;
+    private const float ExecuteRange = 42f;
     private static readonly Rect2 DefaultMovementBounds = new(new Vector2(-380, 124), new Vector2(760, 92));
 
     private enum PlayerState
@@ -21,6 +27,7 @@ public partial class PlayerController : CharacterBody2D
         Idle,
         Walk,
         LightAttack,
+        HeavyAttack,
         HitStun,
         Dead
     }
@@ -43,6 +50,9 @@ public partial class PlayerController : CharacterBody2D
     private float _hitStunTimer;
     private float _hitFlash;
     private float _invulnerabilityTimer;
+    private float _comboWindow;
+    private int _comboStep;
+    private bool _isHeavyAttack;
 
     public Rect2 MovementBounds
     {
@@ -51,6 +61,10 @@ public partial class PlayerController : CharacterBody2D
     }
 
     public bool IsAlive => _state != PlayerState.Dead;
+
+    public int CurrentHealth => _health;
+
+    public int MaxHealthValue => MaxHealth;
 
     public override void _Ready()
     {
@@ -94,6 +108,7 @@ public partial class PlayerController : CharacterBody2D
         _slashTimer = Mathf.Max(0f, _slashTimer - dt);
         _hitFlash = Mathf.Max(0f, _hitFlash - dt);
         _invulnerabilityTimer = Mathf.Max(0f, _invulnerabilityTimer - dt);
+        _comboWindow = Mathf.Max(0f, _comboWindow - dt);
 
         if (_state == PlayerState.Dead)
         {
@@ -104,12 +119,12 @@ public partial class PlayerController : CharacterBody2D
         }
 
         var input = Input.GetVector("move_left", "move_right", "move_up", "move_down");
-        if (_state is not PlayerState.LightAttack and not PlayerState.HitStun && input.LengthSquared() > 0.01f)
+        if (_state is not PlayerState.LightAttack and not PlayerState.HeavyAttack and not PlayerState.HitStun && input.LengthSquared() > 0.01f)
         {
             _facing = input.X < -0.1f ? Vector2.Left : input.X > 0.1f ? Vector2.Right : _facing;
         }
 
-        if (_state == PlayerState.LightAttack)
+        if (_state == PlayerState.LightAttack || _state == PlayerState.HeavyAttack)
         {
             UpdateAttack(dt);
             Velocity = Vector2.Zero;
@@ -135,7 +150,17 @@ public partial class PlayerController : CharacterBody2D
 
         if (Input.IsActionJustPressed("attack_light") && _attackCooldown <= 0f && _state is PlayerState.Idle or PlayerState.Walk)
         {
-            StartLightAttack();
+            StartLightAttack(_comboWindow > 0f ? 2 : 1);
+        }
+
+        if (Input.IsActionJustPressed("attack_heavy") && _attackCooldown <= 0f && _state is PlayerState.Idle or PlayerState.Walk)
+        {
+            StartHeavyAttack();
+        }
+
+        if (Input.IsActionJustPressed("execute") && _state is PlayerState.Idle or PlayerState.Walk)
+        {
+            TryExecute();
         }
 
         if (_attackSlash is not null)
@@ -157,8 +182,10 @@ public partial class PlayerController : CharacterBody2D
         Velocity = Vector2.Zero;
     }
 
-    private void StartLightAttack()
+    private void StartLightAttack(int comboStep)
     {
+        _isHeavyAttack = false;
+        _comboStep = comboStep;
         _state = PlayerState.LightAttack;
         _attackCooldown = AttackCooldownSeconds;
         _attackTimer = AttackStartupSeconds + AttackActiveSeconds + AttackRecoverySeconds;
@@ -167,12 +194,46 @@ public partial class PlayerController : CharacterBody2D
         SetAttackHitboxEnabled(false);
     }
 
+    private void StartHeavyAttack()
+    {
+        _isHeavyAttack = true;
+        _comboStep = 0;
+        _state = PlayerState.HeavyAttack;
+        _attackCooldown = HeavyAttackCooldownSeconds;
+        _attackTimer = HeavyAttackStartupSeconds + HeavyAttackActiveSeconds + HeavyAttackRecoverySeconds;
+        _slashTimer = HeavyAttackActiveSeconds + HeavyAttackRecoverySeconds;
+        _hitEnemiesThisAttack.Clear();
+        SetAttackHitboxEnabled(false);
+    }
+
+    private void TryExecute()
+    {
+        foreach (var node in GetTree().GetNodesInGroup("enemy"))
+        {
+            if (node is not EnemyBase enemy || !enemy.CanBeExecuted)
+            {
+                continue;
+            }
+
+            if (GlobalPosition.DistanceTo(enemy.GlobalPosition) > ExecuteRange)
+            {
+                continue;
+            }
+
+            enemy.Execute(new Vector2(_facing.X * 120f, -14f));
+            GetParent<PrototypeArena>()?.ApplyCombatImpact(6f, 0.06f);
+            return;
+        }
+    }
+
     private void UpdateAttack(float dt)
     {
         _attackTimer = Mathf.Max(0f, _attackTimer - dt);
 
-        var activeStartsAt = AttackRecoverySeconds;
-        var activeEndsAt = AttackRecoverySeconds + AttackActiveSeconds;
+        var recovery = _isHeavyAttack ? HeavyAttackRecoverySeconds : AttackRecoverySeconds;
+        var active = _isHeavyAttack ? HeavyAttackActiveSeconds : AttackActiveSeconds;
+        var activeStartsAt = recovery;
+        var activeEndsAt = recovery + active;
         var isActive = _attackTimer > activeStartsAt && _attackTimer <= activeEndsAt;
 
         SetAttackHitboxEnabled(isActive);
@@ -185,17 +246,27 @@ public partial class PlayerController : CharacterBody2D
         {
             SetAttackHitboxEnabled(false);
             _state = PlayerState.Idle;
+            if (!_isHeavyAttack && _comboStep == 1)
+            {
+                _comboWindow = ComboWindowSeconds;
+            }
+            else
+            {
+                _comboStep = 0;
+                _comboWindow = 0f;
+            }
         }
     }
 
     private void ResolveActiveHitbox()
     {
-        if (_attackHitbox is null)
+        if (_attackHitbox is null || _attackHitboxShape?.Shape is not RectangleShape2D rectangle)
         {
             return;
         }
 
-        _attackHitbox.Position = new Vector2(_facing.X * 34f, -8f);
+        rectangle.Size = _isHeavyAttack ? new Vector2(52, 28) : new Vector2(44, 24);
+        _attackHitbox.Position = new Vector2(_facing.X * (_isHeavyAttack ? 40f : 34f), -8f);
         _attackHitbox.ForceUpdateTransform();
 
         foreach (var area in _attackHitbox.GetOverlappingAreas())
@@ -206,8 +277,14 @@ public partial class PlayerController : CharacterBody2D
             }
 
             _hitEnemiesThisAttack.Add(enemy.GetInstanceId());
-            enemy.TakeHit(new Vector2(_facing.X * 96f, -10f));
-            GetParent<PrototypeArena>()?.ApplyCombatImpact(4.5f, 0.04f);
+            var impulse = new Vector2(_facing.X * (_isHeavyAttack ? 128f : 96f), _isHeavyAttack ? -16f : -10f);
+            enemy.TakeHit(impulse);
+            if (_comboStep == 2)
+            {
+                enemy.TakeHit(impulse * 0.5f);
+            }
+
+            GetParent<PrototypeArena>()?.ApplyCombatImpact(_isHeavyAttack ? 6f : 4.5f, _isHeavyAttack ? 0.05f : 0.04f);
         }
     }
 
@@ -374,6 +451,7 @@ public partial class PlayerController : CharacterBody2D
                 PlayerState.Dead => new Color("#4a2f24"),
                 _ when _hitFlash > 0f => new Color("#f0d7aa"),
                 PlayerState.LightAttack => new Color("#d4843e"),
+                PlayerState.HeavyAttack => new Color("#b51f1f"),
                 PlayerState.Walk => new Color("#c46f35"),
                 _ => new Color("#a85f34")
             };
@@ -385,7 +463,7 @@ public partial class PlayerController : CharacterBody2D
 
         if (_paint is not null)
         {
-            _paint.Color = _state == PlayerState.LightAttack ? new Color("#f0d06a") : new Color("#e0b75d");
+            _paint.Color = _state is PlayerState.LightAttack or PlayerState.HeavyAttack ? new Color("#f0d06a") : new Color("#e0b75d");
             _paint.Visible = _state != PlayerState.Dead;
         }
     }
@@ -397,6 +475,8 @@ public partial class PlayerController : CharacterBody2D
         AddKeyAction("move_up", Key.W);
         AddKeyAction("move_down", Key.S);
         AddKeyAction("attack_light", Key.J);
+        AddKeyAction("attack_heavy", Key.K);
+        AddKeyAction("execute", Key.E);
     }
 
     private static void AddKeyAction(string action, Key key)
