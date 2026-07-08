@@ -1,16 +1,44 @@
 # Prompts de Arte
 
+Ver tambem `docs/15_enredo_completo.md`, `docs/16_personagens_e_faccoes.md` e `assets/art/sprites/enemies/README.md`.
+
+## Eixo visual (usar em todos os prompts)
+
+```text
+dark brazilian mythic 2D beat em up, 1990s arcade silhouette,
+modern painterly finish, dramatic firelight, muddy ground,
+blood red accents, cinematic side-scrolling composition,
+high readability, handcrafted game sprite style, no text
+```
+
 ## Protagonista - conceito
 
 Dark brazilian mythic indigenous-inspired fictional warrior for a mature 2D hack and slash game, strong readable 1990s arcade silhouette, modern painterly pixel-art finish, athletic wounded body, ritual body paint, short heavy wooden club, fibers, bones, torn cloth, melancholic expression, firelight and blood red accents, no text, character concept art, full body, neutral pose.
 
-## Protagonista - sprite
+## Protagonista - sprite sheet (Arandu)
 
-2D side-view beat em up game sprite of a fictional indigenous-inspired warrior, 1990s arcade proportions, modern refined pixel-art/painterly hybrid, transparent background, full body, idle pose, strong silhouette, readable at small size, dark earthy palette with gold body paint and blood red accents, no text.
+Ver `assets/art/sprites/player/README.md` — 8 frames × 256×256, transparente.
 
-## Mercenario comum
+## Mercenario — sprite sheets
 
-2D side-view beat em up enemy sprite, brutal colonial-era mercenary inspired by dark fictional Brazil, dirty leather, iron scraps, machete, fearful violent posture, 1990s arcade silhouette, modern painterly pixel-art finish, transparent background, no text.
+**Gerar 4 arquivos separados.** Anexar `arandu_walk_sheet.png` como referencia de escala.
+
+Prompts completos em `assets/art/sprites/enemies/README.md`:
+
+- `mercenary_idle_sheet.png`
+- `mercenary_walk_sheet.png`
+- `mercenary_attack_sheet.png`
+- `mercenary_hit_sheet.png`
+
+Resumo do personagem:
+
+```text
+Breu-Ferro Company mercenary, colonial-era hired gun, dirty leather,
+iron-gray scraps, short musket, machete, crushed hat, torn cape,
+cowardly violent posture, muddy boots, side view beat em up,
+same scale as attached warrior reference, 8 frames 256x256 each,
+2048x256 horizontal sheet, transparent PNG
+```
 
 ## Aldeia em Cinzas - fundo
 

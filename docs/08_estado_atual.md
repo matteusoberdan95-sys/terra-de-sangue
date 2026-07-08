@@ -1,21 +1,27 @@
 # Estado Atual
 
-Ultima atualizacao: 2026-07-07 (Sprint 25 em andamento - Aldeia integrada, VFX leves e Arandu com idle/walk/ataques iniciais).
+Ultima atualizacao: 2026-07-07 (Sprint 26 — sheets Arandu integrados, combos J/K, arco, pipeline de arte).
 
 ## Sprint atual
 
-**Sprint 25 - Aldeia Visual** (parcialmente entregue)
+**Sprint 26 - Arandu Sprites e Combate** (entregue no codigo; validacao visual pendente)
 
-- PNGs de IA em `assets/art/` (`aldeia_mid`, `aldeia_fg` em uso; `aldeia_sky`, `aldeia_ground` reservados).
-- Cenario montado em **`scenes/levels/AldeiaBackground.tscn`** (ajuste visual no Godot, nao no C#).
-- Codigo: `AldeiaParallaxBackground.cs` (so parallax horizontal), `AldeiaEmCinzasArena.cs` (camera Y travada, faixa de andar Y=152-208).
-- Ajuste 2026-07-07: guias/faixas de debug removidas do runtime PNG; fogo, fumaca e brasas leves adicionados como overlay ambiental.
-- VFX 2026-07-07: spritesheets transparentes em `assets/art/vfx/` para fogo, brasas e fumaca; fallback procedural mantido.
-- Arandu 2026-07-07: `arandu_idle_sheet.png`, `arandu_walk_sheet.png`, `arandu_attack_light_sheet.png` e `arandu_attack_heavy_sheet.png` integrados; usuario validou o walk inicial e os sheets de ataque seguem o mesmo padrao 8x256.
-- Padrao aprovado pelo usuario: poucos assets bem compostos (`aldeia_mid` mestre + `aldeia_fg` transparente + vida ambiente leve), sem remontar PNG opaco em codigo.
-- **Nao** usar fundo procedural em C# (`AldeiaBackgroundArt` foi removido e nao deve voltar).
+- Nova leva de sheets do Arandu em `assets/art/sprites/player/` (walk, idle, run, atk L/H, bow, hit, death).
+- Pipeline Python em `tools/` para normalizar PNGs irregulares da IA.
+- Combos: `J J J` (leve x3), `K K` (pesado x2), finisher `J J K`.
+- Animacao de arco (`R`) com sheet dedicado; mira `W`/`S`.
+- Removida seta vermelha placeholder de ataque.
+- Escala externa `0.30` + boost +5% na corrida.
 
-Ver `docs/sprints/sprint_25_aldeia_visual.md` e `assets/art/README.md`.
+Ver `docs/sprints/sprint_26_arandu_sprites_combate.md` e `assets/art/sprites/player/README.md`.
+
+## Sprint anterior (parcial)
+
+**Sprint 25 - Aldeia Visual**
+
+- Cenario em `scenes/levels/AldeiaBackground.tscn`
+- Mercenario integrado (`mercenary_*.png`)
+- Colisao beat em up via hurtboxes
 
 ## Arco jogavel (Fase 1)
 
@@ -25,15 +31,21 @@ Ver `docs/sprints/sprint_25_aldeia_visual.md` e `assets/art/README.md`.
 
 ## Controles
 
-Ver sprints 20-23 (`J`/`K` corrida, `R` arco, `Shift` dash, etc.).
+- `J` / `J J J` — combo leve (3 golpes)
+- `K` / `K K` — combo pesado (2 golpes)
+- `J J K` — finisher pesado do combo leve
+- `R` — arco (segurar + `W`/`S` mira + soltar dispara)
+- Double-tap `A`/`D` + corrida, `Shift` dash, etc. (sprints 20-23)
 
-## Dor recente (ler antes de mexer no cenario)
+## Dor recente (arte)
 
-Tentativas de empilhar/recortar 4 PNGs opacos no **codigo** geraram emendas feias, personagem no ar, regressao a cada fix. **Licao:** posicao/escala do fundo = editor Godot (`AldeiaBackground.tscn`); codigo = parallax + gameplay.
+- PNGs da IA chegam em tamanhos errados (ex. 2048x683) e com tacape cortado na borda do frame.
+- **Nunca** integrar direto — usar `tools/normalize_sprite_sheet.py` + `tools/upscale_sheet_to_walk.py`.
+- Frames 3 e 7 do attack light original tinham tacape quebrado; mapeamento no codigo pula esses indices.
 
 ## Proximo passo (ordem sugerida)
 
-1. **Alinhar pes / composicao fina** - abrir `AldeiaBackground.tscn`, mover `AldeiaBackdrop` ate `WalkBandGuide` (F5 + editor).
-2. **Arandu run/hit/dano** usando idle/walk/ataques aprovados como referencia de paleta e proporcao.
-3. **Mercenario inimigo base** no mesmo pipeline visual, para testar combate sem bloquinhos.
-4. (Opcional) Regerar `aldeia_sky` / `aldeia_ground` com **transparencia** para parallax real - ver `assets/art/README.md` Opcao B.
+1. Validar visual in-game (F5) apos pull
+2. Regerar `arandu_attack_light_sheet.png` se tacape ainda falhar
+3. Sheets Bruto / Sargento / Capitao (`assets/art/sprites/enemies/README.md`)
+4. Polir gore no combate

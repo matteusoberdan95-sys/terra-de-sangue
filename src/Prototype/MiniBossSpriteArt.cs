@@ -2,10 +2,35 @@ using Godot;
 
 public static class MiniBossSpriteArt
 {
+    private const string IdleSheetPath = "res://assets/art/sprites/enemies/sergeant_idle_sheet.png";
+    private const string WalkSheetPath = "res://assets/art/sprites/enemies/sergeant_walk_sheet.png";
+    private const string AttackSheetPath = "res://assets/art/sprites/enemies/sergeant_attack_sheet.png";
+    private const string HitSheetPath = "res://assets/art/sprites/enemies/sergeant_hit_sheet.png";
+    private const string DeathSheetPath = "res://assets/art/sprites/enemies/sergeant_death_sheet.png";
     private const int Width = 50;
     private const int Height = 60;
 
     public static SpriteFrames BuildSpriteFrames()
+    {
+        if (HasExternalWalkSheet())
+        {
+            return ExternalSpriteSheetArt.BuildEnemyFrames(
+                WalkSheetPath,
+                IdleSheetPath,
+                AttackSheetPath,
+                HitSheetPath,
+                DeathSheetPath);
+        }
+
+        return BuildProceduralSpriteFrames();
+    }
+
+    public static bool HasExternalWalkSheet()
+    {
+        return ExternalSpriteSheetArt.HasWalkSheet(WalkSheetPath);
+    }
+
+    private static SpriteFrames BuildProceduralSpriteFrames()
     {
         var frames = new SpriteFrames();
         frames.AddAnimation("idle");

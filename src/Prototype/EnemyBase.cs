@@ -5,6 +5,7 @@ public abstract partial class EnemyBase : CharacterBody2D
 {
     public const uint HurtboxCollisionLayer = 1u << 2;
     public const uint AttackHitboxCollisionLayer = 1u << 4;
+    public const uint BodyCollisionLayer = 1u << 5;
 
     private const float Friction = 9f;
     private const float DepthTolerance = 12f;
@@ -110,6 +111,8 @@ public abstract partial class EnemyBase : CharacterBody2D
         _health = MaxHealthValue;
         BuildVisuals();
         BuildCollision();
+        CollisionLayer = BodyCollisionLayer;
+        CollisionMask = 0;
         BuildHurtbox();
         BuildAttackHitbox();
     }
@@ -126,7 +129,11 @@ public abstract partial class EnemyBase : CharacterBody2D
 
         _hitFlash = Mathf.Max(0f, _hitFlash - dt);
         _visualAnimator?.SetMoving(_state == EnemyState.Approach && Velocity.LengthSquared() > 1f);
-        _visualAnimator?.SetFacing(_facing.X);
+        if (_pixelSprite is null)
+        {
+            _visualAnimator?.SetFacing(_facing.X);
+        }
+
         UpdatePixelSprite();
         UpdateVisualState();
     }
@@ -557,6 +564,45 @@ public abstract partial class EnemyBase : CharacterBody2D
         }
     }
 
+    private static bool UsesExternalSpriteSheet(EnemyVisualArchetype archetype)
+    {
+        return archetype switch
+        {
+            EnemyVisualArchetype.Mercenary => MercenarySpriteArt.HasExternalWalkSheet(),
+            EnemyVisualArchetype.Brute => BruteSpriteArt.HasExternalWalkSheet(),
+            EnemyVisualArchetype.MiniBoss => MiniBossSpriteArt.HasExternalWalkSheet(),
+            EnemyVisualArchetype.IronCaptain => IronCaptainSpriteArt.HasExternalWalkSheet(),
+            _ => false
+        };
+    }
+
+    private static Vector2 ResolveExternalSpriteOffset(EnemyVisualArchetype archetype, bool usesExternalSheet)
+    {
+        if (usesExternalSheet)
+        {
+            return archetype switch
+            {
+                EnemyVisualArchetype.Brute => new Vector2(0, -6),
+                EnemyVisualArchetype.MiniBoss => new Vector2(0, -8),
+                EnemyVisualArchetype.IronCaptain => new Vector2(0, -10),
+                _ => new Vector2(0, -6)
+            };
+        }
+
+        return archetype switch
+        {
+            EnemyVisualArchetype.Brute => new Vector2(0, -6),
+            EnemyVisualArchetype.MiniBoss => new Vector2(0, -8),
+            EnemyVisualArchetype.IronCaptain => new Vector2(0, -10),
+            _ => new Vector2(0, -4)
+        };
+    }
+
+    private static float ResolveExternalSpriteScale(EnemyVisualArchetype archetype, bool usesExternalSheet)
+    {
+        return usesExternalSheet ? ExternalSpriteSheetArt.DefaultExternalScale : 1.2f;
+    }
+
     private void AttachPixelSprite()
     {
         if (_visualRig is null)
@@ -579,18 +625,18 @@ public abstract partial class EnemyBase : CharacterBody2D
 
         _pixelSprite = new SpriteCharacterAnimator { Name = "PixelSprite" };
         _visualRig.AddChild(_pixelSprite);
-        _pixelSprite.Configure(frames, VisualArchetype switch
+
+        var usesExternalSheet = UsesExternalSpriteSheet(VisualArchetype);
+        if (usesExternalSheet)
         {
-            EnemyVisualArchetype.Brute => new Vector2(0, -6),
-            EnemyVisualArchetype.MiniBoss => new Vector2(0, -8),
-            EnemyVisualArchetype.IronCaptain => new Vector2(0, -10),
-            _ => new Vector2(0, -4)
-        });
+            _pixelSprite.TextureFilter = CanvasItem.TextureFilterEnum.Linear;
+        }
+
+        _pixelSprite.Configure(frames, ResolveExternalSpriteOffset(VisualArchetype, usesExternalSheet), ResolveExternalSpriteScale(VisualArchetype, usesExternalSheet));
 
         foreach (var child in _visualRig.GetChildren())
         {
-            var childName = child.Name.ToString();
-            if (child is Polygon2D polygon && childName != "AttackSwing" && childName != "TelegraphMark")
+            if (child is Polygon2D polygon)
             {
                 polygon.Visible = false;
             }
@@ -610,10 +656,41 @@ public abstract partial class EnemyBase : CharacterBody2D
             _state == EnemyState.Attack,
             _hitFlash > 0f,
             _state == EnemyState.Dead);
+
+        if (_state == EnemyState.Dead)
+        {
+            return;
+        }
+
+        if (_hitFlash > 0f)
+        {
+            _pixelSprite.Modulate = new Color("#f0d7aa");
+        }
+        else if (_bleed.IsActive)
+        {
+            _pixelSprite.Modulate = _bleed.Level == BleedLevel.Hemorrhage
+                ? new Color("#ff9a9a")
+                : new Color("#e8c8c8");
+        }
+        else
+        {
+            _pixelSprite.Modulate = Colors.White;
+        }
     }
 
     private void UpdateTelegraphMarker(bool visible, float progress)
     {
+        if (_pixelSprite is not null)
+        {
+            _visualAnimator?.SetTelegraph(visible ? progress : 0f);
+            if (_telegraphMark is not null)
+            {
+                _telegraphMark.Visible = false;
+            }
+
+            return;
+        }
+
         if (_telegraphMark is null)
         {
             return;
@@ -631,6 +708,11 @@ public abstract partial class EnemyBase : CharacterBody2D
 
     private void UpdateWoundVisuals()
     {
+        if (_pixelSprite is not null)
+        {
+            return;
+        }
+
         var ratio = _health / (float)MaxHealthValue;
 
         if (_tornCloth is not null)
@@ -746,7 +828,7 @@ public abstract partial class EnemyBase : CharacterBody2D
             _attackHitboxShape.Disabled = !enabled;
         }
 
-        if (_attackSwing is not null)
+        if (_attackSwing is not null && _pixelSprite is null)
         {
             _attackSwing.Visible = enabled;
         }
@@ -779,7 +861,7 @@ public abstract partial class EnemyBase : CharacterBody2D
             _mark.Visible = false;
         }
 
-        if (_head is not null)
+        if (_head is not null && _pixelSprite is null)
         {
             _head.Visible = _state != EnemyState.Dead;
         }

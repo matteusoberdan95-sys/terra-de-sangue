@@ -3,7 +3,7 @@ using Godot;
 [GlobalClass]
 public partial class MemoryPickup : Area2D
 {
-    private const uint PlayerBodyLayer = 1u;
+    private const uint PlayerBodyLayer = PlayerController.BodyCollisionLayer;
 
     private Polygon2D? _glow;
     private Polygon2D? _maskShardA;

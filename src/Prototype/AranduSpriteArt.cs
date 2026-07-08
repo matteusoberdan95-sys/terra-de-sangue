@@ -6,6 +6,10 @@ public static class AranduSpriteArt
     private const string WalkSheetPath = "res://assets/art/sprites/player/arandu_walk_sheet.png";
     private const string AttackLightSheetPath = "res://assets/art/sprites/player/arandu_attack_light_sheet.png";
     private const string AttackHeavySheetPath = "res://assets/art/sprites/player/arandu_attack_heavy_sheet.png";
+    private const string RunSheetPath = "res://assets/art/sprites/player/arandu_run_sheet.png";
+    private const string HitSheetPath = "res://assets/art/sprites/player/arandu_hit_sheet.png";
+    private const string DeathSheetPath = "res://assets/art/sprites/player/arandu_death_sheet.png";
+    private const string BowSheetPath = "res://assets/art/sprites/player/arandu_bow_sheet.png";
     private const int ExternalSheetFrameCount = 8;
     private const int ExternalSheetFrameSize = 256;
     private const int Width = 48;
@@ -35,10 +39,46 @@ public static class AranduSpriteArt
         frames.AddFrame("attack_light", BuildFrame(0, 1, false));
         frames.AddFrame("attack_light", BuildFrame(0, 2, false));
 
+        frames.AddAnimation("attack_light_1");
+        frames.SetAnimationSpeed("attack_light_1", 14f);
+        frames.AddFrame("attack_light_1", BuildFrame(0, 1, false));
+        frames.AddFrame("attack_light_1", BuildFrame(1, 1, false));
+
+        frames.AddAnimation("attack_light_2");
+        frames.SetAnimationSpeed("attack_light_2", 15f);
+        frames.AddFrame("attack_light_2", BuildFrame(0, 2, false));
+        frames.AddFrame("attack_light_2", BuildFrame(1, 2, false));
+
+        frames.AddAnimation("attack_light_3");
+        frames.SetAnimationSpeed("attack_light_3", 13f);
+        frames.AddFrame("attack_light_3", BuildFrame(0, 5, false));
+        frames.AddFrame("attack_light_3", BuildFrame(1, 5, false));
+        frames.AddFrame("attack_light_3", BuildFrame(2, 5, false));
+
         frames.AddAnimation("attack_heavy");
         frames.SetAnimationSpeed("attack_heavy", 10f);
         frames.AddFrame("attack_heavy", BuildFrame(0, 3, false));
         frames.AddFrame("attack_heavy", BuildFrame(0, 4, false));
+
+        frames.AddAnimation("attack_heavy_1");
+        frames.SetAnimationSpeed("attack_heavy_1", 11f);
+        frames.AddFrame("attack_heavy_1", BuildFrame(0, 3, false));
+        frames.AddFrame("attack_heavy_1", BuildFrame(1, 3, false));
+        frames.AddFrame("attack_heavy_1", BuildFrame(2, 3, false));
+
+        frames.AddAnimation("attack_heavy_2");
+        frames.SetAnimationSpeed("attack_heavy_2", 10f);
+        frames.AddFrame("attack_heavy_2", BuildFrame(0, 4, false));
+        frames.AddFrame("attack_heavy_2", BuildFrame(1, 4, false));
+        frames.AddFrame("attack_heavy_2", BuildFrame(2, 4, false));
+        frames.AddFrame("attack_heavy_2", BuildFrame(3, 4, false));
+
+        frames.AddAnimation("attack_heavy_3");
+        frames.SetAnimationSpeed("attack_heavy_3", 9f);
+        frames.AddFrame("attack_heavy_3", BuildFrame(0, 6, false));
+        frames.AddFrame("attack_heavy_3", BuildFrame(1, 6, false));
+        frames.AddFrame("attack_heavy_3", BuildFrame(2, 6, false));
+        frames.AddFrame("attack_heavy_3", BuildFrame(3, 6, false));
 
         frames.AddAnimation("run_attack_light");
         frames.SetAnimationSpeed("run_attack_light", 14f);
@@ -62,6 +102,35 @@ public static class AranduSpriteArt
         return FileAccess.FileExists(WalkSheetPath);
     }
 
+    public static bool HasExternalRunSheet()
+    {
+        return FileAccess.FileExists(RunSheetPath);
+    }
+
+    /// <summary>
+    /// Run sheet gerado como faixa horizontal precisa ser in-place (personagem centrado em cada frame).
+    /// Sheets que falham na validacao devem ficar fora de player/ ate regerar.
+    /// </summary>
+    public static bool UsesDedicatedRunSheet()
+    {
+        return HasExternalRunSheet();
+    }
+
+    public static bool HasExternalHitSheet()
+    {
+        return FileAccess.FileExists(HitSheetPath);
+    }
+
+    public static bool HasExternalDeathSheet()
+    {
+        return FileAccess.FileExists(DeathSheetPath);
+    }
+
+    public static bool HasExternalBowSheet()
+    {
+        return FileAccess.FileExists(BowSheetPath);
+    }
+
     private static SpriteFrames BuildSpriteFramesFromWalkSheet()
     {
         var frames = new SpriteFrames();
@@ -69,34 +138,41 @@ public static class AranduSpriteArt
         var idleSheet = FileAccess.FileExists(IdleSheetPath) ? LoadSheet(IdleSheetPath) : walkSheet;
         var attackLightSheet = FileAccess.FileExists(AttackLightSheetPath) ? LoadSheet(AttackLightSheetPath) : walkSheet;
         var attackHeavySheet = FileAccess.FileExists(AttackHeavySheetPath) ? LoadSheet(AttackHeavySheetPath) : attackLightSheet;
+        var runSheet = FileAccess.FileExists(RunSheetPath) ? LoadSheet(RunSheetPath) : walkSheet;
+        var hitSheet = FileAccess.FileExists(HitSheetPath) ? LoadSheet(HitSheetPath) : walkSheet;
+        var bowSheet = FileAccess.FileExists(BowSheetPath) ? LoadSheet(BowSheetPath) : walkSheet;
 
-        frames.AddAnimation("idle");
-        frames.SetAnimationSpeed("idle", 6f);
-        for (var i = 0; i < ExternalSheetFrameCount; i++)
+        ExternalSpriteSheetArt.AddLoopingFrames(frames, "idle", idleSheet, 6f);
+        ExternalSpriteSheetArt.AddLoopingFrames(frames, "walk", walkSheet, 10f);
+
+        if (FileAccess.FileExists(RunSheetPath))
         {
-            frames.AddFrame("idle", BuildSheetFrame(idleSheet, i));
+            ExternalSpriteSheetArt.AddLoopingFrames(frames, "run", runSheet, 14f);
+        }
+        else
+        {
+            // Fallback: walk no mesmo tamanho, mais rapido — evita sheet de corrida mal recortado.
+            ExternalSpriteSheetArt.AddLoopingFrames(frames, "run", walkSheet, 14f);
         }
 
-        frames.AddAnimation("walk");
-        frames.SetAnimationSpeed("walk", 10f);
-        for (var i = 0; i < ExternalSheetFrameCount; i++)
-        {
-            frames.AddFrame("walk", BuildSheetFrame(walkSheet, i));
-        }
+        ExternalSpriteSheetArt.AddFrameRange(frames, "attack_light_1", attackLightSheet, 0, 2, 16f);
 
-        frames.AddAnimation("attack_light");
-        frames.SetAnimationSpeed("attack_light", 14f);
-        for (var i = 0; i < ExternalSheetFrameCount; i++)
-        {
-            frames.AddFrame("attack_light", BuildSheetFrame(attackLightSheet, i));
-        }
+        frames.AddAnimation("attack_light_2");
+        frames.SetAnimationSpeed("attack_light_2", 17f);
+        frames.AddFrame("attack_light_2", BuildSheetFrame(attackLightSheet, 2));
+        frames.AddFrame("attack_light_2", BuildSheetFrame(attackLightSheet, 4));
 
-        frames.AddAnimation("attack_heavy");
-        frames.SetAnimationSpeed("attack_heavy", 11f);
-        for (var i = 0; i < ExternalSheetFrameCount; i++)
-        {
-            frames.AddFrame("attack_heavy", BuildSheetFrame(attackHeavySheet, i));
-        }
+        frames.AddAnimation("attack_light_3");
+        frames.SetAnimationSpeed("attack_light_3", 14f);
+        frames.AddFrame("attack_light_3", BuildSheetFrame(attackLightSheet, 5));
+        frames.AddFrame("attack_light_3", BuildSheetFrame(attackLightSheet, 6));
+        frames.AddFrame("attack_light_3", BuildSheetFrame(attackLightSheet, 4));
+        ExternalSpriteSheetArt.AddLoopingFrames(frames, "attack_light", attackLightSheet, 14f);
+
+        ExternalSpriteSheetArt.AddFrameRange(frames, "attack_heavy_1", attackHeavySheet, 0, 4, 11f);
+        ExternalSpriteSheetArt.AddFrameRange(frames, "attack_heavy_2", attackHeavySheet, 4, 4, 10f);
+        ExternalSpriteSheetArt.AddFrameRange(frames, "attack_heavy_3", attackHeavySheet, 4, 4, 9f);
+        ExternalSpriteSheetArt.AddLoopingFrames(frames, "attack_heavy", attackHeavySheet, 11f);
 
         frames.AddAnimation("run_attack_light");
         frames.SetAnimationSpeed("run_attack_light", 14f);
@@ -110,9 +186,34 @@ public static class AranduSpriteArt
         frames.AddFrame("run_attack_heavy", BuildSheetFrame(attackHeavySheet, 4));
         frames.AddFrame("run_attack_heavy", BuildSheetFrame(attackHeavySheet, 5));
 
+        if (FileAccess.FileExists(BowSheetPath))
+        {
+            ExternalSpriteSheetArt.AddFrameRange(frames, "bow_draw", bowSheet, 0, 2, 10f);
+            ExternalSpriteSheetArt.AddFrameRange(frames, "bow_aim_level", bowSheet, 2, 1, 8f, loop: true);
+            ExternalSpriteSheetArt.AddFrameRange(frames, "bow_aim_up", bowSheet, 3, 1, 8f, loop: true);
+            ExternalSpriteSheetArt.AddFrameRange(frames, "bow_aim_down", bowSheet, 4, 1, 8f, loop: true);
+            ExternalSpriteSheetArt.AddFrameRange(frames, "bow_release", bowSheet, 5, 1, 12f);
+            ExternalSpriteSheetArt.AddFrameRange(frames, "bow_recovery", bowSheet, 6, 2, 10f, loop: false);
+        }
+
         frames.AddAnimation("hit");
-        frames.SetAnimationSpeed("hit", 1f);
-        frames.AddFrame("hit", BuildSheetFrame(walkSheet, 2));
+        frames.SetAnimationSpeed("hit", FileAccess.FileExists(HitSheetPath) ? 12f : 1f);
+        if (FileAccess.FileExists(HitSheetPath))
+        {
+            for (var i = 0; i < ExternalSheetFrameCount; i++)
+            {
+                frames.AddFrame("hit", BuildSheetFrame(hitSheet, i));
+            }
+        }
+        else
+        {
+            frames.AddFrame("hit", BuildSheetFrame(walkSheet, 2));
+        }
+
+        if (FileAccess.FileExists(DeathSheetPath))
+        {
+            ExternalSpriteSheetArt.AddLoopingFrames(frames, "death", LoadSheet(DeathSheetPath), 10f, loop: false);
+        }
 
         return frames;
     }

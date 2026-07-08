@@ -21,12 +21,15 @@ Trocar placeholders da Aldeia em Cinzas por arte 2D real (IA/Krita) sem quebrar 
 - [x] Remocao de placeholders quando PNG presente
 - [x] Documentacao de pipeline (`assets/art/README.md`, handoff Codex)
 
+- [x] Mercenario integrado (`mercenary_*.png`, `MercenarySpriteArt.cs`, validado)
+- [x] Colisao beat em up: player/inimigos nao bloqueiam fisicamente
+- [x] Pipeline externo compartilhado (`ExternalSpriteSheetArt.cs`) para todos inimigos
+- [x] Codigo pronto para Arandu run/hit/death e Bruto/Sargento/Capitao
+
 ### Nao entregue / pendente
 
-- [ ] Alinhamento final dos pes (usuario ajusta no editor - ver README)
-- [ ] Parallax 4 camadas (exige PNGs com transparencia real)
-- [ ] Sprite sheets Arandu restantes: run, hit/dano, morte
-- [ ] Capitao / Mata no mesmo estilo visual
+- [x] Arandu run, hit e death integrados (`arandu_run/hit/death_sheet.png`)
+- [ ] Sheets Bruto, Sargento, Capitao (prompts prontos)
 
 ## Receita aprovada pelo usuario
 

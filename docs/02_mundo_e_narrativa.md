@@ -2,7 +2,10 @@
 
 ## Premissa
 
-A terra foi sangrada. Uma forca invasora destruiu aldeias, abriu caminhos de ferro e fogo, e despertou algo antigo que nao deveria ter sido tocado. Arandu sobrevive, mas sua sobrevivencia parece mais maldicao do que milagre.
+A terra foi sangrada. A **Companhia Breu-Ferro** — cacadores de petroleo e mercenarios — aliou-se ao **Povo das Mandibulas** (tribo canibal ficticia) para invadir aldeias, escravizar sobreviventes e abrir o solo onde dorme uma entidade antiga. Arandu sobreviveu a massacre da **Aldeia do Ocaso Verde**; sua furia e seu luto movem o jogo.
+
+**Enredo completo:** `docs/15_enredo_completo.md`  
+**Personagens e faccoes:** `docs/16_personagens_e_faccoes.md`
 
 ## Principio de respeito cultural
 
@@ -10,27 +13,28 @@ O jogo deve usar uma cultura ficticia inspirada no Brasil, sem se declarar repre
 
 ## Estrutura emocional
 
-1. **Perda**: a aldeia destruida.
-2. **Furia**: a retaliacao contra invasores.
-3. **Duvida**: a violencia comeca a cobrar preco espiritual.
-4. **Revelacao**: a terra nao esta apenas ocupada; esta corrompida.
-5. **Escolha**: vinganca, libertacao ou sacrificio.
+1. **Perda**: a aldeia destruida; Iara levada.
+2. **Furia**: retaliacao contra mercenarios e rastreadores.
+3. **Revelacao**: pacto Companhia-Mandibulas; petroleo profana a terra.
+4. **Corrupcao**: o breu acorda; inimigos e vitimas fundem-se com a mata.
+5. **Escolha**: vinganca, libertacao ou sacrificio no Templo.
 
 ## Fases propostas
 
 1. **Aldeia em Cinzas**: tutorial e trauma inicial.
 2. **Mata Fechada**: emboscadas, chuva, olhos no escuro.
-3. **Rio de Sangue**: canoas destruidas, reflexos vermelhos, entidade aquatica.
-4. **Acampamento de Ferro**: correntes, barris, forjas, mosquetes.
-5. **Rua de Pedra Morta**: cidade colonial corrompida.
-6. **Templo sob as Raizes**: nucleo espiritual da corrupcao.
+3. **Trilho do Breu** *(futuro)*: acampamento de perfuracao, barris, escravos.
+4. **Rio de Sangue**: canoas destruidas, reflexos vermelhos, rumo ao porto.
+5. **Porto das Pedras Mortas**: cidade colonial; mercado de cativos.
+6. **Templo sob as Raizes**: poco de breu; Bicho-Coroa.
 
 ## Chefes iniciais
 
-- **Capitao do Ferro**: corrente, armadura improvisada, brutalidade humana.
-- **Noiva do Rio**: horror tragico, fase de agua e reflexo.
-- **Padre Sem Rosto**: culpa, sino, mortos, manipulacao espiritual.
-- **Bicho-Coroa**: entidade de raiz, osso e pena.
+- **Sargento do Ferro**: retaguarda do ataque; sabre e disciplina cruel.
+- **Capitao do Ferro**: corrente, armadura improvisada, rosto queimado por breu.
+- **Noiva do Rio**: horror tragico; Iara ou eco dela.
+- **Padre Sem Rosto**: porto; sino, culpa, manipulacao.
+- **Bicho-Coroa**: entidade de raiz, osso e breu.
 
 ## Sistema narrativo: Memoria da Terra
 

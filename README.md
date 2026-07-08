@@ -87,6 +87,12 @@ Nunca iniciar uma nova sprint com a anterior apenas validada localmente, mas ain
 
 ## Sprint Atual
 
-Sprint 15 — Sprites pixel (Arandu + mercenario). Audio com fallback em `assets/audio/`.
+**Sprint 25 — Aldeia Visual** (em andamento)
 
-Proximo: validar visualmente ou adicionar `.wav` custom nas pastas de audio.
+- Cenario: `aldeia_mid` + `aldeia_fg` em `scenes/levels/AldeiaBackground.tscn`
+- VFX ambiente: `assets/art/vfx/` (fogo, fumaca, brasas)
+- Arandu: idle, walk, ataque leve e ataque forte em `assets/art/sprites/player/`
+
+Ver `docs/08_estado_atual.md` e `docs/sprints/sprint_25_aldeia_visual.md`.
+
+**Proximo:** sheets Arandu (run, hit) e mercenario inimigo no mesmo pipeline visual.

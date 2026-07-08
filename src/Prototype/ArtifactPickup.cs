@@ -3,7 +3,7 @@ using Godot;
 [GlobalClass]
 public partial class ArtifactPickup : Area2D
 {
-    private const uint PlayerBodyLayer = 1u;
+    private const uint PlayerBodyLayer = PlayerController.BodyCollisionLayer;
 
     private bool _collected;
     private float _pulseTime;

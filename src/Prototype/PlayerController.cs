@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public partial class PlayerController : CharacterBody2D
 {
     public const uint HurtboxCollisionLayer = 1u << 3;
+    public const uint BodyCollisionLayer = 1u;
 
     private const float Speed = 120f;
     private const int MaxHealth = 8;
@@ -18,7 +19,9 @@ public partial class PlayerController : CharacterBody2D
     private const float HeavyAttackStartupSeconds = 0.12f;
     private const float HeavyAttackActiveSeconds = 0.13f;
     private const float HeavyAttackRecoverySeconds = 0.26f;
-    private const float ComboWindowSeconds = 0.30f;
+    private const float ComboWindowSeconds = 0.42f;
+    private const float HeavyComboWindowSeconds = 0.38f;
+    private const float ComboFollowCooldownSeconds = 0.04f;
     private const float ExecuteRange = 42f;
     private const float MaxStamina = 100f;
     private const float DashCost = 22f;
@@ -97,7 +100,11 @@ public partial class PlayerController : CharacterBody2D
     private float _hitFlash;
     private float _invulnerabilityTimer;
     private float _comboWindow;
+    private float _heavyComboWindow;
     private int _comboStep;
+    private int _heavyComboStep;
+    private int _nextHeavyComboHit = 1;
+    private bool _attackHitboxWasActive;
     private bool _isHeavyAttack;
     private bool _isRunAttack;
     private bool _isRunHeavyAttack;
@@ -128,6 +135,8 @@ public partial class PlayerController : CharacterBody2D
     private bool _bowHeld;
     private float _aimDepthOffset;
     private float _bowRecoveryTimer;
+    private float _bowDrawTimer;
+    private float _bowShootAnimTimer;
     private Polygon2D? _aimIndicator;
     private int _artifactCharges;
     private bool _artifactEquipped;
@@ -210,6 +219,8 @@ public partial class PlayerController : CharacterBody2D
         BuildVisuals();
         AttachAranduSprite();
         BuildCollision();
+        CollisionLayer = BodyCollisionLayer;
+        CollisionMask = 0;
         BuildAttackHitbox();
         BuildHurtbox();
         BuildAimIndicator();
@@ -248,10 +259,13 @@ public partial class PlayerController : CharacterBody2D
         _hitFlash = Mathf.Max(0f, _hitFlash - dt);
         _invulnerabilityTimer = Mathf.Max(0f, _invulnerabilityTimer - dt);
         _comboWindow = Mathf.Max(0f, _comboWindow - dt);
+        _heavyComboWindow = Mathf.Max(0f, _heavyComboWindow - dt);
         _dashInvulnTimer = Mathf.Max(0f, _dashInvulnTimer - dt);
         _staminaRegenDelay = Mathf.Max(0f, _staminaRegenDelay - dt);
         _staminaBlockedFlash = Mathf.Max(0f, _staminaBlockedFlash - dt);
         _bowRecoveryTimer = Mathf.Max(0f, _bowRecoveryTimer - dt);
+        _bowDrawTimer = Mathf.Max(0f, _bowDrawTimer - dt);
+        _bowShootAnimTimer = Mathf.Max(0f, _bowShootAnimTimer - dt);
         UpdateStaminaRegen(dt);
 
         if (_state == PlayerState.Dead)
@@ -351,7 +365,7 @@ public partial class PlayerController : CharacterBody2D
             ToggleArtifact();
         }
 
-        if (Input.IsActionJustPressed("attack_light") && _attackCooldown <= 0f)
+        if (Input.IsActionJustPressed("attack_light") && CanPressLightAttack())
         {
             if (_state == PlayerState.Jump)
             {
@@ -374,7 +388,7 @@ public partial class PlayerController : CharacterBody2D
             }
         }
 
-        if (Input.IsActionJustPressed("attack_heavy") && _attackCooldown <= 0f)
+        if (Input.IsActionJustPressed("attack_heavy") && CanPressHeavyAttack())
         {
             if (_artifactEquipped && _artifactCharges > 0 && _artifactKind == ArtifactKind.BrokenClub)
             {
@@ -394,19 +408,13 @@ public partial class PlayerController : CharacterBody2D
             }
             else if (CanStartHeavyAttack())
             {
-                StartHeavyAttack();
+                StartHeavyAttack(ResolveHeavyComboStep());
             }
         }
 
         if (Input.IsActionJustPressed("execute") && _state is PlayerState.Idle or PlayerState.Walk)
         {
             TryExecute();
-        }
-
-        if (_attackSlash is not null)
-        {
-            _attackSlash.Visible = _slashTimer > 0f;
-            _attackSlash.Scale = new Vector2(_facingX, 1f);
         }
 
         UpdateVisualState();
@@ -422,6 +430,9 @@ public partial class PlayerController : CharacterBody2D
         _jumpTimer = 0f;
         _jumpLandingRecovery = 0f;
         _nextComboHit = 1;
+        _heavyComboWindow = 0f;
+        _heavyComboStep = 0;
+        _nextHeavyComboHit = 1;
         _airLightUsed = false;
         _airHeavyUsed = false;
         _airApexAttackTimer = 0f;
@@ -432,20 +443,66 @@ public partial class PlayerController : CharacterBody2D
         Velocity = Vector2.Zero;
     }
 
+    private bool CanPressLightAttack()
+    {
+        if (_bowRecoveryTimer > 0f || _isAimingBow)
+        {
+            return false;
+        }
+
+        if (_state == PlayerState.Jump)
+        {
+            return _attackCooldown <= 0f;
+        }
+
+        if (_state == PlayerState.Run)
+        {
+            return _attackCooldown <= 0f;
+        }
+
+        if (_comboWindow > 0f && _state is PlayerState.Idle or PlayerState.Walk)
+        {
+            return _attackCooldown <= ComboFollowCooldownSeconds;
+        }
+
+        return _attackCooldown <= 0f;
+    }
+
+    private bool CanPressHeavyAttack()
+    {
+        if (_bowRecoveryTimer > 0f || _isAimingBow)
+        {
+            return false;
+        }
+
+        if (_state == PlayerState.Run || _state == PlayerState.Jump)
+        {
+            return _attackCooldown <= 0f;
+        }
+
+        if (CanComboHeavyFinisher())
+        {
+            return _attackCooldown <= ComboFollowCooldownSeconds;
+        }
+
+        if (_heavyComboWindow > 0f && _state is PlayerState.Idle or PlayerState.Walk)
+        {
+            return _attackCooldown <= ComboFollowCooldownSeconds;
+        }
+
+        return _attackCooldown <= 0f;
+    }
+
     private bool CanStartLightAttack()
     {
-        return _bowRecoveryTimer <= 0f
-            && !_isAimingBow
-            && _jumpLandingRecovery <= 0f
+        return _jumpLandingRecovery <= 0f
             && (_state is PlayerState.Idle or PlayerState.Walk || _comboWindow > 0f);
     }
 
     private bool CanStartHeavyAttack()
     {
-        return _bowRecoveryTimer <= 0f
-            && !_isAimingBow
-            && _jumpLandingRecovery <= 0f
-            && _state is PlayerState.Idle or PlayerState.Walk;
+        return _jumpLandingRecovery <= 0f
+            && (_state is PlayerState.Idle or PlayerState.Walk || _heavyComboWindow > 0f);
     }
 
     private bool CanComboHeavyFinisher()
@@ -463,12 +520,25 @@ public partial class PlayerController : CharacterBody2D
         return 1;
     }
 
+    private int ResolveHeavyComboStep()
+    {
+        if (_heavyComboWindow > 0f)
+        {
+            return _nextHeavyComboHit;
+        }
+
+        return 1;
+    }
+
     private void StartLightAttack(int comboStep)
     {
         SnapFacingForAttack(Input.GetVector("move_left", "move_right", "move_up", "move_down"));
         _isHeavyAttack = false;
         _isRunAttack = false;
         _isArtifactAttack = false;
+        _heavyComboWindow = 0f;
+        _nextHeavyComboHit = 1;
+        _heavyComboStep = 0;
 
         if (_comboWindow > 0f)
         {
@@ -477,10 +547,16 @@ public partial class PlayerController : CharacterBody2D
 
         _comboStep = comboStep;
         _state = PlayerState.LightAttack;
-        _attackCooldown = AttackCooldownSeconds;
-        var startup = _comboStep == 3 ? 0.04f : AttackStartupSeconds;
-        _attackTimer = startup + AttackActiveSeconds + (_comboStep == 3 ? 0.12f : AttackRecoverySeconds);
-        _slashTimer = AttackActiveSeconds + (_comboStep == 3 ? 0.12f : AttackRecoverySeconds);
+        _attackCooldown = comboStep > 1 ? ComboFollowCooldownSeconds : AttackCooldownSeconds;
+        var startup = _comboStep switch
+        {
+            2 => 0.03f,
+            3 => 0.04f,
+            _ => AttackStartupSeconds
+        };
+        var recovery = _comboStep == 3 ? 0.12f : AttackRecoverySeconds;
+        _attackTimer = startup + AttackActiveSeconds + recovery;
+        _slashTimer = AttackActiveSeconds + recovery;
         _hitEnemiesThisAttack.Clear();
         _visualAnimator?.PulseAttack();
         PlaySwingSfx(false, _comboStep >= 2);
@@ -538,6 +614,9 @@ public partial class PlayerController : CharacterBody2D
         _comboStep = 0;
         _comboWindow = 0f;
         _nextComboHit = 1;
+        _heavyComboWindow = 0f;
+        _heavyComboStep = 0;
+        _nextHeavyComboHit = 1;
         _runAttackSlideSpeed = RunLightSlideSpeed;
         _state = PlayerState.LightAttack;
         _attackCooldown = 0.22f;
@@ -567,6 +646,9 @@ public partial class PlayerController : CharacterBody2D
         _comboStep = 0;
         _comboWindow = 0f;
         _nextComboHit = 1;
+        _heavyComboWindow = 0f;
+        _heavyComboStep = 0;
+        _nextHeavyComboHit = 1;
         _runAttackSlideSpeed = RunHeavySlideSpeed;
         _state = PlayerState.HeavyAttack;
         _attackCooldown = 0.38f;
@@ -591,6 +673,9 @@ public partial class PlayerController : CharacterBody2D
         SpendStamina(HeavyAttackStaminaCost);
         _comboWindow = 0f;
         _nextComboHit = 1;
+        _heavyComboWindow = 0f;
+        _heavyComboStep = 0;
+        _nextHeavyComboHit = 1;
         _isHeavyAttack = true;
         _isComboHeavyFinisher = true;
         _isRunAttack = false;
@@ -607,7 +692,7 @@ public partial class PlayerController : CharacterBody2D
         SyncAttackHitboxPosition();
     }
 
-    private void StartHeavyAttack()
+    private void StartHeavyAttack(int heavyComboStep = 1)
     {
         SnapFacingForAttack(Input.GetVector("move_left", "move_right", "move_up", "move_down"));
         if (_stamina < HeavyAttackStaminaCost)
@@ -617,18 +702,29 @@ public partial class PlayerController : CharacterBody2D
         }
 
         SpendStamina(HeavyAttackStaminaCost);
+        if (_heavyComboWindow > 0f)
+        {
+            _heavyComboWindow = 0f;
+        }
+
+        _comboWindow = 0f;
+        _nextComboHit = 1;
         _isHeavyAttack = true;
         _isComboHeavyFinisher = false;
         _isRunAttack = false;
         _isRunHeavyAttack = false;
         _comboStep = 0;
+        _heavyComboStep = heavyComboStep;
         _state = PlayerState.HeavyAttack;
-        _attackCooldown = HeavyAttackCooldownSeconds;
-        _attackTimer = HeavyAttackStartupSeconds + HeavyAttackActiveSeconds + HeavyAttackRecoverySeconds;
-        _slashTimer = HeavyAttackActiveSeconds + HeavyAttackRecoverySeconds;
+        var isFinisher = heavyComboStep >= 2;
+        _attackCooldown = heavyComboStep > 1 ? ComboFollowCooldownSeconds : HeavyAttackCooldownSeconds;
+        var startup = isFinisher ? 0.06f : HeavyAttackStartupSeconds;
+        var recovery = isFinisher ? 0.3f : HeavyAttackRecoverySeconds;
+        _attackTimer = startup + HeavyAttackActiveSeconds + recovery;
+        _slashTimer = HeavyAttackActiveSeconds + recovery;
         _hitEnemiesThisAttack.Clear();
         _visualAnimator?.PulseAttack();
-        PlaySwingSfx(true, false);
+        PlaySwingSfx(true, isFinisher);
         SetAttackHitboxEnabled(false);
         SyncAttackHitboxPosition();
     }
@@ -683,28 +779,51 @@ public partial class PlayerController : CharacterBody2D
         {
             SetAttackHitboxEnabled(false);
             var wasRunAttack = _isRunAttack || _isRunHeavyAttack;
+            var wasHeavyAttack = _isHeavyAttack;
+            var wasComboHeavyFinisher = _isComboHeavyFinisher;
+            var endedHeavyComboStep = _heavyComboStep;
+            var endedLightComboStep = _comboStep;
             _state = PlayerState.Idle;
             _isRunAttack = false;
             _isRunHeavyAttack = false;
             _runAttackSlideSpeed = 0f;
             _isComboHeavyFinisher = false;
             _isArtifactAttack = false;
+            _isHeavyAttack = false;
             if (wasRunAttack)
             {
                 _comboStep = 0;
                 _comboWindow = 0f;
                 _nextComboHit = 1;
+                _heavyComboWindow = 0f;
+                _heavyComboStep = 0;
+                _nextHeavyComboHit = 1;
             }
-            else if (!_isHeavyAttack && _comboStep is > 0 and < 3)
+            else if (!wasHeavyAttack && endedLightComboStep is > 0 and < 3)
             {
                 _comboWindow = EffectiveComboWindow;
-                _nextComboHit = _comboStep + 1;
+                _nextComboHit = endedLightComboStep + 1;
+                _heavyComboWindow = 0f;
+                _heavyComboStep = 0;
+                _nextHeavyComboHit = 1;
+            }
+            else if (wasHeavyAttack && !wasComboHeavyFinisher && endedHeavyComboStep == 1)
+            {
+                _heavyComboWindow = HeavyComboWindowSeconds;
+                _nextHeavyComboHit = 2;
+                _heavyComboStep = 0;
+                _comboStep = 0;
+                _comboWindow = 0f;
+                _nextComboHit = 1;
             }
             else
             {
                 _comboStep = 0;
                 _comboWindow = 0f;
                 _nextComboHit = 1;
+                _heavyComboWindow = 0f;
+                _heavyComboStep = 0;
+                _nextHeavyComboHit = 1;
             }
         }
     }
@@ -719,8 +838,13 @@ public partial class PlayerController : CharacterBody2D
         rectangle.Size = _isRunHeavyAttack ? new Vector2(58f, 30f)
             : _isRunAttack ? new Vector2(54f, 22f)
             : _isHeavyAttack
-            ? new Vector2(_isComboHeavyFinisher ? 56f : 52f, 28f)
-            : _comboStep == 3 ? new Vector2(50f, 26f) : new Vector2(44, 24);
+            ? new Vector2(_isComboHeavyFinisher || _heavyComboStep >= 2 ? 58f : 52f, 28f)
+            : _comboStep switch
+            {
+                3 => new Vector2(50f, 26f),
+                2 => new Vector2(46f, 24f),
+                _ => new Vector2(44f, 24f)
+            };
         SyncAttackHitboxPosition();
         _attackHitbox.ForceUpdateTransform();
 
@@ -734,17 +858,19 @@ public partial class PlayerController : CharacterBody2D
             _hitEnemiesThisAttack.Add(enemy.GetInstanceId());
             var baseImpulseX = _isRunHeavyAttack ? 142f
                 : _isRunAttack ? 118f
-                : _isHeavyAttack ? 128f
+                : _isHeavyAttack ? (_heavyComboStep >= 2 || _isComboHeavyFinisher ? 138f : 128f)
                 : _comboStep == 3 ? 112f
+                : _comboStep == 2 ? 102f
                 : 96f;
             var impulse = new Vector2(_facingX * baseImpulseX, _isHeavyAttack || _isRunHeavyAttack ? -16f : _isRunAttack ? -12f : _comboStep == 3 ? -14f : -10f);
             var attackKind = _isRunHeavyAttack ? PlayerAttackKind.RunHeavy
                 : _isRunAttack ? PlayerAttackKind.RunLight
-                : _isHeavyAttack ? PlayerAttackKind.Heavy
-                : _comboStep >= 2 || _isComboHeavyFinisher ? PlayerAttackKind.ComboFinisher
+                : _isHeavyAttack ? (_heavyComboStep >= 2 || _isComboHeavyFinisher ? PlayerAttackKind.ComboFinisher : PlayerAttackKind.Heavy)
+                : _comboStep >= 2 ? PlayerAttackKind.ComboFinisher
                 : PlayerAttackKind.Light;
-            var impulseScale = _isComboHeavyFinisher ? 1.35f
+            var impulseScale = _isComboHeavyFinisher || _heavyComboStep >= 2 ? 1.35f
                 : _comboStep == 3 ? 1.28f
+                : _comboStep == 2 ? 1.12f
                 : 1f;
             var hitDamage = ResolveHitDamage(attackKind);
             enemy.TakeHit(impulse * impulseScale, attackKind, hitDamage);
@@ -786,6 +912,7 @@ public partial class PlayerController : CharacterBody2D
         if (Input.IsActionJustPressed("aim_bow") && CanUseBow())
         {
             _bowHeld = true;
+            _bowDrawTimer = 0.2f;
         }
 
         if (_bowHeld && Input.IsActionPressed("aim_bow") && CanUseBow())
@@ -800,7 +927,10 @@ public partial class PlayerController : CharacterBody2D
                 _aimDepthOffset = Mathf.Clamp(_aimDepthOffset + dt * 1.4f, -0.65f, 0.65f);
             }
 
-            UpdateAimIndicator();
+            if (!AranduSpriteArt.HasExternalBowSheet())
+            {
+                UpdateAimIndicator();
+            }
         }
         else
         {
@@ -842,6 +972,7 @@ public partial class PlayerController : CharacterBody2D
         SpendStamina(BowStaminaCost);
         _arrowCount--;
         _bowRecoveryTimer = BowRecoverySeconds;
+        _bowShootAnimTimer = 0.16f;
         var direction = new Vector2(_facingX, _aimDepthOffset);
         if (direction.LengthSquared() < 0.01f)
         {
@@ -870,6 +1001,11 @@ public partial class PlayerController : CharacterBody2D
 
         if (_isHeavyAttack || attackKind is PlayerAttackKind.Heavy or PlayerAttackKind.ComboFinisher)
         {
+            if (_heavyComboStep >= 2 || _isComboHeavyFinisher)
+            {
+                return 2;
+            }
+
             return 1;
         }
 
@@ -897,8 +1033,9 @@ public partial class PlayerController : CharacterBody2D
 
         var reach = _isRunHeavyAttack ? 44f
             : _isRunAttack ? 40f
-            : _isHeavyAttack ? 40f
+            : _isHeavyAttack ? (_heavyComboStep >= 2 || _isComboHeavyFinisher ? 42f : 40f)
             : _comboStep == 3 ? 38f
+            : _comboStep == 2 ? 36f
             : 34f;
         _attackHitbox.Position = new Vector2(_facingX * reach, -8f);
     }
@@ -1320,6 +1457,12 @@ public partial class PlayerController : CharacterBody2D
             return;
         }
 
+        if (_state == PlayerState.Run)
+        {
+            SetFacingX(_runDirectionX);
+            return;
+        }
+
         if (input.X < -0.05f)
         {
             SetFacingX(-1f);
@@ -1329,12 +1472,6 @@ public partial class PlayerController : CharacterBody2D
         if (input.X > 0.05f)
         {
             SetFacingX(1f);
-            return;
-        }
-
-        if (_state == PlayerState.Run)
-        {
-            SetFacingX(_runDirectionX);
             return;
         }
 
@@ -1448,15 +1585,20 @@ public partial class PlayerController : CharacterBody2D
         _pixelSprite = new SpriteCharacterAnimator { Name = "AranduSprite" };
         _visualRig.AddChild(_pixelSprite);
         var usesExternalWalkSheet = AranduSpriteArt.HasExternalWalkSheet();
+        if (usesExternalWalkSheet)
+        {
+            _pixelSprite.TextureFilter = CanvasItem.TextureFilterEnum.Linear;
+        }
+
         _pixelSprite.Configure(
             AranduSpriteArt.BuildSpriteFrames(),
-            usesExternalWalkSheet ? new Vector2(0, -8) : new Vector2(0, -6),
-            usesExternalWalkSheet ? 0.34f : 1.2f);
+            usesExternalWalkSheet ? new Vector2(0, -6) : new Vector2(0, -6),
+            usesExternalWalkSheet ? ExternalSpriteSheetArt.DefaultExternalScale : 1.2f);
         _visualRig.Scale = Vector2.One;
 
         foreach (var child in _visualRig.GetChildren())
         {
-            if (child is Polygon2D polygon && child.Name.ToString() != "AttackSlash")
+            if (child is Polygon2D polygon)
             {
                 polygon.Visible = false;
             }
@@ -1588,23 +1730,37 @@ public partial class PlayerController : CharacterBody2D
         }
 
         _pixelSprite?.SetFacing(_facingX);
+        if (_pixelSprite is not null && AranduSpriteArt.HasExternalWalkSheet())
+        {
+            var baseScale = ExternalSpriteSheetArt.DefaultExternalScale;
+            var runBoost = _state == PlayerState.Run ? 1.05f : 1f;
+            _pixelSprite.Scale = new Vector2(baseScale * runBoost, baseScale * runBoost);
+        }
+
         var dashFlash = _state == PlayerState.Dash && _dashInvulnTimer > 0f;
         var jumpFlash = _state == PlayerState.Jump;
         var slamReady = _state == PlayerState.Jump && _airAttackPending == AirAttackPending.Slam;
         var runFlash = _state == PlayerState.Run;
-        _pixelSprite?.SpeedScale = _state == PlayerState.Run ? 1.55f : 1f;
+        _pixelSprite?.SpeedScale = 1f;
         _pixelSprite?.Modulate = dashFlash ? new Color(0.85f, 0.92f, 1f, 0.82f)
-            : runFlash ? new Color(1f, 0.94f, 0.86f)
             : slamReady ? new Color(1f, 0.88f, 0.78f)
             : jumpFlash ? new Color(0.96f, 0.98f, 1f)
             : Colors.White;
         _pixelSprite?.UpdatePresentation(
             (_state == PlayerState.Walk || _state == PlayerState.Run) && Velocity.LengthSquared() > 1f,
+            _state == PlayerState.Run,
             _state is PlayerState.LightAttack or PlayerState.HeavyAttack,
             _state == PlayerState.HeavyAttack && !_isRunHeavyAttack,
             _isRunAttack,
             _isRunHeavyAttack,
-            _hitFlash > 0f || dashFlash || jumpFlash,
+            _comboStep,
+            _isComboHeavyFinisher ? 3 : _heavyComboStep,
+            _bowDrawTimer > 0f,
+            _isAimingBow,
+            _aimDepthOffset,
+            _bowShootAnimTimer > 0f,
+            _bowRecoveryTimer > 0f && _bowShootAnimTimer <= 0f,
+            _hitFlash > 0f,
             _state == PlayerState.Dead);
     }
 

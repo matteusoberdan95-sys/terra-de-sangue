@@ -23,6 +23,8 @@ Para arte e narrativa, ler tambem:
 
 - `docs/01_biblia_de_arte.md`
 - `docs/02_mundo_e_narrativa.md`
+- `docs/15_enredo_completo.md` — enredo, fases, final
+- `docs/16_personagens_e_faccoes.md` — fichas de personagens
 - `docs/05_pipeline_de_assets.md`
 
 ## Regras de trabalho
